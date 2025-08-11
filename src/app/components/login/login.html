@@ -1,0 +1,25 @@
+<div class="login-body">
+    <div style="width: 330px; height: 400px; background-color: tomato;">
+        <div>
+            <form>
+                <!-- (ngSubmit) = 'login()' -->
+                <h1 class="h3 mb-3 fw-normal text-center">Login</h1>
+            
+                <div class="form-floating">
+                    <input type="text" class="form-control rounded-0 rounded-top border-bottom-0" name="username" placeholder="User Name">
+                    <label for="username">User Name</label>
+                </div>
+            
+                <div class="form-floating mb-4">
+                    <input type="text" class="form-control rounded-0 rounded-bottom" name="pwd" placeholder="Password">
+                    <!-- [(ngModel)] is used to two-way bound with class Login Property -->
+                    <label for="password">Password</label>
+                </div>
+                <button class="btn btn-primary btn-sm" type="submit">Log in</button> 
+            </form>
+            <!-- @if (errorMsg) {
+                <p class="alert text-danger fs-6">*{{ errorMsg }}</p>
+            } -->
+        </div>
+    </div> 
+</div>
