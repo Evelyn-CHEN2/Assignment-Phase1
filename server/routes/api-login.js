@@ -9,22 +9,18 @@ module.exports = {
                 return res.status(400).json({ error: 'No data provided' });
             }
 
-            const { username, pwd } = req.body;
-            const loggedUser = users.find(user => user.username === username && user.pwd === pwd);
-            if (!loggedUser) {
-                return res.status(401).json({ error: 'Invalid username or password' });
-            } else {
-                let user = new User(
-                    loggedUser.id,
-                    loggedUser.username,
-                    loggedUser.email,
-                    '',
-                    loggedUser.roles,
-                    loggedUser.groups,
-                    loggedUser.isActive
-                );
-                res.send(user)
+            let user = new User('', req.body.username, '', '', [], [], false)
+            // const { username, pwd } = req.body;
+            const loggedUser = users.find(user => user.username === req.body.username && user.pwd === req.body.pwd);
+            if (loggedUser) {
+                user.valid = true;
+                user.id = loggedUser.id;
+                user.usename = loggedUser.username;
+                user.email = loggedUser.email;
+                user.roles = loggedUser.roles;
+                user.groups = loggedUser.groups;
             }
+            res.send(user)
         })
     }
 }

@@ -22,3 +22,9 @@ export interface Channel {
     description: string;
     groupId: number;  //Store group.id
 }
+
+export interface LoginErrors {
+    username?: string;
+    pwd?: string;
+    general?: string;  // For general error messages
+}

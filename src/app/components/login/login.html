@@ -9,17 +9,19 @@
                     <input type="text" class="form-control rounded-0 rounded-top border-bottom-0" [(ngModel)]="username" name="username" placeholder="User Name">
                     <label for="username">User Name</label>
                 </div>
-            
+                @if (errMsgs.username) {
+                    <p class="alert text-danger fs-6">*{{ errMsgs.username }}</p>
+                }
                 <div class="form-floating mb-4">
                     <input type="text" class="form-control rounded-0 rounded-bottom" [(ngModel)]="pwd" name="pwd" placeholder="Password">
                     <!-- [(ngModel)] is used to two-way bound with class Login Property -->
                     <label for="pwd">Password</label>
-                </div>
+                </div>@if (errMsgs.pwd) {
+                    <p class="alert text-danger fs-6">*{{ errMsgs.pwd }}</p>
+                }
                 <button class="btn btn-primary btn-sm" type="submit">Log in</button> 
             </form>
-            <!-- @if (errorMsg) {
-                <p class="alert text-danger fs-6">*{{ errorMsg }}</p>
-            } -->
+            
         </div>
     </div> 
 </div>
