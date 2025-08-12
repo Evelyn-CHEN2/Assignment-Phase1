@@ -1,0 +1,11 @@
+[
+    {
+        "id": "g1", "groupname": "Laravel Devs", "description": "Laravel tips, bugs, and best practices in Australia/NZ.", "channels": [], "createdBy": "super"
+    },
+    {
+        "id": "g2", "groupname": "Data Science", "description": "Weekly study on ML, stats, and notebooks.", "channels": [], "createdBy": "super"
+    },
+    {
+        "id": "g3", "groupname": "Cybersecurity", "description": "Defensive ops, IR playbooks, and vuln management.", "channels": [], "createdBy": "super"
+    }
+]

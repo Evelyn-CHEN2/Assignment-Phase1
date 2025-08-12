@@ -1,0 +1,29 @@
+[
+    {
+        "id": "11", "channelname": "announcements", "group_id": "1", "chats": []
+    },
+    {
+        "id": "12", "channelname": "help-and-fix", "groupid": "1", "chats": []
+    },
+    {
+        "id": "13", "channelname": "jobs-and-gigs", "groupid": "1", "chats": []
+    },
+    {
+        "id": "21", "channelname": "reading-group", "groupid": "21", "chats": []
+    },
+    {
+        "id": "22", "channelname": "notebooks", "groupid": "2", "chats": []
+    },
+    {
+        "id": "23", "channelname": "datasets", "groupid": "2", "chats": []
+    },
+    {
+        "id": "31", "channelname": "alerts-and-news", "groupid": "3", "chats": []
+    },
+    {
+        "id": "32", "channelname": "tooling", "groupid": "3", "chats": []
+    },
+    {
+        "id": "33", "channelname": "playbooks", "groupid": "3", "chats": []
+    }
+]

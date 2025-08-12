@@ -4,7 +4,7 @@ module.exports = {
 
         app.post('/api/login', (req, res) => {
 
-            let users = require('../data.json');
+            let users = require('../data/users.json');
             if (!req.body) {
                 return res.status(400).json({ error: 'No data provided' });
             }

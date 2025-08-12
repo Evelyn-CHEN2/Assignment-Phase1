@@ -13,6 +13,10 @@ export class AuthService {
   login(username: string, pwd: string): Observable<User> {
     return this.http.post<User>(this.server + '/api/login', { username: username, pwd: pwd });
   }
+
+  register(username: string, email: string, pwd: string): Observable<User> {
+    return this.http.post<User>(this.server + '/api/register', { username, email, pwd })
+  }
      
   setCurrentUser(newuser: User): void {
     localStorage.setItem('currentUser', JSON.stringify(newuser));
