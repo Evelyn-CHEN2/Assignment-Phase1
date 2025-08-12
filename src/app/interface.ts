@@ -5,7 +5,7 @@ export interface User {
     email: string;
     groups: Group[];  //Store group data to get direct access
     roles: string[];
-    isActive: boolean;
+    valid: boolean;
 }
 
 export interface Group {
@@ -21,10 +21,4 @@ export interface Channel {
     name: string;
     description: string;
     groupId: number;  //Store group.id
-}
-
-export interface LoginErrors {
-    username?: string;
-    pwd?: string;
-    general?: string;  // For general error messages
 }

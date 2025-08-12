@@ -4,7 +4,7 @@ module.exports = {
 
         app.post('/api/login', (req, res) => {
 
-            let users = require('../data/users.json');
+            let users = require('../data.json');
             if (!req.body) {
                 return res.status(400).json({ error: 'No data provided' });
             }
@@ -15,7 +15,7 @@ module.exports = {
             if (loggedUser) {
                 user.valid = true;
                 user.id = loggedUser.id;
-                user.usename = loggedUser.username;
+                user.username = loggedUser.username;
                 user.email = loggedUser.email;
                 user.roles = loggedUser.roles;
                 user.groups = loggedUser.groups;
