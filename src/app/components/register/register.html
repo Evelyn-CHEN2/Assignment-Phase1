@@ -1,1 +1,47 @@
-<p>register works!</p>
+
+    <h4 class="mb-3">Online Registeration </h4> 
+<hr>
+
+<form class="needs-validation d-flex flex-column" style="min-height:70vh;" novalidate #f="ngForm" (ngSubmit)="onSubmit(f)" [class.was-validated]="submitted"> 
+    <div style="flex:7">
+        <div class="row g-3"> 
+            <div class="col-sm-6"> 
+                <label for="username" class="form-label">User Name</label> 
+                <input type="text" class="form-control" name="username" required> 
+                <div class="invalid-feedback">Valid user name is required.</div> 
+            </div> 
+            <div class="col-sm-6"> 
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group has-validation"> 
+                    <span class="input-group-text">@</span> 
+                    <input type="text" class="form-control" name="email" required> 
+                    <div class="invalid-feedback">Valid email is required.</div>
+                </div> 
+            </div> 
+            <div class="col-12"> 
+                <label for="groups" class="form-label">Interested Groups</label>
+                <div class="input-group has-validation"> 
+                    <input type="text" class="form-control" id="groups" required> 
+                    <div class="invalid-feedback">Please choose at least one group.</div>
+                </div> 
+            </div> 
+            <div class="col-12"> 
+                <label for="pwd" class="form-label">Passsword</label>
+                <div class="input-group has-validation"> 
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span> 
+                    <input type="text" class="form-control" name="pwd" required> 
+                    <div class="invalid-feedback">
+                        <li>Minimum 8 character, including one uppercase letter, one lowercase letter.</li>
+                        <li>At least one number and one symbol(@#$%^&*/?_)</li>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <div style="flex:3">
+        <button class="w-100 btn btn-primary btn-m" type="submit">Register</button> 
+    </div>
+    
+
+</form>
+              

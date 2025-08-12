@@ -6,3 +6,33 @@ body {
 main {
     background-color: lightgrey;
 }
+
+/* Show invalid feedback when the form is validated */
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.was-validated .form-select:invalid ~ .invalid-feedback {
+  display: block;
+}
+
+.invalid-feedback {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545; /* Bootstrap's red */
+}
+
+/* Red border on invalid input */
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,..."); /* optional invalid icon */
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.was-validated .input-group .form-control:invalid ~ .invalid-feedback,
+.was-validated .input-group .form-select:invalid ~ .invalid-feedback {
+  display: block;
+}

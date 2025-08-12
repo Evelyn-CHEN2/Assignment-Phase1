@@ -18,8 +18,12 @@ export class AuthService {
     localStorage.setItem('currentUser', JSON.stringify(newuser));
   }
 
+  setSessionUser(newuser: User): void {
+    sessionStorage.setItem('currentUser', JSON.stringify(newuser));
+  }
+
   getCurrentUser() {
-    const currentUser = localStorage.getItem('currentUser');
+    const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
     if (currentUser) {
       return JSON.parse(currentUser) as User;
     }

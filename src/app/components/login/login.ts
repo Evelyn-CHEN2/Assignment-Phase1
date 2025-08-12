@@ -15,6 +15,7 @@ export class Login implements OnInit {
   username: string = '';
   pwd: string = '';
   errMsg: string = '';
+  rememberMe: boolean = false;
 
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -47,13 +48,20 @@ export class Login implements OnInit {
       next: (user: any) => {
         if (user.valid === true) {
           console.log('Login successful:', user.username & user.roles);
-          this.authService.setCurrentUser(user); //Store logged user data to localStorage
+          if (this.rememberMe) {
+            this.authService.setCurrentUser(user); //Store logged user data to localStorage
+            console.log('User data stored in localStorage:', user);
+          } else {
+            this.authService.setSessionUser(user); //Store logged user data to sessionStorage
+            console.log('User data stored in sessionStorage:', user);
+          }
           if (user.roles.includes('super')) {
             this.router.navigate(['/dashboard']);
           } else {
             this.router.navigate(['/account'])
           } 
-        } else {
+        }
+        else {
           this.errMsg = 'Invalid username or password.';
         }
       },
