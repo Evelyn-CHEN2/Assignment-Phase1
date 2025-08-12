@@ -1,5 +1,5 @@
-
-    <div style="width: 330px; height: 400px;">
+<div class="log-body">
+    <div style="width: 330px; min-height: 400px;">
         
             <form>
                 <!-- (ngSubmit) = 'login()' -->
@@ -27,7 +27,7 @@
                   
 
                 
-                    <button class="btn btn-primary d-flex align-items-center" type="submit" (click)="login($event)" style="height: 30px">Log in</button> 
+                    <button class="w-100 btn btn-primary btn-m" type="submit" (click)="login($event)">Log in</button> 
                 
                 
             </form>
@@ -36,3 +36,4 @@
             <p class="text-center">Don't have an account? <a class="text-primary text-decoration-underline" routerLink="/register">Register</a></p>
         </div>
     </div> 
+</div>

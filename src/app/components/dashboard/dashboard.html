@@ -1,1 +1,46 @@
-<p>Dashboard</p>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-custom overflow-hidden text-center bg-body-tertiary border rounded-2 p-0" style="height: 50px">
+        <li class="breadcrumb-item">
+            <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" href="#">Users</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" href="#">Administrators</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <a class="d-block py-0 px-3 text-decoration-none link-body-emphasis" href="#">Groups</a>
+        </li>
+        </ol>
+    </nav>
+
+<hr>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th style="text-align: center;" scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>03</td>
+            <td>Evelyn</td>
+            <td>admin@com.au</td>
+            <td>Admin</td>
+            <td style="text-align: center;">
+                <select name="role" style="padding: 5px; font-size: 13px;" required>
+                    <option value="" disabled selected>Select...</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="delete">Delete</option>
+
+                </select>
+            </td>
+        </tr>
+    </tbody>
+</table>
+    

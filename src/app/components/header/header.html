@@ -1,44 +1,45 @@
+<div style="width: 180px; margin-right: 10px;" >
+  <nav class="d-flex flex-column p-3 flex-shrink-0 bg-body-tertiary text-dark" style="min-height: 100vh;">
+    
+    <!-- Sidebar Title -->
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      <span class="fs-4">Chats</span>
+    </a>
+    <hr>
 
-<nav class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary text-dark"
-     style="width: 180px; min-height: 100vh; margin: 18px; margin-right: 0;">
-  
-  <!-- Sidebar Title -->
-  <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-    <span class="fs-4">Chats</span></a>
-  <hr>
-
-  <!-- Navigation Links -->
-  <ul class="nav nav-pills flex-column mb-auto">
-    <li class="nav-item">
-      <a class="nav-link d-flex align-items-center text-dark" routerLink="/login">
-        <i class="bi bi-house-door me-2 icon-size"></i> Login</a>
-    </li>
-
-    @if (welcomeMsg) {
-      <span class="px-3" style="font-size: x-small;">{{welcomeMsg}}!</span>
-    }
-
-    @if (userroles.includes('super')) {
+    <!-- Navigation Links -->
+    <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a class="nav-link d-flex align-items-center text-dark" routerLink="/dashboard">
-          <i class="bi bi-speedometer2 me-2 icon-size"></i> Dashboard</a>
+        <a class="nav-link d-flex align-items-center text-dark" routerLink="/login">
+          <i class="bi bi-house-door me-2 icon-size"></i> Login</a>
       </li>
-    }
-    <li class="nav-item">
-        <a class="nav-link d-flex align-items-center text-dark" routerLink="/groups">
-          <i class="bi bi-people me-2 icon-size"></i> Groups</a>
-    </li>
 
-    <li class="nav-item">
-      <a class="nav-link d-flex align-items-center text-dark" href="#" (click)="logout($event)">
-        <i class="bi bi-box-arrow-right me-2 icon-size"></i> Logout</a>
-    </li>
-  </ul>
-  <hr>
+      @if (welcomeMsg) {
+        <span class="px-3" style="font-size: x-small;">{{welcomeMsg}}!</span>
+      }
 
-  <!-- Bottom Icon -->
-  <div class="mt-auto">
-    <a class="nav-link d-flex align-items-center text-dark" routerLink="/account">
-      <i class="bi bi-person-gear me-2 icon-size"></i> Account</a>
-  </div>
-</nav>
+      @if (userroles.includes('super')) {
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center text-dark" routerLink="/dashboard">
+            <i class="bi bi-speedometer2 me-2 icon-size"></i> Dashboard</a>
+        </li>
+      }
+      <li class="nav-item">
+          <a class="nav-link d-flex align-items-center text-dark" routerLink="/groups">
+            <i class="bi bi-people me-2 icon-size"></i> Groups</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center text-dark" (click)="logout($event)">
+          <i class="bi bi-box-arrow-right me-2 icon-size"></i> Logout</a>
+      </li>
+    </ul>
+    <hr>
+
+    <!-- Bottom Icon -->
+    <div class="mt-auto">
+      <a class="nav-link d-flex align-items-center text-dark" routerLink="/account">
+        <i class="bi bi-person-gear me-2 icon-size"></i> Account</a>
+    </div>
+  </nav>
+</div>
