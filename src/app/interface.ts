@@ -5,11 +5,12 @@ export interface User {
     email: string;
     groups: Group[];  //Store group data to get direct access
     roles: string[];
+    status: boolean;
     valid: boolean;
 }
 
 export interface Group {
-    id: number;
+    id: string;
     name: string;
     description: string;
     channels: Channel[]; //Store channel data to get direct access
@@ -17,7 +18,7 @@ export interface Group {
 }
 
 export interface Channel {
-    id: number;
+    id: string;
     name: string;
     description: string;
     groupId: number;  //Store group.id

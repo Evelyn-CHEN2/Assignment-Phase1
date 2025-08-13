@@ -2,7 +2,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-custom overflow-hidden text-center bg-body-tertiary border rounded-2 p-0" style="height: 50px">
         <li class="breadcrumb-item">
-            <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" href="#">Users</a>
+            <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis">Users</a>
         </li>
         <li class="breadcrumb-item">
             <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" href="#">Administrators</a>
@@ -26,11 +26,12 @@
         </tr>
     </thead>
     <tbody>
+        @for (user of users; track $index) {
         <tr>
-            <td>03</td>
-            <td>Evelyn</td>
-            <td>admin@com.au</td>
-            <td>Admin</td>
+            <td>{{user.id}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.roles}}</td>
             <td style="text-align: center;">
                 <select name="role" style="padding: 5px; font-size: 13px;" required>
                     <option value="" disabled selected>Select...</option>
@@ -41,6 +42,7 @@
                 </select>
             </td>
         </tr>
+        }
     </tbody>
 </table>
     

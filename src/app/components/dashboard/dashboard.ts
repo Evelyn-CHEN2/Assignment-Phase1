@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { User } from '../../interface';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,5 +10,7 @@ import { User } from '../../interface';
 })
 export class Dashboard {
   users: User[] = [];
+
+  private userService = inject(UserService);
 
 }

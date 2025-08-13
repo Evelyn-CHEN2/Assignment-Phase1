@@ -2,7 +2,7 @@
 <h4 class="mb-3">Online Registeration </h4> 
 <hr>
 
-<form class="needs-validation d-flex flex-column" style="min-height:70vh;" novalidate #f="ngForm" (ngSubmit)="onSubmit(f)" [class.was-validated]="submitted"> 
+<form class="needs-validation d-flex flex-column" style="min-height:70vh;" novalidate #f="ngForm" [class.was-validated]="submitted"> 
     <div style="flex:7">
         <div class="row g-3"> 
             <div class="col-sm-6"> 
@@ -21,7 +21,7 @@
             <div class="col-12"> 
                 <label for="groups" class="form-label">Interested Groups</label>
                 <div class="input-group has-validation"> 
-                    <input type="text" class="form-control" name="groups" required> 
+                    <input type="text" class="form-control" name="groups" > 
                     <div class="invalid-feedback">Please choose at least one group.</div>
                 </div> 
             </div> 
@@ -38,8 +38,11 @@
             </div>
         </div>
     </div>
+    @if (errMsg) {
+        <p class="text text-danger">{{errMsg}}</p>
+    }
     <div style="flex:3">
-        <button class="w-100 btn btn-primary btn-m" type="submit">Register</button> 
+        <button class="w-100 btn btn-primary btn-m" type="submit" (click)="onSubmit(f, $event)" [disabled]="f.invalid || f.pending">Register</button> 
     </div>
     
 

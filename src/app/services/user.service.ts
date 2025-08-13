@@ -1,0 +1,16 @@
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { User } from '../interface';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+  private http = inject(HttpClient);
+  private server = 'http://localhost:3000';
+
+  getUsers() {
+    
+  }
+}

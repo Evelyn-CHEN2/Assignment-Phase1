@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
@@ -17,17 +17,32 @@ export class Register {
   pwd: string = '';
   groups: string[] = [];
   errMsg: string = '';
+
   private authService = inject(AuthService);
+  private router = inject(Router);
   
-  onSubmit(f: NgForm) {
+  onSubmit(f: NgForm, event: any): void {
+    event.preventDefault();
+    this.errMsg = ''; // Reset error messages
     this.submitted = true;
     if (f.invalid) {
       return;
     }
-    // Here you would typically handle the form submission
-    console.log('Register form submitted:', f.value);
-    // Reset the form after submission
-    f.reset();
-
+    this.authService.register(this.username, this.email, this.pwd).subscribe({
+      next: (user: any) => {
+        if (user.valid === true) {
+          console.log('Registration successful:', user);
+          this.authService.setCurrentUser(user); // Store registered user data to localStorage
+          this.router.navigate(['/login']); // Redirect to login page after registration
+        } else {
+          this.errMsg = 'Registration failed. Please try again.';
+        }
+      },
+      error: (err: any) => {
+        console.error('Registration error:', err);
+        this.errMsg = 'An error occurred during registration. Please try again later.';
+      }
+    })
+  
   }
 }

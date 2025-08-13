@@ -15,19 +15,15 @@ export class AuthService {
   }
 
   register(username: string, email: string, pwd: string): Observable<User> {
-    return this.http.post<User>(this.server + '/api/register', { username, email, pwd })
+    return this.http.post<User>(this.server + '/api/register', { username: username, email: email, pwd: pwd });
   }
      
   setCurrentUser(newuser: User): void {
     localStorage.setItem('currentUser', JSON.stringify(newuser));
   }
 
-  setSessionUser(newuser: User): void {
-    sessionStorage.setItem('currentUser', JSON.stringify(newuser));
-  }
-
   getCurrentUser() {
-    const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    const currentUser = localStorage.getItem('currentUser')
     if (currentUser) {
       return JSON.parse(currentUser) as User;
     }
@@ -41,6 +37,5 @@ export class AuthService {
   
   logout(): void {
     localStorage.removeItem('currentUser');
-    sessionStorage.removeItem('currentUser');
   }
 }

@@ -24,7 +24,12 @@ export class Login implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       console.log('User alreafy logged in: ', currentUser.username);
-      this.router.navigate(['/dashboard']);
+      // If user is super, redirect to dashboard, otherwise to account page
+      if (currentUser.roles.includes('super')) {
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.router.navigate(['/account']);
+      }
     } else {
       console.log('No user logged in, redirecting to login page.');
       this.router.navigate(['/login']);
@@ -33,7 +38,7 @@ export class Login implements OnInit {
 
   login(event: any): void {
     event.preventDefault();
-    this.errMsg = ''; //Reset error messages
+    this.errMsg = ''; 
     // Validate input fields
     if (this.username === '') {
       this.errMsg = 'User name is required.';
@@ -47,14 +52,10 @@ export class Login implements OnInit {
     this.authService.login(this.username, this.pwd).subscribe({
       next: (user: any) => {
         if (user.valid === true) {
-          console.log('Login successful:', user.username & user.roles);
-          if (this.rememberMe) {
-            this.authService.setCurrentUser(user); //Store logged user data to localStorage
-            console.log('User data stored in localStorage:', user);
-          } else {
-            this.authService.setSessionUser(user); //Store logged user data to sessionStorage
-            console.log('User data stored in sessionStorage:', user);
-          }
+          console.log('Login successful:', user.roles);
+          this.authService.setCurrentUser(user); //Store logged user data to localStorage
+     
+          // If user is super, redirect to dashboard after login, otherwise to account page
           if (user.roles.includes('super')) {
             this.router.navigate(['/dashboard']);
           } else {
