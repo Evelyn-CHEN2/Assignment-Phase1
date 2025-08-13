@@ -1,48 +1,19 @@
-
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb breadcrumb-custom overflow-hidden text-center bg-body-tertiary border rounded-2 p-0" style="height: 50px">
-        <li class="breadcrumb-item">
-            <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis">Users</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" href="#">Administrators</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-            <a class="d-block py-0 px-3 text-decoration-none link-body-emphasis" href="#">Groups</a>
-        </li>
-        </ol>
-    </nav>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb breadcrumb-custom overflow-hidden text-center bg-body-tertiary border rounded-2 p-0" style="height: 50px">
+    <li class="breadcrumb-item">
+        <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" routerLink="/dashboard/users">Users</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" routerLink="/dashboard/admins">Administrators</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        <a class="d-block py-0 px-3 text-decoration-none link-body-emphasis" href="#">Groups</a>
+    </li>
+    </ol>
+</nav>
 
 <hr>
+<div>
+    <router-outlet></router-outlet>
+</div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th style="text-align: center;" scope="col">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (user of users; track $index) {
-        <tr>
-            <td>{{user.id}}</td>
-            <td>{{user.username}}</td>
-            <td>{{user.email}}</td>
-            <td>{{user.roles}}</td>
-            <td style="text-align: center;">
-                <select name="role" style="padding: 5px; font-size: 13px;" required>
-                    <option value="" disabled selected>Select...</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                    <option value="delete">Delete</option>
-
-                </select>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
-    

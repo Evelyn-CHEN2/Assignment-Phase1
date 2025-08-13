@@ -1,0 +1,32 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Groups</th>
+            <th style="text-align: center;" scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (user of users; track $index) {
+        <tr>
+            <td>{{user.id}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.roles}}</td>
+            <td>{{user.groups}}</td>
+            <td style="text-align: center;">
+                <select name="role" style="padding: 5px; font-size: 13px;" required>
+                    <option value="" disabled selected>Select...</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="delete">Delete</option>
+    
+                </select>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -9,7 +9,8 @@ module.exports = {
         // Function to read users from file
         const readUsers = () => {
             const data = fs.readFileSync(usersFile, 'utf8');
-            return JSON.parse(data);
+            const users = JSON.parse(data);
+            return Array.isArray(users) ? users : [];
         };
 
         // Function to write users to file
@@ -44,10 +45,11 @@ module.exports = {
 
             try {
                 writeUsers(users);
-                res.status(201).json(newUser);
-            } catch (error) {
+                res.send(newUser);
+            } 
+            catch (error) {
                 console.error('Error writing users file:', error);
-                res.status(500).json({ error: 'Failed to save user' });
+                res.status(500).json({ error: 'Failed to write user' });
             }
         });
     }

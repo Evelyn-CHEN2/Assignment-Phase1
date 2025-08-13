@@ -10,7 +10,7 @@ export class UserService {
   private http = inject(HttpClient);
   private server = 'http://localhost:3000';
 
-  getUsers() {
-    
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.server + '/api/allusers')
   }
 }

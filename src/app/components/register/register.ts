@@ -33,14 +33,17 @@ export class Register {
         if (user.valid === true) {
           console.log('Registration successful:', user);
           this.authService.setCurrentUser(user); // Store registered user data to localStorage
-          this.router.navigate(['/login']); // Redirect to login page after registration
+          this.router.navigate(['/account']);
         } else {
           this.errMsg = 'Registration failed. Please try again.';
         }
       },
-      error: (err: any) => {
-        console.error('Registration error:', err);
+      error: (error: any) => {
+        console.error('Registration error:', error);
         this.errMsg = 'An error occurred during registration. Please try again later.';
+      },
+      complete: () => {
+        console.log('Registration request completed.');
       }
     })
   

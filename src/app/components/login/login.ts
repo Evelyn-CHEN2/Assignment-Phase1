@@ -22,8 +22,9 @@ export class Login implements OnInit {
 
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
+    console.log('Checking current user on login page:', currentUser);
     if (currentUser) {
-      console.log('User alreafy logged in: ', currentUser.username);
+      console.log('User alreafy logged in: ', currentUser);
       // If user is super, redirect to dashboard, otherwise to account page
       if (currentUser.roles.includes('super')) {
         this.router.navigate(['/dashboard']);
@@ -32,7 +33,7 @@ export class Login implements OnInit {
       }
     } else {
       console.log('No user logged in, redirecting to login page.');
-      this.router.navigate(['/login']);
+      return;
     }
   }
 
@@ -52,9 +53,8 @@ export class Login implements OnInit {
     this.authService.login(this.username, this.pwd).subscribe({
       next: (user: any) => {
         if (user.valid === true) {
-          console.log('Login successful:', user.roles);
+          console.log('Login successful:', user);
           this.authService.setCurrentUser(user); //Store logged user data to localStorage
-     
           // If user is super, redirect to dashboard after login, otherwise to account page
           if (user.roles.includes('super')) {
             this.router.navigate(['/dashboard']);
