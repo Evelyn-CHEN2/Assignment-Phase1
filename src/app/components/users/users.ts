@@ -1,11 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { User } from '../../interface'
-
 
 @Component({
   selector: 'app-users',
   standalone: true,
+  imports: [FormsModule],
   templateUrl: './users.html',
   styleUrl: './users.css'
 })
@@ -15,10 +16,6 @@ export class Users {
   private userService = inject(UserService)
 
   ngOnInit(): void {
-    this.getUsers();
-  }
-
-  getUsers(): void {
     this.userService.getUsers().subscribe({
       next: (users: User[]) => {
         this.users = users;
@@ -28,8 +25,51 @@ export class Users {
         console.error('Error fetching users:', error);
       },
       complete: () => { 
-        console.log('User fetching complete.');
+        console.log('Groups fetching complete.');
       }
     });
+  }
+
+  update(user: User & { _pendingAction?: string }): void {
+    const action = user._pendingAction;
+    if (!action) {
+      return;
+    }
+    // Delete user
+    if (action === 'delete') {
+      this.userService.deleteUser(user.id).subscribe({
+        next: () => {
+          console.log('User deleted successfully:', user);
+          // Remove the user from the local users array
+          this.users = this.users.filter(u => u.id !== user.id);
+        },
+        error: (error: any) => {
+          console.error('Error deleting user:', error);
+        },
+        complete: () => { 
+          console.log('User deletion complete.');
+        }
+      });
+      return;
+    }
+    // Update user role
+    if (action === 'admin' || action === 'chatuser') {
+      this.userService.updateUserRole(user.id, action).subscribe({
+        next: (updatedUser: User) => {
+          console.log('User role updated successfully: ', updatedUser);
+          // Update the local users array
+          const index = this.users.findIndex(u => u.id === updatedUser.id);
+          if (index !== -1) {
+            this.users[index] = updatedUser;
+          }
+        },
+        error: (error: any) => {
+          console.error('Error updating user role:', error);
+        },
+        complete: () => { 
+          console.log('User role update complete.');
+        }
+      });
+    }
   }
 }

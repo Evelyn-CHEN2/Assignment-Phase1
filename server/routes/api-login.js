@@ -12,6 +12,7 @@ module.exports = {
             const users = JSON.parse(data);
             return Array.isArray(users) ? users : [];
         };
+
         app.post('/api/login', (req, res) => {
             try {
                 if (!req.body) {
@@ -35,14 +36,14 @@ module.exports = {
                     loggedUser.username,
                     loggedUser.email,
                     '',
-                    loggedUser.roles,
+                    loggedUser.role,
                     loggedUser.groups ,
                     true
                 )
                 res.send(safeUser)
             }
             catch (error) {
-                console.error('Error reading users file:', error);
+                console.error('Error reading login user file:', error);
                 res.status(500).json({ error: 'Failed to login user' });
             }
             

@@ -12,13 +12,14 @@ module.exports = {
             return Array.isArray(users) ? users : [];
         };
 
-        app.get('/api/allusers', (req, res) => {
+        app.get('/api/fetchusers', (req, res) => {
             try {
                 const users = readUsers();
                 res.send(users);
-            } catch (error) {
-                console.error('Error reading users file:', error);
-                res.status(500).json({ error: 'Failed to retrieve users' });
+            } 
+            catch (error) {
+                console.error('Error reading users file: ', error);
+                res.status(500).json({ error: 'Failed to retrieve users.' });
             }
         });
     }

@@ -1,0 +1,39 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Group Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Channels</th>
+            <th scope="col">Created By</th>
+            <th style="text-align: center;" scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (group of groups; track $index) {
+        <tr>
+            <td>{{group.id}}</td>
+            <td>{{group.groupname}}</td>
+            <td>{{group.description}}</td>
+            <td>
+                <select>
+                    <option value="" disabled selected>channels</option>
+                    @for (channel of group.channels; track $index) {
+                        <option value="{{channel.id}}">{{channel.channelname}}</option>
+                    }
+                </select>
+            </td>
+            <td>{{group.createdBy}}</td>
+            <td style="text-align: center;">
+                <select name="role" style="padding: 5px; font-size: 13px;" required>
+                    <option value="" disabled selected>Select...</option>
+                    <option value="admin">Edit</option>
+                    <option value="delete">Delete</option>
+                </select>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<button class="btn btn-primary" routerLink="/dashboard/group-form">+ New Group</button>

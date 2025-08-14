@@ -21,8 +21,8 @@ export class Register {
   private authService = inject(AuthService);
   private router = inject(Router);
   
-  onSubmit(f: NgForm, event: any): void {
-    event.preventDefault();
+  onSubmit(f: NgForm): void {
+
     this.errMsg = ''; // Reset error messages
     this.submitted = true;
     if (f.invalid) {

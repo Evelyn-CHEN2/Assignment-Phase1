@@ -1,51 +1,51 @@
-<div class="register-body">
-<h4 class="mb-3">Online Registeration </h4> 
-<hr>
 
-<form class="needs-validation d-flex flex-column" style="min-height:70vh;" novalidate #f="ngForm" [class.was-validated]="submitted"> 
-    <div style="flex:7">
-        <div class="row g-3"> 
-            <div class="col-sm-6"> 
-                <label for="username" class="form-label">User Name</label> 
-                <input type="text" class="form-control" name="username" [(ngModel)]="username" required> 
-                <div class="invalid-feedback">Valid user name is required.</div> 
-            </div> 
-            <div class="col-sm-6"> 
-                <label for="email" class="form-label">Email</label>
-                <div class="input-group has-validation"> 
-                    <span class="input-group-text">@</span> 
-                    <input type="text" class="form-control" name="email" [(ngModel)]="email" required> 
-                    <div class="invalid-feedback">Valid email is required.</div>
-                </div> 
-            </div> 
-            <div class="col-12"> 
-                <label for="groups" class="form-label">Interested Groups</label>
-                <div class="input-group has-validation"> 
-                    <input type="text" class="form-control" name="groups" > 
-                    <div class="invalid-feedback">Please choose at least one group.</div>
-                </div> 
-            </div> 
-            <div class="col-12"> 
-                <label for="pwd" class="form-label">Passsword</label>
-                <div class="input-group has-validation"> 
-                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span> 
-                    <input type="text" class="form-control" name="pwd" [(ngModel)]="pwd" required> 
-                    <div class="invalid-feedback">
-                        <li>Minimum 8 character, including one uppercase letter, one lowercase letter.</li>
-                        <li>At least one number and one symbol(@#$%^&*/?_)</li>
-                    </div>
-                </div> 
+<form class="group-form" novalidate #f="ngForm" (ngSubmit)="onSubmit(f)" [class.was-validated]="submitted">
+    <h2 class="form-title">Online Registration</h2>
+
+    <div class="field">
+        <label for="username" class="form-label">User Name <span class="req">*</span></label>
+        <input class="form-control" name="username" type="text" [(ngModel)]="username" placeholder="Enter your username" required/>
+        <div class="invalid-feedback">Valid user name is required.</div>
+    </div>
+
+    <div class="field">
+        <label for="email" class="form-label">Email <span class="req">*</span></label>
+        <div class="input-group has-validation">
+            <span class="input-group-text">@</span>
+            <input class="form-control" name="email" type="email" [(ngModel)]="email" placeholder="you@example.com" required/>
+            <div class="invalid-feedback">Valid email is required.</div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label for="groups" class="form-label">Interested Groups <span class="req">*</span></label>
+        <input class="form-control" name="groups" type="text" [(ngModel)]="groups" placeholder="engineering, marketing (Comma-seperated.)" required/>
+        <div class="invalid-feedback">Please choose at least one group.</div>
+    </div>
+
+    <div class="field"> 
+        <label for="pwd" class="form-label">Passsword <span class="req">*</span></label>
+        <div class="input-group has-validation">
+            <span class="input-group-text"><i class="bi bi-lock-fill" aria-hidden="true"></i></span>
+            <input class="form-control" name="pwd" type="password" [(ngModel)]="pwd" placeholder="Choose a strong password" required/>
+            <div class="invalid-feedback">
+                <ul class="pw-rules">
+                    <li>Minimum 8 characters</li>
+                    <li>At least one uppercase &amp; one lowercase letter</li>
+                    <li>At least one number</li>
+                    <li>At least one symbol (@ # $ % ^ & * / ? _)</li>
+                </ul>
             </div>
         </div>
     </div>
     @if (errMsg) {
         <p class="text text-danger">{{errMsg}}</p>
     }
-    <div style="flex:3">
-        <button class="w-100 btn btn-primary btn-m" type="submit" (click)="onSubmit(f, $event)" [disabled]="f.invalid || f.pending">Register</button> 
+    <div class="actions">
+        <button type="reset" class="btn secondary">Reset</button>
+        <button type="submit" class="btn primary">Register</button>
     </div>
-    
-
 </form>
-</div>
-              
+
+
+<!-- pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&*/?_]).{8,}$" -->

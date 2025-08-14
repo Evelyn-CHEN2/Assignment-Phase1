@@ -4,8 +4,9 @@ import { Dashboard } from './components/dashboard/dashboard';
 import { Register } from './components/register/register';
 import { Account } from './components/account/account';
 import { Users } from './components/users/users'
-import { Admins } from './components/admins/admins'
+import { Groups } from './components/groups/groups'
 import { authGuard } from './guards/auth-guard';
+import { GroupForm } from './components/group-form/group-form';
 
 export const routes: Routes = [
     {
@@ -21,13 +22,16 @@ export const routes: Routes = [
         path: 'dashboard', component: Dashboard, canActivate: [authGuard],
         children: [
             {
+                path: '', component: Users
+            },
+            {
                 path: 'users', component: Users
             },
             {
-                path: 'admins', component: Admins
+                path: 'groups', component: Groups
             },
             {
-                path: '', component: Users
+                path: 'group-form', component: GroupForm
             }
         ]
     },

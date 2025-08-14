@@ -18,7 +18,7 @@
         <span class="px-3" style="font-size: x-small;">{{welcomeMsg}}!</span>
       }
 
-      @if (userroles.includes('super')) {
+      @if (userrole === 'super') {
         <li class="nav-item">
           <a class="nav-link d-flex align-items-center text-dark" routerLink="/dashboard">
             <i class="bi bi-speedometer2 me-2 icon-size"></i> Dashboard</a>

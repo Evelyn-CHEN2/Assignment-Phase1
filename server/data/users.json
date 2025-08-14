@@ -4,10 +4,7 @@
         "username": "Bob",
         "email": "Bob@com",
         "pwd": "1234",
-        "roles": [
-            "chatuser",
-            "admin"
-        ],
+        "role": "admin",
         "groups": [
             "g1",
             "g2"
@@ -19,9 +16,7 @@
         "username": "Tom",
         "email": "Tom@com",
         "pwd": "1234",
-        "roles": [
-            "chatuser"
-        ],
+        "role": "chatuser",
         "groups": [
             "g1",
             "g2",
@@ -34,9 +29,7 @@
         "username": "Jerry",
         "email": "Jerry@com",
         "pwd": "1234",
-        "roles": [
-            "chatuser"
-        ],
+        "role": "chatuser",
         "groups": [
             "g2",
             "g3"
@@ -48,9 +41,7 @@
         "username": "super",
         "email": "super@com",
         "pwd": "123",
-        "roles": [
-            "super"
-        ],
+        "role": "super",
         "groups": [],
         "valid": false
     },
@@ -59,9 +50,7 @@
         "username": "caca",
         "email": "caca@com",
         "pwd": "1234",
-        "roles": [
-            "chatuser"
-        ],
+        "role": "chatuser",
         "groups": [
             "g1",
             "g2",
@@ -70,35 +59,11 @@
         "valid": true
     },
     {
-        "id": 6,
-        "username": "caca2",
-        "email": "caca2@com",
-        "pwd": "1234",
-        "roles": [
-            "chatuser"
-        ],
-        "groups": [],
-        "valid": true
-    },
-    {
-        "id": 7,
-        "username": "cave",
-        "email": "cave@com",
-        "pwd": "1234",
-        "roles": [
-            "chatuser"
-        ],
-        "groups": [],
-        "valid": true
-    },
-    {
         "id": 8,
         "username": "caleb",
         "email": "caleb@com",
         "pwd": "1234",
-        "roles": [
-            "chatuser"
-        ],
+        "role": "chatuser",
         "groups": [],
         "valid": true
     },
@@ -107,10 +72,20 @@
         "username": "will",
         "email": "will@com",
         "pwd": "1234",
-        "roles": [
+        "role": "chatuser",
+        "groups": [],
+        "valid": true
+    },
+    {
+        "id": 8,
+        "username": "try",
+        "email": "try@com",
+        "pwd": "1234",
+        "role": [
             "chatuser"
         ],
         "groups": [],
-        "valid": true
+        "valid": true,
+        "_pendingAction": null
     }
 ]

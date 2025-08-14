@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrl: './header.css'
 })
 export class Header implements OnInit {
-  userroles: string[] = [];
+  userrole: string = '';
   welcomeMsg: string = 'Welcome, ';
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -20,7 +20,7 @@ export class Header implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     console.log('Current user:', currentUser);
     if (currentUser) {
-      this.userroles = currentUser.roles;
+      this.userrole = currentUser.role;
       this.welcomeMsg += currentUser.username;
     } else {
       this.welcomeMsg = 'Welcome, Guest';

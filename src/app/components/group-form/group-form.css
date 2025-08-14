@@ -1,68 +1,3 @@
-
-/* Show invalid feedback when the form is validated */
-.was-validated .form-control:invalid ~ .invalid-feedback,
-.was-validated .form-select:invalid ~ .invalid-feedback {
-  display: block;
-}
-
-.invalid-feedback {
-  display: none;
-  width: 100%;
-  margin-top: 0.25rem;
-  font-size: 0.875em;
-  color: #dc3545; /* Bootstrap's red */
-}
-
-/* Red border on invalid input */
-.was-validated .form-control:invalid,
-.form-control.is-invalid {
-  border-color: #dc3545;
-  padding-right: calc(1.5em + 0.75rem);
-  background-image: url("data:image/svg+xml,..."); /* optional invalid icon */
-  background-repeat: no-repeat;
-  background-position: right calc(0.375em + 0.1875rem) center;
-  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-}
-
-.was-validated .input-group .form-control:invalid ~ .invalid-feedback,
-.was-validated .input-group .form-select:invalid ~ .invalid-feedback {
-  display: block;
-}
-
-/* Customize breadcrumb for dashboard*/
-/* remove the default slash divider */
-.breadcrumb-custom .breadcrumb-item {
-  position: relative;
-  padding: .75rem 4rem;
-}
-.breadcrumb-custom .breadcrumb-item::before {
-  display: none;
-}
-.breadcrumb-custom .breadcrumb-item::after {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  z-index: 1;
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  margin-top: -26px;
-  content: "";
-  background-color: var(--bs-tertiary-bg);
-  border-top-right-radius: .5rem;
-  box-shadow: 1px -1px var(--bs-border-color);
-  transform: scale(.707) rotate(45deg);
-}
-.breadcrumb-custom .breadcrumb-item:first-child {
-  padding-left: 1.5rem;
-}
-.breadcrumb-custom .breadcrumb-item:last-child {
-  padding-right: 1.5rem;
-}
-.breadcrumb-custom .breadcrumb-item:last-child::after {
-  display: none;
-}
-
 .group-form {
 background: var(--bg-form);
 border: 1px solid var(--border);
@@ -133,7 +68,6 @@ background: #f5f7fa;
 color: #70808f;
 cursor: default;
 }
-
 
 .hint {
 font-size: .68rem;
@@ -207,4 +141,4 @@ box-shadow: var(--focus);
     text-align: center;
 }
 }
-  
+ 

@@ -57,38 +57,3 @@ module.exports = {
 
 
 
-
-// module.exports = {
-//     route: (app) => {
-//         const User = require('../models/user-class');
-//         const users = [
-//             new User(1, "super", "super@com", "123", ["super"], [], false),
-//             new User(2, "Tom", "Tom@com", "1234", ["chatuser"], [], false)
-//         ];
-
-//         app.post('/api/register', (req, res) => {
-//             if (!req.body || !req.body.username || !req.body.pwd || !req.body.email) {
-//                 return res.status(400).json({ error: 'Invalid data provided' });
-//             }
-
-//             const existingUser = users.find(user => user.username === req.body.username);
-//             if (existingUser) {
-//                 return res.status(400).json({ error: 'Username already exists' });
-//             }
-
-//             const newUser = new User(
-//                 users.length + 1,
-//                 req.body.username,
-//                 req.body.email,
-//                 req.body.pwd,
-//                 ["chatuser"],
-//                 [],
-//                 true
-//             );
-
-//             users.push(newUser);
-//             res.status(201).json(newUser);
-//         });
-//     }
-// }
-

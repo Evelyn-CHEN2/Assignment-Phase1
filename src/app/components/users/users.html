@@ -15,18 +15,18 @@
             <td>{{user.id}}</td>
             <td>{{user.username}}</td>
             <td>{{user.email}}</td>
-            <td>{{user.roles}}</td>
+            <td>{{user.role}}</td>
             <td>{{user.groups}}</td>
             <td style="text-align: center;">
-                <select name="role" style="padding: 5px; font-size: 13px;" required>
+                <select [(ngModel)]="user._pendingAction" (ngModelChange)="update(user)" name="role{{user.id}}" style="padding: 5px; font-size: 13px;">
                     <option value="" disabled selected>Select...</option>
                     <option value="admin">Admin</option>
-                    <option value="user">User</option>
+                    <option value="chatuser">Chat User</option>
                     <option value="delete">Delete</option>
     
                 </select>
             </td>
         </tr>
-    }
+    } 
     </tbody>
 </table>

@@ -26,7 +26,7 @@ export class Login implements OnInit {
     if (currentUser) {
       console.log('User alreafy logged in: ', currentUser);
       // If user is super, redirect to dashboard, otherwise to account page
-      if (currentUser.roles.includes('super')) {
+      if (currentUser.role === 'super') {
         this.router.navigate(['/dashboard']);
       } else {
         this.router.navigate(['/account']);
@@ -56,7 +56,7 @@ export class Login implements OnInit {
           console.log('Login successful:', user);
           this.authService.setCurrentUser(user); //Store logged user data to localStorage
           // If user is super, redirect to dashboard after login, otherwise to account page
-          if (user.roles.includes('super')) {
+          if (user.role === 'super') {
             this.router.navigate(['/dashboard']);
           } else {
             this.router.navigate(['/account'])

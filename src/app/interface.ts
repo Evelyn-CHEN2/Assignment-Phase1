@@ -4,14 +4,15 @@ export interface User {
     pwd: string;
     email: string;
     groups: Group[];  //Store group data to get direct access
-    roles: string[];
+    role: string;
     status: boolean;
     valid: boolean;
+    _pendingAction?: string; //Used to store pending action for user
 }
 
 export interface Group {
     id: string;
-    name: string;
+    groupname: string;
     description: string;
     channels: Channel[]; //Store channel data to get direct access
     createdBy: number;  //Store user.id
@@ -19,7 +20,7 @@ export interface Group {
 
 export interface Channel {
     id: string;
-    name: string;
+    channelname: string;
     description: string;
-    groupId: number;  //Store group.id
+    groupid: string;  //Store group.id
 }

@@ -1,0 +1,27 @@
+<form class="group-form" novalidate #f="ngForm" [class.was-validated]="submitted">
+    <div class="field">
+        <label for="groupname">Group Name <span class="req">*</span></label>
+        <input type="text" name="groupname" maxlength="50" placeholder="e.g. Engineering" required>
+        <small class="hint">Required. Max 50 characters.</small>
+    </div>
+
+    <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="3" maxlength="300" placeholder="Describe the purpose of this group..."></textarea>
+        <small class="hint">Optional. Max 300 characters.</small>
+    </div>
+
+ 
+    <div class="field">
+        <label for="channels">Channels (one per line)</label>
+        <textarea id="channels" name="channels" rows="5" placeholder="general&#10;announcements&#10;random"></textarea>
+        <small class="hint">Each line will become one channel name.</small>
+    </div>
+
+  
+    <div class="actions">
+        <button type="reset" class="btn secondary">Reset</button>
+        <button type="submit" class="btn primary">Create</button>
+    </div>
+</form>
+

@@ -11,6 +11,14 @@ export class UserService {
   private server = 'http://localhost:3000';
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.server + '/api/allusers')
+    return this.http.get<User[]>(this.server + '/api/fetchusers')
   }
+
+  updateUserRole(id: number, action: string): Observable<User> {
+    return this.http.put<User>(`${this.server}/api/updateuser/${id}/action`, { action });
+  }
+
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.server}/api/deleteuser/${id}`);
+  } 
 }
