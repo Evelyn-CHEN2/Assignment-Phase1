@@ -4,6 +4,7 @@ import { Group } from '../../interface';
 import { Channel } from '../../interface';
 import { forkJoin } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-groups',
@@ -19,6 +20,7 @@ export class Groups {
   errMsg: string = '';
 
   private groupService = inject (GroupService)
+  private router = inject(Router);
 
   ngOnInit(): void {
     forkJoin({
@@ -35,15 +37,14 @@ export class Groups {
     })
   }
 
-  deleteGroup(group: Group, event: any): void {
-    event.preventDefault();
+  deleteGroup(group: Group): void {
     this.errMsg = '';
     const groupID = group.id;
     this.groupService.deleteGroup(groupID).subscribe({
       next: () => {
         console.log('Group deleted successfully:', group);
         // Remove the deleted group from the groups array, so Angular updates the UI immediately
-        this.groups = this.groups.filter(group => group.id !== groupID);
+        this.groups = this.groups.filter(g => g.id !== groupID);
       },
       error: (error: any) => {
         console.error('Error deleting group:', error);
@@ -56,8 +57,7 @@ export class Groups {
   }
 
   // Delete a channel from a group
-  deleteChannel(channel: Channel, event: any): void {
-    event.preventDefault();
+  deleteChannel(channel: Channel): void {
     this.errMsg = '';
     const channelID = channel.id;
     this.groupService.deleteChannel(channelID).subscribe({

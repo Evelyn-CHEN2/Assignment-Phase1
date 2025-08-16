@@ -4,6 +4,7 @@ import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
 import { Channel } from '../../interface';
 import { Group } from '../../interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-group-form',
@@ -21,6 +22,7 @@ export class GroupForm {
 
   private groupService = inject(GroupService);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   onReset(f: NgForm): void {
     this.submitted = false;
@@ -46,8 +48,9 @@ export class GroupForm {
       return;
     }
     this.groupService.createGroup(this.groupname, this.description, channelNames, currentUser).subscribe({
-      next: () => {
+      next: (data: any) => {
         console.log('Group created successfully'); 
+        this.router.navigate(['/dashboard/groups']);
         // Reset form fields after successful creation
         this.onReset(f);
       }

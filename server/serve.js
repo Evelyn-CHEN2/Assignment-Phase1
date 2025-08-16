@@ -14,7 +14,7 @@ require('./routes/api-deleteuser.js').route(app);
 require('./routes/api-allgroups.js').route(app);
 require('./routes/api-creategroup.js').route(app);
 // require('./routes/api-updategroup.js').route(app);
-// require('./routes/api-deletegroup.js').route(app);
+require('./routes/api-deletegroup.js').route(app);
 require('./routes/api-channels.js').route(app);
 require('./routes/api-createchannel.js').route(app);
 require('./routes/api-deletechannel.js').route(app);

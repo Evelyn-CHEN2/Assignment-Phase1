@@ -54,12 +54,6 @@
     "chats": []
   },
   {
-    "id": "c10",
-    "channelname": "examples",
-    "groupid": "g1",
-    "chats": []
-  },
-  {
     "id": "c1755333442708",
     "channelname": "sdr[sfg",
     "groupid": "g1755333442708",
@@ -75,6 +69,42 @@
     "id": "c1755333442709",
     "channelname": "sfdg",
     "groupid": "g1755333442708",
+    "chats": []
+  },
+  {
+    "id": "c1755334301016",
+    "channelname": "qertqert",
+    "groupid": "g1755334301014",
+    "chats": []
+  },
+  {
+    "id": "c1755334514458",
+    "channelname": "qaert",
+    "groupid": "g1755334514455",
+    "chats": []
+  },
+  {
+    "id": "c1755334773144",
+    "channelname": "asdg",
+    "groupid": "g1755334773142",
+    "chats": []
+  },
+  {
+    "id": "c1755334960914",
+    "channelname": "adg",
+    "groupid": "g1755334960911",
+    "chats": []
+  },
+  {
+    "id": "c1755335361423",
+    "channelname": "asdf",
+    "groupid": "g1755335361422",
+    "chats": []
+  },
+  {
+    "id": "c1755335442039",
+    "channelname": "asgd",
+    "groupid": "g1755335442037",
     "chats": []
   }
 ]
