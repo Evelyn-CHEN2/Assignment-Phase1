@@ -71,15 +71,17 @@ padding: 10px 10px 30px;
 box-shadow: var(--shadow);
 display: flex;
 flex-direction: column;
-gap: 10px;
+gap: 4px;
 position: relative;
 overflow: hidden;
+min-height: 80vh;
 }
 
 .field {
 display: flex;
 flex-direction: column;
-gap: 3px;
+gap: 10px;
+margin-bottom: 15px;
 }
 
 .field label {
@@ -88,6 +90,7 @@ font-weight: 600;
 text-transform: uppercase;
 letter-spacing: .5px;
 color: var(--text-dim);
+margin-bottom: 0px;
 }
 
 .req {
@@ -132,14 +135,6 @@ background: #fdfefe;
 background: #f5f7fa;
 color: #70808f;
 cursor: default;
-}
-
-
-.hint {
-font-size: .68rem;
-letter-spacing: .3px;
-color: #7a8895;
-line-height: 1.25;
 }
 
 .actions {

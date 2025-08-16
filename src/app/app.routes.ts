@@ -25,13 +25,13 @@ export const routes: Routes = [
                 path: '', component: Users
             },
             {
-                path: 'users', component: Users
+                path: 'users', component: Users, canActivate: [authGuard]
             },
             {
-                path: 'groups', component: Groups
+                path: 'groups', component: Groups, canActivate: [authGuard]
             },
             {
-                path: 'group-form', component: GroupForm
+                path: 'group-form', component: GroupForm, canActivate: [authGuard]
             }
         ]
     },

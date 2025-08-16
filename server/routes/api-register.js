@@ -25,7 +25,6 @@ module.exports = {
 
             // Check if the users file exists, if not create it with an empty array
             let users = readUsers();
-            
             const existingUser = users.find(user => user.username === req.body.username);
             if (existingUser) {
                 return res.status(400).json({ error: 'Username already exists' });

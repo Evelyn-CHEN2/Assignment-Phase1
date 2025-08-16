@@ -1,29 +1,80 @@
 [
-    {
-        "id": "c1", "channelname": "announces", "groupid": "g1", "chats": []
-    },
-    {
-        "id": "c2", "channelname": "help-and-fix", "groupid": "g1", "chats": []
-    },
-    {
-        "id": "c3", "channelname": "jobs-and-gigs", "groupid": "g1", "chats": []
-    },
-    {
-        "id": "c11", "channelname": "reading-group", "groupid": "g2", "chats": []
-    },
-    {
-        "id": "c12", "channelname": "notebooks", "groupid": "g2", "chats": []
-    },
-    {
-        "id": "c13", "channelname": "datasets", "groupid": "g2", "chats": []
-    },
-    {
-        "id": "c21", "channelname": "alerts-and-news", "groupid": "g3", "chats": []
-    },
-    {
-        "id": "c22", "channelname": "tooling", "groupid": "g3", "chats": []
-    },
-    {
-        "id": "c23", "channelname": "playbooks", "groupid": "g3", "chats": []
-    }
+  {
+    "id": "c1",
+    "channelname": "announces",
+    "groupid": "g1",
+    "chats": []
+  },
+  {
+    "id": "c2",
+    "channelname": "help-and-fix",
+    "groupid": "g1",
+    "chats": []
+  },
+  {
+    "id": "c3",
+    "channelname": "jobs-and-gigs",
+    "groupid": "g1",
+    "chats": []
+  },
+  {
+    "id": "c4",
+    "channelname": "reading-group",
+    "groupid": "g2",
+    "chats": []
+  },
+  {
+    "id": "c5",
+    "channelname": "notebooks",
+    "groupid": "g2",
+    "chats": []
+  },
+  {
+    "id": "c6",
+    "channelname": "datasets",
+    "groupid": "g2",
+    "chats": []
+  },
+  {
+    "id": "c7",
+    "channelname": "alerts-and-news",
+    "groupid": "g3",
+    "chats": []
+  },
+  {
+    "id": "c8",
+    "channelname": "tooling",
+    "groupid": "g3",
+    "chats": []
+  },
+  {
+    "id": "c9",
+    "channelname": "playbooks",
+    "groupid": "g3",
+    "chats": []
+  },
+  {
+    "id": "c10",
+    "channelname": "examples",
+    "groupid": "g1",
+    "chats": []
+  },
+  {
+    "id": "c1755333442708",
+    "channelname": "sdr[sfg",
+    "groupid": "g1755333442708",
+    "chats": []
+  },
+  {
+    "id": "c1755333442709",
+    "channelname": "sfg",
+    "groupid": "g1755333442708",
+    "chats": []
+  },
+  {
+    "id": "c1755333442709",
+    "channelname": "sfdg",
+    "groupid": "g1755333442708",
+    "chats": []
+  }
 ]

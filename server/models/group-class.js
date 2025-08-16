@@ -1,5 +1,5 @@
 class Group {
-    constractor(id, groupname, description, channels, createdBy) {
+    constructor(id, groupname, description, channels, createdBy) {
         this.id = id;
         this.groupname = groupname;
         this.description = description || '';
@@ -9,4 +9,3 @@ class Group {
 }
 
 module.exports = Group;
-

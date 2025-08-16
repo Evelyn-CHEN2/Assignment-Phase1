@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<!-- <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">ID</th>
@@ -34,6 +34,56 @@
         </tr>
     }
     </tbody>
-</table>
+</table> -->
+<!-- 
+<button class="btn btn-primary" routerLink="/dashboard/group-form">+ New Group</button> -->
 
-<button class="btn btn-primary" routerLink="/dashboard/group-form">+ New Group</button>
+
+
+<div class="row">
+    @for (group of groups; track $index) {
+      <div class="col-md-12 mb-12">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title mb-1">{{group.groupname}}</h5>
+            <button class="btn btn-link text-danger p-0" type="button" (click)="deleteGroup(group, $event)">
+              <i class="bi bi-x-square fs-5"></i>
+            </button>
+            <p class="card-text mb-2">{{group.description}}</p>
+            <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy}}</p>
+  
+            <div class="channels text-muted small">
+                <label class="form-label fs-6 text-muted">Channels:</label><br> 
+                @for (channel of group.channels; track channel.id) {
+                    <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
+                  {{channel.channelname}}
+                  <!-- delete channel button -->
+                    <button class="btn btn-link text-danger p-0" type="button" (click)="deleteChannel(channel, $event)">
+                      <i class="bi bi-x-square fs-5"></i>
+                    </button>
+                </li>
+              }
+            </div>
+
+            <!-- Add channel -->
+            <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
+              <span class="add-text">Add</span>
+              <span class="add-circle"><i class="bi bi-plus-lg"></i></span>
+            </button>
+            @if (showAdd[group.id]){
+              <div class="add-pop mt-2">
+                  <input class="form-control form-control-sm me-2" type="text" placeholder="New channel name" 
+                  [(ngModel)]="newChannelName[group.id]" name="newChannelName{{group.id}}" />
+                  <button class="btn btn-primary btn-sm" type="button" (click)="confirmAddChannel(group, $event)">Confirm</button>
+                  <button class="btn btn-link btn-sm ms-2" type="button" (click)="toggleAddChannel(group)">Cancel</button>
+                </div>
+              }
+          </div>
+
+          
+          
+        </div>
+      </div>
+    }
+  </div>
+  

@@ -30,7 +30,7 @@ export class Users {
     });
   }
 
-  update(user: User & { _pendingAction?: string }): void {
+  updateRole(user: User & { _pendingAction?: string }): void {
     const action = user._pendingAction;
     if (!action) {
       return;

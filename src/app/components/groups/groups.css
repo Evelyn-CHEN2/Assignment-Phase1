@@ -1,0 +1,43 @@
+.add-btn{
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    border-radius: 999px;
+    padding: .6rem 2.9rem .6rem 1rem; /* extra right space for circle */
+    background: #28a745;              /* Bootstrap green */
+    color: #fff;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    transition: transform .05s ease, box-shadow .2s ease;
+  }
+  .add-btn:hover{ box-shadow: 0 4px 10px rgba(0,0,0,.12); }
+  .add-btn:active{ transform: translateY(1px); }
+  
+  .add-text{ pointer-events: none; } /* keep click target on whole button */
+  
+  .add-circle{
+    position: absolute;
+    right: -10px;                     /* overlaps pill */
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: #34ce57;              /* lighter green */
+    border: 3px solid #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    pointer-events: none;             /* button handles the click */
+  }
+  .add-circle i{ font-size: 1rem; }
+  
+  .add-pop{
+    display: flex;
+    align-items: center;
+    padding: .5rem;
+    border: 1px solid #e9ecef;
+    border-radius: .5rem;
+    background: #f8f9fa;
+  }
+  

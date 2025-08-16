@@ -20,9 +20,14 @@ export class Register {
 
   private authService = inject(AuthService);
   private router = inject(Router);
-  
-  onSubmit(f: NgForm): void {
 
+  onReset(f: NgForm): void {
+    this.errMsg = '';
+    this.submitted = false;
+    f.resetForm();
+  }
+  
+  register(f: NgForm): void {
     this.errMsg = ''; // Reset error messages
     this.submitted = true;
     if (f.invalid) {
@@ -32,15 +37,14 @@ export class Register {
       next: (user: any) => {
         if (user.valid === true) {
           console.log('Registration successful:', user);
-          this.authService.setCurrentUser(user); // Store registered user data to localStorage
+          // Store registered user data to localStorage
+          this.authService.setCurrentUser(user); 
           this.router.navigate(['/account']);
-        } else {
-          this.errMsg = 'Registration failed. Please try again.';
         }
       },
       error: (error: any) => {
         console.error('Registration error:', error);
-        this.errMsg = 'An error occurred during registration. Please try again later.';
+        this.errMsg = error.error.error || 'Registration failed. Please try again.';
       },
       complete: () => {
         console.log('Registration request completed.');

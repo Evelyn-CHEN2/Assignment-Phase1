@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, NgForm} from '@angular/forms';
+import { GroupService } from '../../services/group.service';
+import { AuthService } from '../../services/auth.service';
+import { Channel } from '../../interface';
+import { Group } from '../../interface';
 
 @Component({
   selector: 'app-group-form',
@@ -10,9 +14,45 @@ import { FormsModule, NgForm} from '@angular/forms';
 })
 export class GroupForm {
   submitted = false;
+  groupname: string = ''; 
+  description: string = '';
+  channelnames: string = '';
+  errMsg: string = '';
 
-  createGroup(f: NgForm, event: any): void {
-    event.preventDefault();
+  private groupService = inject(GroupService);
+  private authService = inject(AuthService);
+
+  onReset(f: NgForm): void {
+    this.submitted = false;
+    f.resetForm();
+  }
+
+  createGroup(f: NgForm): void {
     this.submitted = true;
+    if (f.invalid) {
+      return;
+    }
+    const channelNames = this.channelnames.split(/[\r?\n,;]+/)
+      .map(channelname => channelname.trim().replace(/^[,;]+|[,;]+$/g, ''))
+      .filter(c => c.length > 0);
+
+    if (!Array.isArray(channelNames)) {
+      this.errMsg = 'Please enter one channel name per line.';
+      return;
+    }
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.error('No current user found. Cannot create group.');
+      return;
+    }
+    this.groupService.createGroup(this.groupname, this.description, channelNames, currentUser).subscribe({
+      next: () => {
+        console.log('Group created successfully'); 
+        // Reset form fields after successful creation
+        this.onReset(f);
+      }
+    })
+
+
   }
 }

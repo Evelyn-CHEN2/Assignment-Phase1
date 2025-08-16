@@ -1,26 +1,26 @@
-<form class="group-form" novalidate #f="ngForm" [class.was-validated]="submitted">
+<form class="group-form" novalidate #f="ngForm" (ngSubmit)="createGroup(f)" [class.was-validated]="submitted">
     <div class="field">
         <label for="groupname">Group Name <span class="req">*</span></label>
-        <input type="text" name="groupname" maxlength="50" placeholder="e.g. Engineering" required>
-        <small class="hint">Required. Max 50 characters.</small>
+        <input type="text" name="groupname" [(ngModel)]="groupname" maxlength="50" placeholder="e.g. Engineering" required>
+        <div class="invalid-feedback">Group name is required.</div>
     </div>
 
     <div class="field">
-        <label for="description">Description</label>
-        <textarea id="description" name="description" rows="3" maxlength="300" placeholder="Describe the purpose of this group..."></textarea>
-        <small class="hint">Optional. Max 300 characters.</small>
+        <label for="description">Description <span class="req">*</span></label>
+        <textarea id="description" name="description" [(ngModel)]="description" rows="3" maxlength="300" placeholder="Describe the purpose of this group..." required></textarea>
+        <div class="invalid-feedback">Group name is required.</div>
     </div>
 
  
     <div class="field">
-        <label for="channels">Channels (one per line)</label>
-        <textarea id="channels" name="channels" rows="5" placeholder="general&#10;announcements&#10;random"></textarea>
-        <small class="hint">Each line will become one channel name.</small>
+        <label for="channelnames">Channels (one per line) <span class="req">*</span></label>
+        <textarea id="channelnames" name="channelnames" [(ngModel)]="channelnames" rows="5" placeholder="general&#10;announcements&#10;random" required></textarea>
+        <div class="invalid-feedback">Add at least one channel.</div>
     </div>
 
   
     <div class="actions">
-        <button type="reset" class="btn secondary">Reset</button>
+        <button type="reset" class="btn secondary" (click)="onReset(f)">Reset</button>
         <button type="submit" class="btn primary">Create</button>
     </div>
 </form>

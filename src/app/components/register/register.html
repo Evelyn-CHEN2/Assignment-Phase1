@@ -1,7 +1,6 @@
-
-<form class="group-form" novalidate #f="ngForm" (ngSubmit)="onSubmit(f)" [class.was-validated]="submitted">
-    <h2 class="form-title">Online Registration</h2>
-
+<h2 style="margin: 25px;">Online Registration</h2>
+<form class="group-form" novalidate #f="ngForm" (ngSubmit)="register(f)" [class.was-validated]="submitted">
+    <div style="flex:8;">
     <div class="field">
         <label for="username" class="form-label">User Name <span class="req">*</span></label>
         <input class="form-control" name="username" type="text" [(ngModel)]="username" placeholder="Enter your username" required/>
@@ -28,24 +27,20 @@
         <div class="input-group has-validation">
             <span class="input-group-text"><i class="bi bi-lock-fill" aria-hidden="true"></i></span>
             <input class="form-control" name="pwd" type="password" [(ngModel)]="pwd" placeholder="Choose a strong password" required/>
-            <div class="invalid-feedback">
-                <ul class="pw-rules">
-                    <li>Minimum 8 characters</li>
-                    <li>At least one uppercase &amp; one lowercase letter</li>
-                    <li>At least one number</li>
-                    <li>At least one symbol (@ # $ % ^ & * / ? _)</li>
-                </ul>
-            </div>
+            <div class="invalid-feedback">Password is required</div>
         </div>
     </div>
     @if (errMsg) {
-        <p class="text text-danger">{{errMsg}}</p>
+        <p class="text text-danger" style="font-size: small;">{{errMsg}}</p>
     }
-    <div class="actions">
-        <button type="reset" class="btn secondary">Reset</button>
+    </div>
+    <div class="actions" style="flex:2;">
+        <button type="reset" class="btn secondary" (click)="onReset(f)">Reset</button>
         <button type="submit" class="btn primary">Register</button>
     </div>
 </form>
+
+
 
 
 <!-- pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&*/?_]).{8,}$" -->

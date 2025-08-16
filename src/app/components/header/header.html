@@ -23,11 +23,17 @@
           <a class="nav-link d-flex align-items-center text-dark" routerLink="/dashboard">
             <i class="bi bi-speedometer2 me-2 icon-size"></i> Dashboard</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center text-dark" routerLink="/dashboard/group-form">
+            <i class="bi bi-snapchat me-2 icon-size"></i> + Group</a>
+        </li>
       }
-      <li class="nav-item">
-          <a class="nav-link d-flex align-items-center text-dark" routerLink="/groups">
-            <i class="bi bi-people me-2 icon-size"></i> Groups</a>
-      </li>
+      @if (userrole === 'chatuser') { 
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center text-dark" routerLink="/groups">
+              <i class="bi bi-people me-2 icon-size"></i> Groups</a>
+        </li>
+      }
 
       <li class="nav-item">
         <a class="nav-link d-flex align-items-center text-dark" (click)="logout($event)">

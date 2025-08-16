@@ -21,6 +21,6 @@ export interface Group {
 export interface Channel {
     id: string;
     channelname: string;
-    description: string;
+    chats: [];
     groupid: string;  //Store group.id
 }

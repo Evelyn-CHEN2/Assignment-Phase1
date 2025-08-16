@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { User } from '../../interface';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -51,7 +52,7 @@ export class Login implements OnInit {
     }
     // Proceed with data sent back from server
     this.authService.login(this.username, this.pwd).subscribe({
-      next: (user: any) => {
+      next: (user: User) => {
         if (user.valid === true) {
           console.log('Login successful:', user);
           this.authService.setCurrentUser(user); //Store logged user data to localStorage
@@ -62,12 +63,10 @@ export class Login implements OnInit {
             this.router.navigate(['/account'])
           } 
         }
-        else {
-          this.errMsg = 'Invalid username or password.';
-        }
       },
       error: (error) => {
         console.error('Login failed:', error);
+        this.errMsg = error.error.error || 'Login failed. Please check your credentials and try again.';
       },
       complete: () => {
         console.info('Login request completed');

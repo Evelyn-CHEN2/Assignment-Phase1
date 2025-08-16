@@ -1,11 +1,42 @@
 [
-    {
-        "id": "g1", "groupname": "Laravel Devs", "description": "Laravel tips, bugs, and best practices in Australia/NZ.", "channels": ["c1","c2","c3"], "createdBy": "super"
-    },
-    {
-        "id": "g2", "groupname": "Data Science", "description": "Weekly study on ML, stats, and notebooks.", "channels": ["c11","c12","c13"], "createdBy": "super"
-    },
-    {
-        "id": "g3", "groupname": "Cybersecurity", "description": "Defensive ops, IR playbooks, and vuln management.", "channels": ["c21","c22","c23"], "createdBy": "super"
-    }
+  {
+    "id": "g1",
+    "groupname": "Laravel Devs",
+    "description": "Laravel tips, bugs, and best practices in Australia/NZ.",
+    "channels": [
+      "c1",
+      "c2",
+      "c3"
+    ],
+    "createdBy": "super"
+  },
+  {
+    "id": "g2",
+    "groupname": "Data Science",
+    "description": "Weekly study on ML, stats, and notebooks.",
+    "channels": [
+      "c4",
+      "c5",
+      "c6"
+    ],
+    "createdBy": "super"
+  },
+  {
+    "id": "g3",
+    "groupname": "Cybersecurity",
+    "description": "Defensive ops, IR playbooks, and vuln management.",
+    "channels": [
+      "c7",
+      "c8",
+      "c9"
+    ],
+    "createdBy": "super"
+  },
+  {
+    "id": "g1755333442708",
+    "groupname": "test",
+    "description": "srt",
+    "channels": [],
+    "createdBy": null
+  }
 ]
