@@ -4,6 +4,7 @@ const path = require('path')
 module.exports = {
     route: (app) => {
         const groupsFile = path.join(__dirname, '../data/groups.json');
+        
         //Function to read groups from file
         const readGroups = () => {
             const data = fs.readFileSync(groupsFile, 'utf8');

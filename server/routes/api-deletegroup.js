@@ -4,6 +4,7 @@ const path = require('path');
 module.exports = {
     route: (app) => {
         const groupsFile = path.join(__dirname, '../data/groups.json');
+        const channelsFile = path.join(__dirname, '../data/channels.json');
 
         // Function to read groups from file
         const readGroups = () => {
@@ -15,6 +16,18 @@ module.exports = {
         // Function to write groups to file
         const writeGroups = (groups) => {
             fs.writeFileSync(groupsFile, JSON.stringify(groups, null, 2), 'utf8');
+        }
+
+        // Function to read channels from file
+        const readChannels = () => {
+            const data = fs.readFileSync(channelsFile, 'utf8');
+            const channels = JSON.parse(data);
+            return Array.isArray(channels) ? channels : [];
+        }
+
+        // Function to write channels to file
+        const writeChannels = (channels) => {
+            fs.writeFileSync(channelsFile, JSON.stringify(channels, null, 2), 'utf8');
         }
 
         app.delete('/api/deletegroup/:id', (req, res) => {
@@ -32,6 +45,12 @@ module.exports = {
 
             // Remove the group from the array
             groups.splice(groupIndex, 1);
+
+            // Remove channels associated with the group
+            let channels = readChannels();
+            channels = channels.filter(c => c.groupid != req.params.id);
+            writeChannels(channels);
+
             try {
                 writeGroups(groups);
                 console.log('Group deleted successfully');

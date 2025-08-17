@@ -23,7 +23,6 @@ export class Login implements OnInit {
 
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
-    console.log('Checking current user on login page:', currentUser);
     if (currentUser) {
       console.log('User alreafy logged in: ', currentUser);
       // If user is super, redirect to dashboard, otherwise to account page
@@ -50,6 +49,7 @@ export class Login implements OnInit {
       this.errMsg = 'Password is required.';
       return;
     }
+
     // Proceed with data sent back from server
     this.authService.login(this.username, this.pwd).subscribe({
       next: (user: User) => {

@@ -42,7 +42,7 @@ module.exports = {
                 const description = req.body.description;
                 
                 // Check if group already exists
-                const existingGroup = groups.find(group => group.groupname === groupname.trim());
+                const existingGroup = groups.find(g => g.groupname === groupname.trim());
                 if (existingGroup) {
                     return res.status(400).json({ error: 'Group already exists' });
                 }

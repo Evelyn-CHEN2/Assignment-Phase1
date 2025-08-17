@@ -17,7 +17,7 @@ export class GroupService {
   }
 
   getChannels(): Observable<Channel[]> {
-    return this.http.get<Channel[]>(this.server + '/api/channels')
+    return this.http.get<Channel[]>(this.server + '/api/allchannels')
   }
 
   createGroup(groupname: string, description: string , channelNames: string[], currentUser: User): Observable<void> {

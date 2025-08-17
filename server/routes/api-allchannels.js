@@ -10,7 +10,7 @@ module.exports = {
             const channels = JSON.parse(data);
             return Array.isArray(channels) ? channels : [];
         }
-        app.get('/api/channels', (req, res) => {
+        app.get('/api/allchannels', (req, res) => {
             try {
                 const channels = readChannels();
                 res.send(channels);

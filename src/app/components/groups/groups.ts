@@ -30,12 +30,12 @@ export class Groups {
       allusers: this.userService.getUsers()
     }).subscribe(({ groups, allchannels, allusers }) => {
       this.usersById = Object.fromEntries(
-        allusers.map(user => [user.id, user.username.charAt(0).toUpperCase() + user.username.slice(1)])
+        allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
       )
       this.groups = groups.map(group => {
         return {
           ...group,
-          channels: allchannels.filter(channel => channel.groupid === group.id),
+          channels: allchannels.filter(c => c.groupid === group.id),
         };
 
       });
@@ -43,13 +43,14 @@ export class Groups {
     })
   }
 
+  // Delete a group
   deleteGroup(group: Group): void {
     this.errMsg = '';
     const groupID = group.id;
     this.groupService.deleteGroup(groupID).subscribe({
       next: () => {
         console.log('Group deleted successfully:', group);
-        // Remove the deleted group from the groups array, so Angular updates the UI immediately
+        // Remove the deleted group from the groups array
         this.groups = this.groups.filter(g => g.id !== groupID);
       },
       error: (error: any) => {
@@ -69,10 +70,10 @@ export class Groups {
     this.groupService.deleteChannel(channelID).subscribe({
       next: () => {
         console.log('Channel deleted successfully:', channel);
-        // Remove the deleted channel from the group's channels, so Angular updates the UI immediately
-        const group = this.groups.find(group => group.id === channel.groupid);
+        // Remove the deleted channel from the group's channels
+        const group = this.groups.find(g => g.id === channel.groupid);
         if (group) {
-          group.channels = group.channels.filter(channel => channel.id !== channelID);
+          group.channels = group.channels.filter(c => c.id !== channelID);
         } else {
           console.warn('Group not found for channel deletion:', channel.groupid);
         }
@@ -104,7 +105,7 @@ export class Groups {
       next: (newChannel: Channel) => {
         if (newChannel) {
           console.log('Channel created successfully:', newChannel);
-          // Add the new channel to the group's channels so Angular update UI immediately
+          // Add the new channel to the group's channels
           group.channels.push(newChannel);
           // Reset channel name input
           this.newChannelName[group.id] = '';

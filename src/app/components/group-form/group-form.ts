@@ -28,14 +28,15 @@ export class GroupForm {
     this.submitted = false;
     f.resetForm();
   }
-
+ 
+  // Create a new group
   createGroup(f: NgForm): void {
     this.submitted = true;
     if (f.invalid) {
       return;
     }
     const channelNames = this.channelnames.split(/[\r?\n,;]+/)
-      .map(channelname => channelname.trim().replace(/^[,;]+|[,;]+$/g, ''))
+      .map(cname => cname.trim().replace(/^[,;]+|[,;]+$/g, ''))
       .filter(c => c.length > 0);
 
     if (!Array.isArray(channelNames)) {

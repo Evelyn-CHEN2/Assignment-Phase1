@@ -5,6 +5,7 @@ module.exports = {
     route: (app) => {
         const Channel = require('../models/channel-class');
         const channelsFile = path.join(__dirname, '../data/channels.json');
+        const groupsFile = path.join(__dirname, '../data/groups.json');
 
         // Function to read channels from file
         const readChannels = () => {
@@ -18,6 +19,18 @@ module.exports = {
             fs.writeFileSync(channelsFile, JSON.stringify(channels, null, 4), 'utf8');
         }
 
+        // Function to read groups from file
+        const readGroups = () => {
+            const data = fs.readFileSync(groupsFile, 'utf8');
+            const groups = JSON.parse(data);
+            return Array.isArray(groups) ? groups : [];
+        }
+
+        // Function to write groups to file
+        const writeGroups = (groups) => {
+            fs.writeFileSync(groupsFile, JSON.stringify(groups, null, 4), 'utf8');
+        }
+
         app.post('/api/createchannel', (req, res) => {
             if (!req.body) {
                 return res.status(400).json({ error: 'No data provided' });
@@ -25,7 +38,7 @@ module.exports = {
 
             // Check if the channels file exists, if not create it with an empty array
             let channels = readChannels();
-            const existingChannel = channels.find(channel => channel.channelname === req.body.channelname);
+            const existingChannel = channels.find(c => c.channelname === req.body.channelname);
             if (existingChannel) {
                 return res.status(400).json({ error: 'Channel name already exists' });
             }
@@ -36,8 +49,16 @@ module.exports = {
                 req.body.group.id,
                 []
             )
-
             channels.push(newChannel);
+
+            // Update the group with the new channel
+            let groups = readGroups();
+            const groupIndex = groups.findIndex(g => g.id === req.body.group.id);
+            if (groupIndex === -1) {
+                return res.status(404).json({ error: 'Group for added new channel not found' });
+            }
+            groups[groupIndex].channels.push(newChannel.id);
+            writeGroups(groups);
 
             try {
                 writeChannels(channels);
