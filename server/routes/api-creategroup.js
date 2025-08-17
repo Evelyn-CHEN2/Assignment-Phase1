@@ -37,44 +37,43 @@ module.exports = {
                 if (!req.body || !req.body.groupname || !req.body.description || !req.body.channelNames || !req.body.currentUser) {
                     return res.status(400).json({ error: 'Invalid request data' });
                 }
-        
                 let groups = readGroups();
                 const groupname = req.body.groupname;
                 const description = req.body.description;
                 
-
                 // Check if group already exists
                 const existingGroup = groups.find(group => group.groupname === groupname.trim());
                 if (existingGroup) {
                     return res.status(400).json({ error: 'Group already exists' });
                 }
 
-                // Create new group object
                 const newGroupid = 'g' + Date.now().toString()
-                const newgroup = new Group(
-                    newGroupid,
-                    groupname.trim(),
-                    description.trim(),
-                    [],
-                    req.body.currentUser.id,
-                )
-                console.log('New group created:', newGroupid);
-                groups.push(newgroup);
-                writeGroups(groups);
-            
+
                 // Create new channel objects
                 const channelnames = req.body.channelNames;
-                let channels = readChannels();
-                const newchannels = channelnames.map(channelname => {
+                const newchannels = channelnames.map((channelname,idx) => {
                     return new Channel(
-                        'c' + (Date.now().toString()),
+                        'c' + (Date.now() + idx),
                         channelname,
                         newGroupid,
                         [],
                     )
                 })
+                let channels = readChannels();
                 channels = channels.concat(newchannels);
                 writeChannels(channels);
+
+                // Create new group object
+                const newgroup = new Group(
+                    newGroupid,
+                    groupname.trim(),
+                    description.trim(),
+                    newchannels.map(channel => channel.id),
+                    req.body.currentUser.id,
+                )
+                console.log('New group created:', newgroup);
+                groups.push(newgroup);
+                writeGroups(groups);
                 
                 return res.send({ group: newgroup, channels: newchannels });
             }

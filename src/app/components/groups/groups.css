@@ -3,11 +3,12 @@
     display: inline-flex;
     align-items: center;
     border: none;
-    border-radius: 999px;
-    padding: .6rem 2.9rem .6rem 1rem; /* extra right space for circle */
-    background: #28a745;              /* Bootstrap green */
-    color: #fff;
-    font-weight: 600;
+    background: #b7e4c7;
+    padding: .5rem 1.4rem .5rem .5rem; /* extra right space for circle */
+    border-radius: 50px;
+    color: white;
+    font-weight: 400;
+    font-size: x-small;
     line-height: 1;
     box-shadow: 0 2px 6px rgba(0,0,0,.08);
     transition: transform .05s ease, box-shadow .2s ease;
@@ -15,14 +16,14 @@
   .add-btn:hover{ box-shadow: 0 4px 10px rgba(0,0,0,.12); }
   .add-btn:active{ transform: translateY(1px); }
   
-  .add-text{ pointer-events: none; } /* keep click target on whole button */
   
+
   .add-circle{
     position: absolute;
     right: -10px;                     /* overlaps pill */
-    width: 34px; height: 34px;
+    width: 28px; height: 28px;
     border-radius: 50%;
-    background: #34ce57;              /* lighter green */
+    background: green;              /* lighter green */
     border: 3px solid #fff;
     display: inline-flex;
     align-items: center;
@@ -41,3 +42,8 @@
     background: #f8f9fa;
   }
   
+  .add-pop .form-control:focus {
+    border-color: #8d99ae;                       
+    box-shadow: 0 0 0 .25rem rgba(141,153,174,.25);
+    outline: none;
+  }

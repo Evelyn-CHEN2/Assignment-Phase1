@@ -15,7 +15,7 @@ export interface Group {
     groupname: string;
     description: string;
     channels: Channel[]; //Store channel data to get direct access
-    createdBy: number;  //Store user.id
+    createdBy: number | undefined;  //Store user.id
 }
 
 export interface Channel {

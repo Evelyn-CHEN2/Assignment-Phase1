@@ -1,16 +1,5 @@
 [
   {
-    "id": "g1",
-    "groupname": "Laravel Devs",
-    "description": "Laravel tips, bugs, and best practices in Australia/NZ.",
-    "channels": [
-      "c1",
-      "c2",
-      "c3"
-    ],
-    "createdBy": "super"
-  },
-  {
     "id": "g2",
     "groupname": "Data Science",
     "description": "Weekly study on ML, stats, and notebooks.",
@@ -19,7 +8,7 @@
       "c5",
       "c6"
     ],
-    "createdBy": "super"
+    "createdBy": 4
   },
   {
     "id": "g3",
@@ -30,6 +19,15 @@
       "c8",
       "c9"
     ],
-    "createdBy": "super"
+    "createdBy": 4
+  },
+  {
+    "id": "g1755410090288",
+    "groupname": "wer",
+    "description": "werfwe",
+    "channels": [
+      "c1755410090288"
+    ],
+    "createdBy": 4
   }
 ]

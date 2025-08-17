@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GroupService } from '../../services/group.service';
-import { Group } from '../../interface';
+import { Group, User } from '../../interface';
 import { Channel } from '../../interface';
 import { forkJoin } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-groups',
@@ -15,23 +15,29 @@ import { Router } from '@angular/router';
 })
 export class Groups {
   groups: Group[] = [];
+  usersById: Record<number, string> = {};
   showAdd: Record<string, boolean> = {};
   newChannelName: Record<string, string> = {};
   errMsg: string = '';
 
   private groupService = inject (GroupService)
-  private router = inject(Router);
+  private userService = inject(UserService);
 
   ngOnInit(): void {
     forkJoin({
       groups: this.groupService.getGroups(),
       allchannels: this.groupService.getChannels(),
-    }).subscribe(({ groups, allchannels }) => {
+      allusers: this.userService.getUsers()
+    }).subscribe(({ groups, allchannels, allusers }) => {
+      this.usersById = Object.fromEntries(
+        allusers.map(user => [user.id, user.username.charAt(0).toUpperCase() + user.username.slice(1)])
+      )
       this.groups = groups.map(group => {
         return {
           ...group,
-          channels: allchannels.filter(channel => channel.groupid === group.id)
+          channels: allchannels.filter(channel => channel.groupid === group.id),
         };
+
       });
       console.log('All groups fetched successfully:', this.groups);
     })

@@ -4,12 +4,20 @@
       <div class="col-md-12 mb-12">
         <div class="card shadow-sm h-100">
           <div class="card-body">
-            <h5 class="card-title mb-1">{{group.groupname}}</h5>
-            <button class="btn btn-link text-danger p-0" type="button" (click)="deleteGroup(group)">
-              <i class="bi bi-x-square fs-5"></i>
-            </button>
+            <div class ="d-flex justify-content-between">
+              <h5 class="card-title mb-1">{{group.groupname}}</h5>
+              <div style="gap: 10px; display: flex;">
+                <button class="btn p-0" style="color: green;" type="button" (click)="deleteGroup(group)">
+                  <i class="bi bi-pencil-fill fs-5"></i>
+                </button>
+                <button class="btn text-danger p-0" type="button" (click)="deleteGroup(group)">
+                  <i class="bi bi-x-square fs-5"></i>
+                </button>
+              </div>
+              
+            </div>
             <p class="card-text mb-2">{{group.description}}</p>
-            <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy}}</p>
+            <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy ? usersById[group.createdBy] : 'unknown'}}</p>
   
             <div class="channels text-muted small">
                 <label class="form-label fs-6 text-muted">Channels:</label><br> 
@@ -18,25 +26,28 @@
                   {{channel.channelname}}
                   <!-- delete channel button -->
                     <button class="btn btn-link text-danger p-0" type="button" (click)="deleteChannel(channel)">
-                      <i class="bi bi-x-square fs-5"></i>
+                      <i class="bi bi-x-square fs-6"></i>
                     </button>
                 </li>
               }
             </div>
 
             <!-- Add channel -->
-            <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
-              <span class="add-text">Add</span>
-              <span class="add-circle"><i class="bi bi-plus-lg"></i></span>
-            </button>
-            @if (showAdd[group.id]){
-              <div class="add-pop mt-2">
-                  <input class="form-control form-control-sm me-2" type="text" placeholder="New channel name" 
+            <div class="d-flex justify-content-end m-2">
+              <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
+                <span>Channel</span>
+                <span class="add-circle"><i class="bi bi-plus-lg"></i></span>
+              </button>
+            </div>
+              @if (showAdd[group.id]){
+                <div class="add-pop mt-2">
+                  <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New channel name" 
                   [(ngModel)]="newChannelName[group.id]" name="newChannelName{{group.id}}" />
-                  <button class="btn btn-primary btn-sm" type="button" (click)="confirmAddChannel(group, $event)">Confirm</button>
-                  <button class="btn btn-link btn-sm ms-2" type="button" (click)="toggleAddChannel(group)">Cancel</button>
+                  <button class="btn btn-sm ms-2" style="font-size:small; color:#023e8a;" type="button" (click)="confirmAddChannel(group, $event)">Confirm</button>
+                  <button class="btn btn-sm ms-2" style="font-size:small; color:#023e8a;" type="button" (click)="toggleAddChannel(group)">Cancel</button>
                 </div>
               }
+            
           </div>
 
           
