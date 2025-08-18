@@ -7,7 +7,7 @@ class User {
         this.role = role;
         this.groups = groups || [];
         this.valid = valid ;
-        this._pendingAction = _pendingAction || null;
+        this._pendingAction = _pendingAction || '';
     }
 }
 

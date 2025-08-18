@@ -2,8 +2,11 @@
   <nav class="d-flex flex-column p-3 flex-shrink-0 text-white" style="min-height: 100vh; background-color: #2b2d42;">
     
     <!-- Sidebar Title -->
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+    <a href="/" class="d-flex align-items-center justify-content-between  mb-md-0 me-md-auto text-white text-decoration-none">
       <span class="fs-4">Chats</span>
+      @if (welcomeMsg) {
+        <span class="px-3 text-end" style="font-size: x-small;">{{welcomeMsg}}!</span>
+      }
     </a>
     <hr>
 
@@ -13,10 +16,6 @@
         <a class="nav-link d-flex align-items-center text-white" routerLink="/login">
           <i class="bi bi-house-door me-2 icon-size"></i> Login</a>
       </li>
-
-      @if (welcomeMsg) {
-        <span class="px-3" style="font-size: x-small;">{{welcomeMsg}}!</span>
-      }
 
       @if (userrole === 'super') {
         <li class="nav-item">

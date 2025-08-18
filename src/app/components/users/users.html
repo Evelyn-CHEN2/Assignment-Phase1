@@ -5,7 +5,6 @@
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Role</th>
-            <th scope="col">Groups</th>
             <th style="text-align: center;" scope="col">Actions</th>
         </tr>
     </thead>
@@ -13,15 +12,15 @@
         @for (user of users; track $index) {
         <tr>
             <td>{{user.id}}</td>
-            <td>{{user.username}}</td>
+            <td><button type="button" (click)="navToAccount(user, $event)">{{user.username}}</button></td>
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
-            <td>{{user.groups}}</td>
+            
             <td style="text-align: center;">
                 <select [(ngModel)]="user._pendingAction" (ngModelChange)="updateRole(user)" name="role{{user.id}}" style="padding: 5px; font-size: 13px;">
-                    <option value="" disabled selected>Select...</option>
-                    <option value="admin">Admin</option>
-                    <option value="chatuser">Chat User</option>
+                    <option value="" disabled selcted>_UPDATE_</option>
+                    <option value="admin" [disabled]="user.role==='admin'">Admin</option>
+                    <option value="chatuser" [disabled]="user.role==='chatuser'">Chat User</option>
                     <option value="delete">Delete</option>
     
                 </select>

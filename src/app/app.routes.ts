@@ -6,6 +6,7 @@ import { Account } from './components/account/account';
 import { Users } from './components/users/users'
 import { Groups } from './components/groups/groups'
 import { authGuard } from './guards/auth-guard';
+import { viewOtherAccountGuard } from './guards/view-other-account-guard';
 import { GroupForm } from './components/group-form/group-form';
 
 export const routes: Routes = [
@@ -37,5 +38,8 @@ export const routes: Routes = [
     },
     {
         path: 'account', component: Account, canActivate: [authGuard]
+    },
+    {
+        path: 'account/:id', component: Account, canActivate: [viewOtherAccountGuard, authGuard],
     }
 ];

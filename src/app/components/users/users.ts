@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { User } from '../../interface'
 
@@ -14,6 +15,7 @@ export class Users {
   users: User[] = [];
 
   private userService = inject(UserService)
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.userService.getUsers().subscribe({
@@ -48,6 +50,7 @@ export class Users {
         },
         complete: () => { 
           console.log('User deletion complete.');
+          user._pendingAction = ''; // Reset pending action after deletion
         }
       });
       return;
@@ -68,8 +71,17 @@ export class Users {
         },
         complete: () => { 
           console.log('User role update complete.');
+          user._pendingAction = ''; // Reset pending action after update
         }
       });
     }
+  }
+
+  // Navigate to user account
+  navToAccount(user: User, event: any): void {
+    event.preventDefault();
+    console.log('Navigating to account for user from dashboard:', user);
+    // Navigate to the account page for the selected user
+    this.router.navigate(['/account', user.id])
   }
 }

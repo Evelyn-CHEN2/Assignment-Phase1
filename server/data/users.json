@@ -9,7 +9,8 @@
       "g1",
       "g2"
     ],
-    "valid": false
+    "valid": false,
+    "_pendingAction": null
   },
   {
     "id": 2,
@@ -22,7 +23,8 @@
       "g2",
       "g3"
     ],
-    "valid": false
+    "valid": false,
+    "_pendingAction": null
   },
   {
     "id": 3,
@@ -34,7 +36,8 @@
       "g2",
       "g3"
     ],
-    "valid": false
+    "valid": false,
+    "_pendingAction": null
   },
   {
     "id": 4,
@@ -43,7 +46,8 @@
     "pwd": "123",
     "role": "super",
     "groups": [],
-    "valid": false
+    "valid": false,
+    "_pendingAction": null
   },
   {
     "id": 5,
@@ -56,7 +60,8 @@
       "g2",
       "g3"
     ],
-    "valid": true
+    "valid": true,
+    "_pendingAction": null
   },
   {
     "id": 6,
@@ -65,7 +70,8 @@
     "pwd": "1234",
     "role": "chatuser",
     "groups": [],
-    "valid": true
+    "valid": true,
+    "_pendingAction": null
   },
   {
     "id": 7,
@@ -74,28 +80,15 @@
     "pwd": "1234",
     "role": "chatuser",
     "groups": [],
-    "valid": true
+    "valid": true,
+    "_pendingAction": null
   },
   {
     "id": 8,
     "username": "try",
     "email": "try@com",
     "pwd": "1234",
-    "role": [
-      "chatuser"
-    ],
-    "groups": [],
-    "valid": true,
-    "_pendingAction": null
-  },
-  {
-    "id": 10,
-    "username": "mama",
-    "email": "mama@com",
-    "pwd": "1234",
-    "role": [
-      "chatuser"
-    ],
+    "role": "admin",
     "groups": [],
     "valid": true,
     "_pendingAction": null
