@@ -3,7 +3,7 @@ export interface User {
     username: string;
     pwd: string;
     email: string;
-    groups: Group[];  //Store group data to get direct access
+    groups: string[];  //Store group data to get direct access
     role: string;
     status: boolean;
     valid: boolean;

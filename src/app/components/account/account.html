@@ -2,7 +2,6 @@
     User name: {{user?.username}}
     Email: {{user?.email}}
     Role: {{user?.role}}
-    Groups: {{user?.groups}}
 </div>
 <div class="account-container">
     <div class="account-header">
@@ -23,7 +22,7 @@
         <label>Groups:</label>
       </div>
       <ul class="groups-list">
-        @for (group of user?.groups; track $index) {
+        @for (group of userGroups; track $index) {
             <li class="group-item">
             <span class="group-name">{{group.groupname}}</span>
             <span class="group-role">{{group.channels}}</span>

@@ -12,9 +12,9 @@
         @for (user of users; track $index) {
         <tr>
             <td>{{user.id}}</td>
-            <td><button type="button" (click)="navToAccount(user, $event)">{{user.username}}</button></td>
-            <td>{{user.email}}</td>
-            <td>{{user.role}}</td>
+            <td><button class="btn btn-m p-0" style="color:#023e8a;" type="button" (click)="navToAccount(user, $event)">{{user.username}}</button></td>
+            <td style="font-size: small;">{{user.email}}</td>
+            <td class="text-capitalize">{{user.role}}</td>
             
             <td style="text-align: center;">
                 <select [(ngModel)]="user._pendingAction" (ngModelChange)="updateRole(user)" name="role{{user.id}}" style="padding: 5px; font-size: 13px;">
