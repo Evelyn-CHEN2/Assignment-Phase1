@@ -19,6 +19,7 @@ export class GroupForm {
   description: string = '';
   channelnames: string = '';
   errMsg: string = '';
+  testname: string = 'test';
 
   private groupService = inject(GroupService);
   private authService = inject(AuthService);
@@ -49,7 +50,7 @@ export class GroupForm {
       return;
     }
     this.groupService.createGroup(this.groupname, this.description, channelNames, currentUser).subscribe({
-      next: (data: any) => {
+      next: () => {
         console.log('Group created successfully'); 
         this.router.navigate(['/dashboard/groups']);
         // Reset form fields after successful creation

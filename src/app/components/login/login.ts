@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { User } from '../../interface';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { Header } from '../header/header';
 
 @Component({
   selector: 'app-login',
@@ -55,7 +56,8 @@ export class Login implements OnInit {
       next: (user: User) => {
         if (user.valid === true) {
           console.log('Login successful:', user);
-          this.authService.setCurrentUser(user); //Store logged user data to localStorage
+          this.authService.setCurrentUser(user, this.rememberMe); //Store logged user data to localStorage
+          
           // If user is super, redirect to dashboard after login, otherwise to account page
           if (user.role === 'super') {
             this.router.navigate(['/dashboard']);

@@ -1,7 +1,7 @@
 <form class="group-form" novalidate #f="ngForm" (ngSubmit)="createGroup(f)" [class.was-validated]="submitted">
     <div class="field">
         <label for="groupname">Group Name <span class="req">*</span></label>
-        <input type="text" name="groupname" [(ngModel)]="groupname" maxlength="50" placeholder="e.g. Engineering" required>
+        <input type="text" name="groupname" [(ngModel)]="groupname" maxlength="50" placeholder="(testname ? {{testname}} : 'e.g. Engineering')" required>
         <div class="invalid-feedback">Group name is required.</div>
     </div>
 

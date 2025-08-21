@@ -7,7 +7,7 @@
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
-                <button class="btn p-0" style="color: green;" type="button">
+                <button class="btn p-0" style="color: green;" type="button" (click)="editGroup(group, $event)">
                   <i class="bi bi-pencil-fill fs-6"></i>
                 </button>
                 <button class="btn text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteGroupModal" type="button" (click)="openDeleteGroupModal(group)">

@@ -4,9 +4,14 @@
     <!-- Sidebar Title -->
     <a href="/" class="d-flex align-items-center justify-content-between  mb-md-0 me-md-auto text-white text-decoration-none">
       <span class="fs-4">Chats</span>
-      @if (welcomeMsg) {
-        <span class="px-3 text-end" style="font-size: x-small;">{{welcomeMsg}}!</span>
-      }
+      <span class="px-3 text-end" style="font-size: x-small;">
+        @if (user$ | async; as user) {
+          Welcome, {{ user.username | titlecase }}!
+        } @else {
+          Welcome, Guest
+        }
+        
+      </span>
     </a>
     <hr>
 
@@ -17,7 +22,7 @@
           <i class="bi bi-house-door me-2 icon-size"></i> Login</a>
       </li>
 
-      @if (userrole === 'super') {
+      @if ((userRole$ | async) === 'super') {
         <li class="nav-item">
           <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard">
             <i class="bi bi-speedometer2 me-2 icon-size"></i> Dashboard</a>
@@ -27,7 +32,7 @@
             <i class="bi bi-snapchat me-2 icon-size"></i> + Group</a>
         </li>
       }
-      @if (userrole === 'chatuser') { 
+      @if ((userRole$ | async) === 'chatuser') { 
         <li class="nav-item">
             <a class="nav-link d-flex align-items-center text-white" routerLink="/groups">
               <i class="bi bi-people me-2 icon-size"></i> Groups</a>
@@ -41,7 +46,7 @@
     </ul>
     <hr>
 
-    <!-- Bottom Icon -->
+    <!-- Account Link -->
     <div class="mt-auto">
       <a class="nav-link d-flex align-items-center text-white" routerLink="/account">
         <i class="bi bi-person-gear me-2 icon-size"></i> Account</a>

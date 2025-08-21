@@ -53,8 +53,8 @@ module.exports = {
 
             try {
                 writeGroups(groups);
-                res.send(groups);
-                console.log('Group deleted successfully');
+                // Send a 204 No Content response, not ideal to do res.send(groups) since deleteGroup is not expecting a response
+                return res.sendStatus(204)
             } catch (error) {
                 console.error('Error writing groups file:', error);
                 res.status(500).json({ error: 'Failed to delete group' });

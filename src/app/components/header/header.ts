@@ -13,43 +13,33 @@ import { Router } from '@angular/router';
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
-export class Header implements OnInit {
+export class Header {
   userrole: string = '';
   welcomeMsg: string = 'Welcome, ';
   username: string = '';
+  remember: boolean = false;
 
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private router = inject(Router);
 
-  // userId$ = this.authService.currentUserId$;
-  // username$ = this.authService.username$; 
-  // role$ = this.authService.currentUser$.pipe(
-  //   map(u => u ? u.role : 'Guest'),
-  // )
+  user$ = this.authService.currentUser$;
+  userRole$ = this.user$.pipe(
+    map(u => u ? u.role : '')
+  );
 
-  ngOnInit(): void {
-    // const currentUser = this.authService.getCurrentUser();
-    // console.log('Current user:', currentUser);
-    // if (currentUser) {
-    //   this.userrole = currentUser.role;
-    //   this.welcomeMsg += currentUser.username;
-    // } else {
-    //   this.welcomeMsg = 'Welcome, Guest';
-    // }
-    // this.role$.subscribe(role => {
-    //   this.userrole = role;
-    // });
-    if (this.authService.isLoggedIn()) {
-      const currentUser = this.authService.getCurrentUser();
-      this.userrole = currentUser?.role || 'Guest';
-      this.username = (currentUser?.username ?? 'Guest').charAt(0).toUpperCase() + (currentUser?.username ?? 'Guest').slice(1);
-      this.welcomeMsg += this.username;
-    }
-    else {
-      this.welcomeMsg = 'Welcome, Guest';
-    }
-  }
+
+  // ngOnInit(): void {
+  //   const currentUser = this.authService.getCurrentUser();
+  //   console.log('Current user:', currentUser);
+  //   if (currentUser) {
+  //     this.userrole = currentUser.role;
+  //     this.welcomeMsg += currentUser.username;
+  //   } else {
+  //     this.welcomeMsg = 'Welcome, Guest';
+  //   }
+    
+  // }
   
   logout(event: any): void {
     event.preventDefault();

@@ -25,19 +25,19 @@ export class GroupService {
     return this.http.post<void>(this.server + '/api/creategroup', {groupname, description, channelNames, currentUser});
   }
 
-  updateGroup(group: Group): Observable<Group> {
-    return this.http.put<Group>(`${this.server}/api/updategroup/${group.id}`, group);
+  editGroup(group: Group): Observable<Group> {
+    return this.http.put<Group>(`${this.server}/api/editgroup/${group.id}`, group);
   }
 
-  deleteGroup(id: string): Observable<Group[]> {
-    return this.http.delete<Group[]>(`${this.server}/api/deletegroup/${id}`);
+  deleteGroup(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.server}/api/deletegroup/${id}`);
   }
 
   createChannel(group: Group, channelName: string): Observable<Channel> {
     return this.http.post<Channel>(this.server + '/api/createchannel', {group, channelName});
   }
 
-  deleteChannel(id: string): Observable<Channel[]> {
-    return this.http.delete<Channel[]>(`${this.server}/api/deletechannel/${id}`);
+  deleteChannel(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.server}/api/deletechannel/${id}`);
   }
 }

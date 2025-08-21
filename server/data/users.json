@@ -37,20 +37,6 @@
     "_pendingAction": null
   },
   {
-    "id": 5,
-    "username": "caca",
-    "email": "caca@com",
-    "pwd": "1234",
-    "role": "chatuser",
-    "groups": [
-      "g1",
-      "g2",
-      "g3"
-    ],
-    "valid": true,
-    "_pendingAction": null
-  },
-  {
     "id": 6,
     "username": "caleb",
     "email": "caleb@com",

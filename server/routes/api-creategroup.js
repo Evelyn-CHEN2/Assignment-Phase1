@@ -73,7 +73,7 @@ module.exports = {
                 )
                 groups.push(newgroup);
                 writeGroups(groups);
-                return res.send({ group: newgroup, channels: newchannels });
+                res.send({ group: newgroup, channels: newchannels });
             }
             catch (error) {
                 console.error('Created group failed:', error);

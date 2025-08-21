@@ -13,7 +13,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './groups.html',
   styleUrl: './groups.css'
 })
-export class Groups {
+export class Groups implements OnInit {
   groups: Group[] = [];
   userById: Record<number, string> = {};
   showAdd: Record<string, boolean> = {};
@@ -45,10 +45,14 @@ export class Groups {
           ...group,
           channels: allchannels.filter(c => c.groupid === group.id),
         };
-
       });
       console.log('All groups fetched successfully:', this.groups);
     })
+  }
+
+  // Edit a group
+  editGroup(group: Group, event: any): void {
+
   }
 
   // Toggle delete confirmation modal
@@ -63,11 +67,10 @@ export class Groups {
     this.errMsg = '';
     const groupID = group.id;
     this.groupService.deleteGroup(groupID).subscribe({
-      next: (groups: Group[]) => {
+      next: () => {
         console.log('Group deleted successfully:', group);
-        // Remove the deleted group from the groups array
-        this.groups = groups;
-        console.log('Remaining groups:', this.groups);
+        // Remove the deleted group from the groups array for UI display immediately
+        this.groups = this.groups.filter(g => g.id !== groupID);
       },
       error: (error: any) => {
         console.error('Error deleting group:', error);

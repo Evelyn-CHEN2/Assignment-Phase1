@@ -27,7 +27,7 @@ module.exports = {
 
             try {
                 writeChannels(channels);
-                res.send(channels); // Return the updated list of channels
+                return res.sendStatus(204); // No response expected
             }
             catch (error) {
                 console.error('Error deleting channel:', error);

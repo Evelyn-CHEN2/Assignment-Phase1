@@ -12,17 +12,16 @@ import { map, distinctUntilChanged } from 'rxjs/operators';
 export class AuthService {
   private http = inject(HttpClient);
   private server = 'http://localhost:3000';
-  // private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
-  // currentUser$ = this.currentUserSubject.asObservable();
-  // // Handy derived streams
-  // currentUserId$: Observable<string | null> = this.currentUser$.pipe(
-  //   map(u => (u?.id != null ? u.id.toString() : null)),
-  //   distinctUntilChanged()
-  // );
-  // username$: Observable<string | null> = this.currentUser$.pipe(
-  //   map(u => (u ? u.username.charAt(0).toUpperCase() + u.username.slice(1) : null)),
-  //   distinctUntilChanged()
-  // );
+
+  private currentUserSubject = new BehaviorSubject<User | null>(this.readFromStorage());
+  currentUser$: Observable<User | null> = this.currentUserSubject.asObservable()
+
+//   window.addEventListener('storage', (e) => {
+//     if (e.key === 'currentUser') {
+//       this.currentUserSubject.next(this.readFromStorage());
+//     }
+//   });
+// }
 
   login(username: string, pwd: string): Observable<User> {
     return this.http.post<User>(this.server + '/api/login', { username: username, pwd: pwd });
@@ -32,18 +31,36 @@ export class AuthService {
     return this.http.post<User>(this.server + '/api/register', { username: username, email: email, pwd: pwd });
   }
      
-  setCurrentUser(newuser: User): void {
-    localStorage.setItem('currentUser', JSON.stringify(newuser));
-    // this.currentUserSubject.next(newuser);
+  setCurrentUser(newuser: User, remember = true): void {
+    const key = 'currentUser';
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
+    if (remember) {
+      localStorage.setItem('currentUser', JSON.stringify(newuser));
+    } else {
+      sessionStorage.setItem('currentUser', JSON.stringify(newuser));
+    }
+    
+    
+    this.currentUserSubject.next(newuser);
+  }
+
+  private readFromStorage(): User | null {
+    const user = localStorage.getItem('currentUser') ?? sessionStorage.getItem('currentUser');
+    if (user) {
+      return JSON.parse(user) as User;
+    }
+    return null;
   }
 
   getCurrentUser(): User | null {
-    const currentUser = localStorage.getItem('currentUser')
-    if (currentUser) {
-      return JSON.parse(currentUser) as User;
-    }
-    return null;
-    // return this.currentUserSubject.value;
+    // const currentUser = localStorage.getItem('currentUser')
+    // if (currentUser) {
+    //   return JSON.parse(currentUser) as User;
+      
+    // }
+    // return null;
+    return this.currentUserSubject.value
   }
 
   isLoggedIn(): boolean {
@@ -53,5 +70,7 @@ export class AuthService {
   
   logout(): void {
     localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
   }
 }

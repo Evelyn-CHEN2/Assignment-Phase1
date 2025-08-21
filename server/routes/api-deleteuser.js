@@ -27,7 +27,7 @@ module.exports = {
 
             try {
                 writeUsers(users);
-                res.send(users); // Return the updated list of users
+                return res.sendStatus(204); // No response expected
             } 
             catch (error) {
                 console.error('Error deleting user:', error);
