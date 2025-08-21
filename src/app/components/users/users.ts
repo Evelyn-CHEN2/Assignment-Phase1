@@ -13,9 +13,15 @@ import { User } from '../../interface'
 })
 export class Users {
   users: User[] = [];
+  showUpdateRole: Record<number, boolean> = {};
+  showDelete: Record<number, boolean> = {};
+  newRole: Record<number, string> = {};
+  selectedUser: User | null = null; 
 
   private userService = inject(UserService)
   private router = inject(Router);
+
+  declare bootstrap: any
 
   ngOnInit(): void {
     this.userService.getUsers().subscribe({
@@ -32,50 +38,57 @@ export class Users {
     });
   }
 
-  updateRole(user: User & { _pendingAction?: string }): void {
-    const action = user._pendingAction;
-    if (!action) {
-      return;
-    }
-    // Delete user
-    if (action === 'delete') {
-      this.userService.deleteUser(user.id).subscribe({
-        next: () => {
-          console.log('User deleted successfully:', user);
-          // Remove the user from the local users array
-          this.users = this.users.filter(u => u.id !== user.id);
-        },
-        error: (error: any) => {
-          console.error('Error deleting user:', error);
-        },
-        complete: () => { 
-          console.log('User deletion complete.');
-          user._pendingAction = ''; // Reset pending action after deletion
-        }
-      });
-      return;
-    }
-    // Update user role
-    if (action === 'admin' || action === 'chatuser') {
-      this.userService.updateUserRole(user.id, action).subscribe({
-        next: (updatedUser: User) => {
-          console.log('User role updated successfully: ', updatedUser);
-          // Update the local users array
-          const index = this.users.findIndex(u => u.id === updatedUser.id);
-          if (index !== -1) {
-            this.users[index] = updatedUser;
-          }
-        },
-        error: (error: any) => {
-          console.error('Error updating user role:', error);
-        },
-        complete: () => { 
-          console.log('User role update complete.');
-          user._pendingAction = ''; // Reset pending action after update
-        }
-      });
-    }
+  // Update user role
+  toggleUpdateRole(user: User): void {
+    this.showUpdateRole[user.id] = !this.showUpdateRole[user.id];
   }
+  updateRole(user: User, event: any): void {
+    event.preventDefault();
+    if (!this.newRole[user.id]) {
+      console.error('New role is not set for user:', user);
+      return;
+    }
+    const newRole = this.newRole[user.id];
+    this.userService.updateUserRole(newRole, user.id).subscribe({
+      next: (updatedUser: User) => {
+        console.log('User role updated successfully: ', updatedUser);
+        // Update the local users array
+        const index = this.users.findIndex(u => u.id === updatedUser.id);
+        if (index !== -1) {
+          this.users[index] = updatedUser;
+        }
+      },
+      error: (error: any) => {
+        console.error('Error updating user role:', error);
+      },
+      complete: () => { 
+        console.log('User role update complete.');
+      }
+    });
+  }
+
+  openDeleteModal(user: User): void {
+    this.selectedUser = user;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteModal')!).show();
+}
+  // Delete user
+  confirmDelete(user: User, event: any): void {
+    event.preventDefault();
+    this.userService.deleteUser(user.id).subscribe({
+      next: () => {
+        console.log('User deleted successfully:', user);
+        // Remove the deleted user from the users array
+        this.users = this.users.filter(u => u.id !== user.id);
+      },
+      error: (error: any) => {
+        console.error('Error deleting user:', error);
+      },
+      complete: () => { 
+        console.log('User deletion complete.');
+      }
+    })
+  }
+  
 
   // Navigate to user account
   navToAccount(user: User, event: any): void {

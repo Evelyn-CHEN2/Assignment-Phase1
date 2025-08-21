@@ -22,11 +22,11 @@ export class Header implements OnInit {
   private userService = inject(UserService);
   private router = inject(Router);
 
-  userId$ = this.authService.currentUserId$;
-  username$ = this.authService.username$; 
-  role$ = this.authService.currentUser$.pipe(
-    map(u => u ? u.role : 'Guest'),
-  )
+  // userId$ = this.authService.currentUserId$;
+  // username$ = this.authService.username$; 
+  // role$ = this.authService.currentUser$.pipe(
+  //   map(u => u ? u.role : 'Guest'),
+  // )
 
   ngOnInit(): void {
     // const currentUser = this.authService.getCurrentUser();
@@ -37,10 +37,18 @@ export class Header implements OnInit {
     // } else {
     //   this.welcomeMsg = 'Welcome, Guest';
     // }
-    this.role$.subscribe(role => {
-      this.userrole = role;
-    });
-
+    // this.role$.subscribe(role => {
+    //   this.userrole = role;
+    // });
+    if (this.authService.isLoggedIn()) {
+      const currentUser = this.authService.getCurrentUser();
+      this.userrole = currentUser?.role || 'Guest';
+      this.username = (currentUser?.username ?? 'Guest').charAt(0).toUpperCase() + (currentUser?.username ?? 'Guest').slice(1);
+      this.welcomeMsg += this.username;
+    }
+    else {
+      this.welcomeMsg = 'Welcome, Guest';
+    }
   }
   
   logout(event: any): void {

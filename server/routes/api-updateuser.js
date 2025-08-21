@@ -15,11 +15,11 @@ module.exports = {
             fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
         }
 
-        app.put('/api/updateuser/:id/action', (req, res) => {
+        app.put('/api/updateuser/:id', (req, res) => {
             const id = req.params.id;
-            const action = req.body.action;
-            if (!id || !action) {
-                return res.status(400).json({ error: 'Missing id or action to update user' });
+            const newRole = req.body.newRole;
+            if (!id || !newRole) {
+                return res.status(400).json({ error: 'Missing id or new role to update user role' });
             }
             // Check if the users file exists
             const users = readUsers();
@@ -28,13 +28,7 @@ module.exports = {
                 return res.status(404).json({ error: 'User to update not found' });
             }
             // Update the user
-            if (action === 'admin') {
-                users[userIndex].role = 'admin';
-            } else if (action === 'chatuser') {
-                users[userIndex].role = 'chatuser';
-            } else {
-                return res.status(400).json({ error: 'Invalid update action' });
-            }
+            users[userIndex].role = newRole;
             
             // Write the updated user to file
             try {

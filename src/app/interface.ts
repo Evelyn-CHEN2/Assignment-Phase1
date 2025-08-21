@@ -7,7 +7,6 @@ export interface User {
     role: string;
     status: boolean;
     valid: boolean;
-    _pendingAction?: string; //Used to store pending action for user
 }
 
 export interface Group {

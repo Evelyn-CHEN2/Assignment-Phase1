@@ -18,7 +18,7 @@
     "username": "Jerry",
     "email": "Jerry@com",
     "pwd": "1234",
-    "role": "chatuser",
+    "role": "admin",
     "groups": [
       "g2",
       "g3"
@@ -55,27 +55,7 @@
     "username": "caleb",
     "email": "caleb@com",
     "pwd": "1234",
-    "role": "chatuser",
-    "groups": [],
-    "valid": true,
-    "_pendingAction": null
-  },
-  {
-    "id": 7,
-    "username": "will",
-    "email": "will@com",
-    "pwd": "1234",
-    "role": "chatuser",
-    "groups": [],
-    "valid": true,
-    "_pendingAction": null
-  },
-  {
-    "id": 8,
-    "username": "try",
-    "email": "try@com",
-    "pwd": "1234",
-    "role": "chatuser",
+    "role": "admin",
     "groups": [],
     "valid": true,
     "_pendingAction": null

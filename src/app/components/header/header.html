@@ -4,12 +4,9 @@
     <!-- Sidebar Title -->
     <a href="/" class="d-flex align-items-center justify-content-between  mb-md-0 me-md-auto text-white text-decoration-none">
       <span class="fs-4">Chats</span>
-      <ng-container *ngIf="username$ | async as name; else guest">
-        <span class="px-3 text-end" style="font-size: x-small;">Welcome: {{ name }}!</span>
-      </ng-container>
-      <ng-template #guest>
-        <span class="px-3 text-end" style="font-size: x-small;">Guest</span>
-      </ng-template>
+      @if (welcomeMsg) {
+        <span class="px-3 text-end" style="font-size: x-small;">{{welcomeMsg}}!</span>
+      }
     </a>
     <hr>
 

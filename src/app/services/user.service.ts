@@ -18,8 +18,8 @@ export class UserService {
     return this.http.get<User>(`${this.server}/api/fetchuser_byID/${id}`);
   }
 
-  updateUserRole(id: number, action: string): Observable<User> {
-    return this.http.put<User>(`${this.server}/api/updateuser/${id}/action`, { action });
+  updateUserRole(newRole: string, id: number): Observable<User> {
+    return this.http.put<User>(`${this.server}/api/updateuser/${id}`, {newRole});
   }
 
   deleteUser(id: number): Observable<void> {

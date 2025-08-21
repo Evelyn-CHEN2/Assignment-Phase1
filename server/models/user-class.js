@@ -1,5 +1,5 @@
 class User {
-    constructor(id, username, email, pwd, role, groups, valid, _pendingAction) {
+    constructor(id, username, email, pwd, role, groups, valid) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -7,7 +7,6 @@ class User {
         this.role = role;
         this.groups = groups || [];
         this.valid = valid ;
-        this._pendingAction = _pendingAction || '';
     }
 }
 

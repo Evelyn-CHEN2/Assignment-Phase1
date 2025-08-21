@@ -71,10 +71,8 @@ module.exports = {
                     newchannels.map(channel => channel.id),
                     req.body.currentUser.id,
                 )
-                console.log('New group created:', newgroup);
                 groups.push(newgroup);
                 writeGroups(groups);
-                
                 return res.send({ group: newgroup, channels: newchannels });
             }
             catch (error) {
