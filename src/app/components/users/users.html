@@ -18,7 +18,7 @@
             
             <td style="text-align: center;">
                 <select [(ngModel)]="user._pendingAction" (ngModelChange)="updateRole(user)" name="role{{user.id}}" style="padding: 5px; font-size: 13px;">
-                    <option value="" disabled selcted>_UPDATE_</option>
+                    <option value="_UPDATE_" disabled selcted>_UPDATE_</option>
                     <option value="admin" [disabled]="user.role==='admin'">Admin</option>
                     <option value="chatuser" [disabled]="user.role==='chatuser'">Chat User</option>
                     <option value="delete">Delete</option>

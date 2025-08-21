@@ -15,7 +15,7 @@ import { UserService } from '../../services/user.service';
 })
 export class Groups {
   groups: Group[] = [];
-  usersById: Record<number, string> = {};
+  userById: Record<number, string> = {};
   showAdd: Record<string, boolean> = {};
   newChannelName: Record<string, string> = {};
   errMsg: string = '';
@@ -29,9 +29,14 @@ export class Groups {
       allchannels: this.groupService.getChannels(),
       allusers: this.userService.getUsers()
     }).subscribe(({ groups, allchannels, allusers }) => {
-      this.usersById = Object.fromEntries(
-        allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
-      )
+      // this.usersById = Object.fromEntries(
+      //   allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
+      // )
+      this.userById = allusers.reduce((acc, user) => {
+        acc[user.id] = user.username.charAt(0).toUpperCase() + user.username.slice(1);
+        return acc;
+      }, {} as Record<number, string>);
+
       this.groups = groups.map(group => {
         return {
           ...group,
@@ -52,6 +57,7 @@ export class Groups {
         console.log('Group deleted successfully:', group);
         // Remove the deleted group from the groups array
         this.groups = this.groups.filter(g => g.id !== groupID);
+        console.log('Remaining groups:', this.groups);
       },
       error: (error: any) => {
         console.error('Error deleting group:', error);

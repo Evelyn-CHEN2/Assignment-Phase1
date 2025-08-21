@@ -8,6 +8,7 @@ import { Channel } from '../interface';
 @Injectable({
   providedIn: 'root'
 })
+
 export class GroupService {
   private http = inject(HttpClient)
   private server = 'http://localhost:3000';
@@ -28,8 +29,8 @@ export class GroupService {
     return this.http.put<Group>(`${this.server}/api/updategroup/${group.id}`, group);
   }
 
-  deleteGroup(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.server}/api/deletegroup/${id}`);
+  deleteGroup(id: string): Observable<Group[]> {
+    return this.http.delete<Group[]>(`${this.server}/api/deletegroup/${id}`);
   }
 
   createChannel(group: Group, channelName: string): Observable<Channel> {
@@ -39,5 +40,4 @@ export class GroupService {
   deleteChannel(id: string): Observable<void> {
     return this.http.delete<void>(`${this.server}/api/deletechannel/${id}`);
   }
-
 }

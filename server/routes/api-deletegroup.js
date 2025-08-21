@@ -53,6 +53,7 @@ module.exports = {
 
             try {
                 writeGroups(groups);
+                res.send(groups);
                 console.log('Group deleted successfully');
             } catch (error) {
                 console.error('Error writing groups file:', error);

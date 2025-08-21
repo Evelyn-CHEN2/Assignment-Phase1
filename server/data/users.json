@@ -1,23 +1,10 @@
 [
   {
-    "id": 1,
-    "username": "Bob",
-    "email": "Bob@com",
-    "pwd": "1234",
-    "role": "admin",
-    "groups": [
-      "g1",
-      "g2"
-    ],
-    "valid": false,
-    "_pendingAction": null
-  },
-  {
     "id": 2,
     "username": "Tom",
     "email": "Tom@com",
     "pwd": "1234",
-    "role": "chatuser",
+    "role": "admin",
     "groups": [
       "g1",
       "g2",
@@ -88,7 +75,7 @@
     "username": "try",
     "email": "try@com",
     "pwd": "1234",
-    "role": "admin",
+    "role": "chatuser",
     "groups": [],
     "valid": true,
     "_pendingAction": null
