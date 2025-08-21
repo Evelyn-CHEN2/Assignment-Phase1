@@ -37,7 +37,7 @@ export class GroupService {
     return this.http.post<Channel>(this.server + '/api/createchannel', {group, channelName});
   }
 
-  deleteChannel(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.server}/api/deletechannel/${id}`);
+  deleteChannel(id: string): Observable<Channel[]> {
+    return this.http.delete<Channel[]>(`${this.server}/api/deletechannel/${id}`);
   }
 }

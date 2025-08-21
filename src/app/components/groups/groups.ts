@@ -63,10 +63,10 @@ export class Groups {
     this.errMsg = '';
     const groupID = group.id;
     this.groupService.deleteGroup(groupID).subscribe({
-      next: () => {
+      next: (groups: Group[]) => {
         console.log('Group deleted successfully:', group);
         // Remove the deleted group from the groups array
-        this.groups = this.groups.filter(g => g.id !== groupID);
+        this.groups = groups;
         console.log('Remaining groups:', this.groups);
       },
       error: (error: any) => {

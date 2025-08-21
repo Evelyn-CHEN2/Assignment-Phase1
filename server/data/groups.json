@@ -1,28 +1,30 @@
 [
-  {
-    "id": "g2",
-    "groupname": "Data Science",
-    "description": "Weekly study on ML, stats, and notebooks.",
-    "channels": [
-      "c4",
-      "c5",
-      "c6",
-      "c37",
-      "c10",
-      "c11",
-      "c11"
-    ],
-    "createdBy": 4
-  },
-  {
-    "id": "g3",
-    "groupname": "Cybersecurity",
-    "description": "Defensive ops, IR playbooks, and vuln management.",
-    "channels": [
-      "c7",
-      "c8",
-      "c9"
-    ],
-    "createdBy": 4
-  }
+    {
+        "id": "g2",
+        "groupname": "Data Science",
+        "description": "Weekly study on ML, stats, and notebooks.",
+        "channels": [
+            "c4",
+            "c5",
+            "c6",
+            "c37",
+            "c10",
+            "c11",
+            "c11",
+            "c10",
+            "c10"
+        ],
+        "createdBy": 4
+    },
+    {
+        "id": "g3",
+        "groupname": "Cybersecurity",
+        "description": "Defensive ops, IR playbooks, and vuln management.",
+        "channels": [
+            "c7",
+            "c8",
+            "c9"
+        ],
+        "createdBy": 4
+    }
 ]
