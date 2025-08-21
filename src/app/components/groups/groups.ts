@@ -18,10 +18,13 @@ export class Groups {
   userById: Record<number, string> = {};
   showAdd: Record<string, boolean> = {};
   newChannelName: Record<string, string> = {};
+  selectedGroup: Group | null = null;
+  selectedChannel: Channel | null = null;
   errMsg: string = '';
 
   private groupService = inject (GroupService)
   private userService = inject(UserService);
+  declare bootstrap: any;
 
   ngOnInit(): void {
     forkJoin({
@@ -48,8 +51,15 @@ export class Groups {
     })
   }
 
+  // Toggle delete confirmation modal
+  openDeleteGroupModal(group: Group): void {
+    this.selectedGroup = group;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteModal')!).show();
+  }
+
   // Delete a group
-  deleteGroup(group: Group): void {
+  deleteGroup(group: Group, event: any): void {
+    event.preventDefault();
     this.errMsg = '';
     const groupID = group.id;
     this.groupService.deleteGroup(groupID).subscribe({
@@ -69,8 +79,14 @@ export class Groups {
     })
   }
 
+  // Toggle channel deletion confirmation modal
+  openDeleteChannelModal(channel: Channel): void {
+    this.selectedChannel = channel;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteChannelModal')!).show();
+  }
+
   // Delete a channel from a group
-  deleteChannel(channel: Channel): void {
+  deleteChannel(channel: Channel, event: any): void {
     this.errMsg = '';
     const channelID = channel.id;
     this.groupService.deleteChannel(channelID).subscribe({

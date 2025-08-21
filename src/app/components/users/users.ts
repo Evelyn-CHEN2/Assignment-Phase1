@@ -20,7 +20,6 @@ export class Users {
 
   private userService = inject(UserService)
   private router = inject(Router);
-
   declare bootstrap: any
 
   ngOnInit(): void {
@@ -67,10 +66,11 @@ export class Users {
     });
   }
 
+  // Toggle delete confirmation modal
   openDeleteModal(user: User): void {
     this.selectedUser = user;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteModal')!).show();
-}
+  }
   // Delete user
   confirmDelete(user: User, event: any): void {
     event.preventDefault();

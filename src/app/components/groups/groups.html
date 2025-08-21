@@ -7,10 +7,10 @@
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
-                <button class="btn p-0" style="color: green;" type="button" (click)="deleteGroup(group)">
+                <button class="btn p-0" style="color: green;" type="button">
                   <i class="bi bi-pencil-fill fs-6"></i>
                 </button>
-                <button class="btn text-danger p-0" type="button" (click)="deleteGroup(group)">
+                <button class="btn text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteGroupModal" type="button" (click)="openDeleteGroupModal(group)">
                   <i class="bi bi-x fs-5"></i>
                 </button>
               </div>
@@ -25,7 +25,7 @@
                     <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
                   {{channel.channelname}}
                   <!-- delete channel button -->
-                    <button class="btn btn-link text-danger p-0" type="button" (click)="deleteChannel(channel)">
+                    <button class="btn btn-link text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteChannelModal" type="button" (click)="openDeleteChannelModal(channel)">
                       <i class="bi bi-x-square fs-6"></i>
                     </button>
                 </li>
@@ -43,8 +43,8 @@
                 <div class="add-pop mt-2">
                   <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New channel name" 
                   [(ngModel)]="newChannelName[group.id]" name="newChannelName{{group.id}}" />
-                  <button class="btn btn-sm ms-2" style="font-size:small; color:#023e8a;" type="button" (click)="confirmAddChannel(group, $event)">Confirm</button>
-                  <button class="btn btn-sm ms-2" style="font-size:small; color:#023e8a;" type="button" (click)="toggleAddChannel(group)">Cancel</button>
+                  <button class="btn btn-sm btn-outline-secondary" style="font-size:x-small; background-color:#b7e4c7; color: black;" type="button" (click)="confirmAddChannel(group, $event)">Confirm</button>
+                  <button class="btn btn-sm ms-2" style="font-size:x-small;" type="button" (click)="toggleAddChannel(group)">Cancel</button>
                 </div>
               }
             
@@ -55,5 +55,46 @@
         </div>
       </div>
     }
+</div>
+
+<!-- Delete confirmation modals for group -->
+<div class="modal fade" id="confirmDeleteGroupModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-body py-3">
+        <p class="mb-0" id="confirmDeleteLabel">Are you sure you want to delete
+          @if (selectedGroup) {
+              <strong>Group: {{ selectedGroup.groupname }}</strong>?
+          }
+        </p>
+      </div>
+      <div class="modal-footer py-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-sm btn-danger" (click)="selectedGroup && deleteGroup(selectedGroup, $event)" data-bs-dismiss="modal">
+          Delete
+        </button>
+      </div>
+    </div>
   </div>
+</div>
   
+<!-- Delete confirmation modal for channel -->
+<div class="modal fade" id="confirmDeleteChannelModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-body py-3">
+        <p class="mb-0" id="confirmDeleteLabel">Are you sure you want to delete
+          @if (selectedChannel) {
+              <strong>Channel: {{ selectedChannel.channelname }}</strong>?
+          }
+        </p>
+      </div>
+      <div class="modal-footer py-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-sm btn-danger" (click)="selectedChannel && deleteChannel(selectedChannel, $event)" data-bs-dismiss="modal">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

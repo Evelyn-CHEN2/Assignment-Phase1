@@ -5,7 +5,7 @@
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Role</th>
-            <th style="text-align: center;" scope="col">Actions</th>
+            <th style="text-align: center; width: 20%;" scope="col">_EDIT_</th>
         </tr>
     </thead>
     <tbody>
@@ -18,20 +18,22 @@
             
             <td class="position-relative text-center align-top">
                 <div class="d-inline-flex gap-4">
-                    <button class="btn btn-sm p-0" style="color: green;" type="button" (click)="toggleUpdateRole(user)"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" type="button" (click)="openDeleteModal(user)"><i class="bi bi-x-square"></i></button>
+                    <button class="btn btn-sm p-0" style="color: #40916c;" type="button" (click)="toggleUpdateRole(user)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-sm text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" type="button" (click)="openDeleteModal(user)">
+                      <i class="bi bi-x-square"></i>
+                    </button>
                 </div>
-            
-
-                <!-- Update role -->
                 @if (showUpdateRole[user.id]) {
-                
-                    <div class="update-role-pop mt-2 d-flex w-100 position-absolute end-50" >
-                        <select style="width:50%; margin-right: 20px;" [(ngModel)]="newRole[user.id]" name="newRole{{user.id}}">
+                    <div class="update-role-pop mt-2 d-flex justify-content-around" >
+                        <select style="width:50%" [(ngModel)]="newRole[user.id]" name="newRole{{user.id}}">
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
                         </select>
-                        <button class="btn btn-sm btn-outline-secondary flex-3" style="background-color:lightgrey; color: black;" type="button" (click)="updateRole(user, $event)">Update</button>
+                        <button class="btn btn-sm btn-outline-secondary" style="width: 35%; font-size: x-small; background-color:#b7e4c7; color: black;" type="button" (click)="updateRole(user, $event)">
+                          Update
+                        </button>
                     </div>
                 }
             </td>
@@ -40,13 +42,14 @@
     </tbody>
 </table>
 
+<!-- Delete user confirmation modal -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-body py-3">
           <p class="mb-0" id="confirmDeleteLabel">Are you sure you want to delete
             @if (selectedUser) {
-                <strong>{{ selectedUser.username }}</strong>?
+                <strong>User: {{ selectedUser.username }}</strong>?
             }
           </p>
         </div>
