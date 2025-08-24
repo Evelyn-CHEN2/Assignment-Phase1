@@ -28,19 +28,6 @@ export class Header {
     map(u => u ? u.role : '')
   );
 
-
-  // ngOnInit(): void {
-  //   const currentUser = this.authService.getCurrentUser();
-  //   console.log('Current user:', currentUser);
-  //   if (currentUser) {
-  //     this.userrole = currentUser.role;
-  //     this.welcomeMsg += currentUser.username;
-  //   } else {
-  //     this.welcomeMsg = 'Welcome, Guest';
-  //   }
-    
-  // }
-  
   logout(event: any): void {
     event.preventDefault();
     this.authService.logout();

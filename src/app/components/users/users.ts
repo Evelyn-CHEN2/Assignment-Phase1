@@ -88,7 +88,6 @@ export class Users {
       }
     })
   }
-  
 
   // Navigate to user account
   navToAccount(user: User, event: any): void {

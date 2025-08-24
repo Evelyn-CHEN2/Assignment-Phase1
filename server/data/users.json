@@ -1,67 +1,48 @@
 [
-    {
-        "id": 2,
-        "username": "Tom",
-        "email": "Tom@com",
-        "pwd": "1234",
-        "role": "user",
-        "groups": [
-            "g1",
-            "g2",
-            "g3"
-        ],
-        "valid": false,
-        "_pendingAction": null
-    },
-    {
-        "id": 3,
-        "username": "Jerry",
-        "email": "Jerry@com",
-        "pwd": "1234",
-        "role": "user",
-        "groups": [
-            "g2",
-            "g3"
-        ],
-        "valid": false,
-        "_pendingAction": null
-    },
-    {
-        "id": 4,
-        "username": "super",
-        "email": "super@com",
-        "pwd": "123",
-        "role": "super",
-        "groups": [],
-        "valid": false,
-        "_pendingAction": null
-    },
-    {
-        "id": 6,
-        "username": "caleb",
-        "email": "caleb@com",
-        "pwd": "1234",
-        "role": "admin",
-        "groups": [],
-        "valid": true,
-        "_pendingAction": null
-    },
-    {
-        "id": 5,
-        "username": "tete",
-        "email": "tete@com",
-        "pwd": "1234",
-        "role": "chatuser",
-        "groups": [],
-        "valid": true
-    },
-    {
-        "id": 6,
-        "username": "caca2",
-        "email": "caca@com",
-        "pwd": "1234",
-        "role": "chatuser",
-        "groups": [],
-        "valid": true
-    }
+  {
+    "id": 2,
+    "username": "Tom",
+    "email": "Tom@com",
+    "pwd": "1234",
+    "role": "admin",
+    "groups": [
+      "g1",
+      "g2",
+      "g3"
+    ],
+    "valid": false,
+    "_pendingAction": null
+  },
+  {
+    "id": 3,
+    "username": "Jerry",
+    "email": "Jerry@com",
+    "pwd": "1234",
+    "role": "chatuser",
+    "groups": [
+      "g2",
+      "g3"
+    ],
+    "valid": false,
+    "_pendingAction": null
+  },
+  {
+    "id": 4,
+    "username": "super",
+    "email": "super@com",
+    "pwd": "123",
+    "role": "super",
+    "groups": [],
+    "valid": false,
+    "_pendingAction": null
+  },
+  {
+    "id": 5,
+    "username": "tete",
+    "email": "tete@com",
+    "pwd": "1234",
+    "role": "chatuser",
+    "groups": [],
+    "valid": true
+  }
 ]

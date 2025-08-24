@@ -1,1 +1,35 @@
+/* Make roles-badge usable as a button */
+.roles-badge--btn{
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    border: 1px solid #e5e7eb; 
+    border-radius: 9999px;
+    transition: filter .15s ease, transform .05s ease;
+  }
+  .roles-badge--btn:hover{ filter: brightness(.97); }
+  .roles-badge--btn:active{ transform: translateY(1px); }
+  .roles-badge--btn:focus-visible{
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+  }
 
+  .roles-badge--sm{
+    font-size: .75rem;     
+    padding: .18rem .5rem;  
+    border-width: 1px;
+    line-height: 1.1;
+    min-height: 28px;       
+  }
+  
+  .roles-badge--green{
+    background: #ecfdf5;   
+    color: #065f46;        
+    border-color: #a7f3d0; 
+  }
+  
+  .roles-badge--btn .bi{ color: currentColor; font-size: 1rem; line-height: 1; }
+  

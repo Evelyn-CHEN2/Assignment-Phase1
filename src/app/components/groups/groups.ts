@@ -3,8 +3,10 @@ import { GroupService } from '../../services/group.service';
 import { Group, User } from '../../interface';
 import { Channel } from '../../interface';
 import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-groups',
@@ -16,6 +18,7 @@ import { UserService } from '../../services/user.service';
 export class Groups implements OnInit {
   groups: Group[] = [];
   userById: Record<number, string> = {};
+  user: User | null = null;
   showAdd: Record<string, boolean> = {};
   newChannelName: Record<string, string> = {};
   selectedGroup: Group | null = null;
@@ -24,30 +27,53 @@ export class Groups implements OnInit {
 
   private groupService = inject (GroupService)
   private userService = inject(UserService);
+  private authService = inject(AuthService);
   declare bootstrap: any;
 
   ngOnInit(): void {
+    // Retrive user data from localStorage
+    const currentUser = this.authService.getCurrentUser();
+    this.user = currentUser;
+    // Fetch all groups, channels, and users in parallel
     forkJoin({
       groups: this.groupService.getGroups(),
       allchannels: this.groupService.getChannels(),
       allusers: this.userService.getUsers()
-    }).subscribe(({ groups, allchannels, allusers }) => {
-      // this.usersById = Object.fromEntries(
-      //   allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
-      // )
-      this.userById = allusers.reduce((acc, user) => {
-        acc[user.id] = user.username.charAt(0).toUpperCase() + user.username.slice(1);
-        return acc;
-      }, {} as Record<number, string>);
-
-      this.groups = groups.map(group => {
-        return {
-          ...group,
-          channels: allchannels.filter(c => c.groupid === group.id),
-        };
-      });
+    }).pipe(
+      map(({ groups, allchannels, allusers }) => {
+        const userById = Object.fromEntries(
+          allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
+        );
+        const formattedGroups = groups.map(group => {
+          return {
+            ...group,
+            channels: allchannels.filter(c => c.groupid === group.id),
+          }
+        });
+        return { userById, formattedGroups };
+      }),
+    ).subscribe(({ userById, formattedGroups }) => {
+      this.userById = userById;
+      this.groups = formattedGroups;
       console.log('All groups fetched successfully:', this.groups);
     })
+    // }).subscribe(({ groups, allchannels, allusers }) => {
+    //   // this.usersById = Object.fromEntries(
+    //   //   allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
+    //   // )
+    //   this.userById = allusers.reduce((acc, user) => {
+    //     acc[user.id] = user.username.charAt(0).toUpperCase() + user.username.slice(1);
+    //     return acc;
+    //   }, {} as Record<number, string>);
+
+    //   this.groups = groups.map(group => {
+    //     return {
+    //       ...group,
+    //       channels: allchannels.filter(c => c.groupid === group.id),
+    //     };
+    //   });
+    //   console.log('All groups fetched successfully:', this.groups);
+    // })
   }
 
   // Edit a group

@@ -1,33 +1,66 @@
-<div>
-    User name: {{user?.username}}
-    Email: {{user?.email}}
-    Role: {{user?.role}}
+<div class="account-card">
+  <div class="account-header">
+    <div class="avatar">{{ (user?.username || '?') }}</div>
+
+    <div class="user-main">
+      <h2 class="account-title">{{ user?.username }}</h2>
+      <p class="user-email">Email: {{ user?.email }}</p>
+    </div>
+   
+    <div class="header-actions">
+      <span class="roles-badge" [attr.data-role]="user?.role">
+        {{ user?.role }}
+      </span>
+      <button
+        class="roles-badge roles-badge--btn"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#confirmDeleteModal"
+        (click)="user && openDeleteModal(user)">
+        Remove
+      </button>
+    </div>
+    
+  </div>
+
+  <div class="account-section">
+    <h3 class="section-title">Groups & Channels</h3>
+
+    <ul class="group-list">
+      @for (group of userGroups; track group.id) {
+        <li class="group-item">
+          <span class="group-chip">{{ group.groupname }}</span>
+
+          <div class="channel-chips">
+            @for (channel of group.channels; track channel.id) {
+              <span class="chip">{{ channel.channelname }}</span>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
 </div>
-<div class="account-container">
-    <div class="account-header">
-      <div class="avatar">{{user?.username}}</div>
-      <div>
-        <div class="account-title">{{user?.username}}</div>
-        <div style="color: #888;">{{user?.email}}</div>
+
+<!-- Delete user confirmation modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-m">
+    <div class="modal-content">
+      <div class="modal-body py-3">
+        <p class="mb-0" id="confirmDeleteLabel">Are you sure to delete your account permanently?</p>
+        <small class="text-muted">This action cannot be undone.</small>
+          
+
       </div>
-    </div>
-    <div class="account-section">
-      <div class="account-info">
-        <label>Role:</label>
-        <span class="roles-badge">{{user?.role}}</span>
+      <div class="modal-footer py-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" (click)="loggedUser && confirmDelete(user!, $event)"> 
+                                                                                                                      <!-- user! is for check user is not null -->
+          Delete
+        </button>
       </div>
-    </div>
-    <div class="account-section">
-      <div class="account-info">
-        <label>Groups:</label>
-      </div>
-      <ul class="groups-list">
-        @for (group of userGroups; track $index) {
-            <li class="group-item">
-            <span class="group-name">{{group.groupname}}</span>
-            <span class="group-role">{{group.channels}}</span>
-            </li>
-        }
-      </ul>
     </div>
   </div>
+</div>
+
+        

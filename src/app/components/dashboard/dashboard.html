@@ -1,16 +1,18 @@
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb breadcrumb-custom overflow-hidden text-center bg-body-tertiary border rounded-2 p-0" style="height: 50px">
-    <li class="breadcrumb-item">
-        <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" routerLink="/dashboard/users">Users</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" routerLink="/dashboard/groups">Groups</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-        <a class="d-block py-0 px-3 text-decoration-none link-body-emphasis" href="#">Groups</a>
-    </li>
-    </ol>
-</nav>
+@if (user?.role === 'super' || user?.role === 'admin') {
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-custom overflow-hidden text-center bg-body-tertiary border rounded-2 p-0" style="height: 50px">
+        <li class="breadcrumb-item">
+            <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" routerLink="/dashboard/users">Users</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="d-block py-0 px-4 fw-semibold text-decoration-none link-body-emphasis" routerLink="/dashboard/groups">Groups</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <a class="d-block py-0 px-3 text-decoration-none link-body-emphasis" href="#">Groups</a>
+        </li>
+        </ol>
+    </nav>
+}
 
 <hr>
 <div>

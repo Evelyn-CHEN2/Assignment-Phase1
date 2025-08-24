@@ -31,7 +31,7 @@ export class AuthService {
     return this.http.post<User>(this.server + '/api/register', { username: username, email: email, pwd: pwd });
   }
      
-  setCurrentUser(newuser: User, remember = true): void {
+  setCurrentUser(newuser: User | null, remember = true): void {
     const key = 'currentUser';
     localStorage.removeItem(key);
     sessionStorage.removeItem(key);

@@ -5,6 +5,7 @@ import { Group } from '../../interface';
 import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { map, switchMap, of } from 'rxjs';
 
 @Component({
@@ -15,13 +16,15 @@ import { map, switchMap, of } from 'rxjs';
 })
 export class Account implements OnInit {
   user: User | null = null;
-  userGroups: Group[] = []
+  userGroups: Group[] = [];
+  loggedUser: User | null = null;
 
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private groupService = inject(GroupService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  declare bootstrap: any;
 
   ngOnInit(): void {
     this.route.params.pipe(
@@ -32,18 +35,54 @@ export class Account implements OnInit {
         console.log('Fetching user with ID:', userId);
         return this.userService.getUserById(userId);
       }),
-      // Fetch groups for the user
+      // Fetch groups/channels for the user
       switchMap(user => {
         if (!user) {
           console.warn('User not found or access denied');
-          return of(null);
+          return of(null); // SwithchMap expects an Observable, return of(null) to avoid breaking the stream
         };
         this.user = user;
-        return this.groupService.getGroups().pipe(
-          map(groups => groups.filter(g => user.groups.includes(g.id)))
+        return forkJoin({
+          groups: this.groupService.getGroups(),
+          channels: this.groupService.getChannels()
+        }).pipe(
+          map(({ groups, channels }) => {
+            return groups.filter(g => user.groups.includes(g.id)).map(group => ({
+                ...group,
+                channels: channels.filter(c => c.groupid === group.id)
+            }));
+          })
         );
-      })
+      }),
     ).subscribe(groups => this.userGroups = groups || []);
   }
+
+  // Toggle delete confirmation modal
+  openDeleteModal(user: User): void {
+    this.loggedUser = user;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteModal')!).show();
+  }
+
+  // Delete user account, operated by logged user self
+  confirmDelete(user: User, event: any): void {
+    event.preventDefault();
+    this.userService.deleteUser(user.id).subscribe({
+      next: () => {
+        console.log('User self deleted successfully:', user);
+        this.authService.setCurrentUser(null, false); // Clear current user
+        this.router.navigate(['/login']);
+      }, 
+      error: (error: any) => {
+        console.error('Error deleting user self:', error);
+      },
+      complete: () => {
+        console.log('User self deletion complete.');
+      }
+    })
+  }
+
+
 }
+
+
 
