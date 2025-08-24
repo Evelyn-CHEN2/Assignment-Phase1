@@ -1,9 +1,9 @@
 class Channel {
-    constructor(id, channelname, groupid, chats) {
+    constructor(id, channelname, groupid, messages) {
         this.id = id;
         this.channelname = channelname;
         this.groupid = groupid;
-        this.chats = chats || [];
+        this.messages = messages || [];
     }
 }
 

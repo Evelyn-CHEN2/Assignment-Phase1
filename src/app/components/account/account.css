@@ -48,7 +48,7 @@
 .user-email{
   margin: 2px 0 0;
   font-size: .875rem;
-  color: #6b7280; /* gray-500 */
+  color: #6b7280;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -131,11 +131,14 @@
   font-size: .8rem;
 }
 
-/* optional empty state */
-.group-list:empty::before{
-  content: "No groups yet.";
-  color: #9ca3af;
-  font-size: .9rem;
+.chip--btn{
+  appearance: none;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
+  border-radius: 9999px;
+  padding: .3rem .55rem;
+  font: inherit;
+  cursor: pointer;
 }
-
+.chip--btn:focus-visible{ outline:2px solid #60a5fa; outline-offset:2px; }
 

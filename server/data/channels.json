@@ -3,54 +3,102 @@
     "id": "c1",
     "channelname": "announces",
     "groupid": "g1",
-    "chats": []
+    "messages": []
   },
   {
     "id": "c2",
     "channelname": "help-and-fix",
     "groupid": "g1",
-    "chats": []
+    "messages": []
   },
   {
     "id": "c3",
     "channelname": "jobs-and-gigs",
     "groupid": "g1",
-    "chats": []
+    "cmessages": []
   },
   {
     "id": "c4",
     "channelname": "reading-group",
     "groupid": "g2",
-    "chats": []
+    "messages": [
+      {
+        "sender": 2,
+        "timestamp": "2025-08-24T09:04:18.728Z"
+      },
+      {
+        "sender": 2,
+        "timestamp": "2025-08-24T09:04:44.397Z"
+      },
+      {
+        "sender": 2,
+        "timestamp": "2025-08-24T09:05:42.163Z"
+      },
+      {
+        "sender": 2,
+        "timestamp": "2025-08-24T09:05:43.446Z"
+      },
+      {
+        "sender": 2,
+        "timestamp": "2025-08-24T09:05:44.709Z"
+      },
+      {
+        "sender": 2,
+        "timestamp": "2025-08-24T09:05:45.965Z"
+      },
+      {
+        "sender": 2,
+        "timestamp": "2025-08-24T09:05:47.897Z"
+      },
+      {
+        "sender": 2,
+        "timestamp": "2025-08-24T09:14:53.562Z"
+      },
+      {
+        "sender": 2,
+        "text": "testtesteset",
+        "timestamp": "2025-08-24T09:16:56.112Z"
+      },
+      {
+        "sender": 2,
+        "text": "ryhaerhe",
+        "timestamp": "2025-08-24T09:17:03.936Z"
+      },
+      {
+        "sender": 2,
+        "text": "adgfgergha",
+        "timestamp": "2025-08-24T09:45:21.391Z"
+      }
+    ]
   },
   {
     "id": "c5",
     "channelname": "notebooks",
     "groupid": "g2",
-    "chats": []
+    "messages": []
   },
   {
     "id": "c6",
     "channelname": "datasets",
     "groupid": "g2",
-    "chats": []
+    "messages": []
   },
   {
     "id": "c7",
     "channelname": "alerts-and-news",
     "groupid": "g3",
-    "chats": []
+    "messages": []
   },
   {
     "id": "c8",
     "channelname": "tooling",
     "groupid": "g3",
-    "chats": []
+    "messages": []
   },
   {
     "id": "c9",
     "channelname": "playbooks",
     "groupid": "g3",
-    "chats": []
+    "messages": []
   }
 ]

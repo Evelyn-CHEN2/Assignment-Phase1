@@ -8,6 +8,7 @@ import { Groups } from './components/groups/groups'
 import { authGuard } from './guards/auth-guard';
 import { viewOtherAccountGuard } from './guards/view-other-account-guard';
 import { GroupForm } from './components/group-form/group-form';
+import { Chatwindow } from './components/chatwindow/chatwindow';
 
 export const routes: Routes = [
     {
@@ -41,5 +42,8 @@ export const routes: Routes = [
     },
     {
         path: 'account/:id', component: Account, canActivate: [viewOtherAccountGuard, authGuard],
+    },
+    {
+        path: 'chatwindow/:id', component: Chatwindow, canActivate: [authGuard]
     }
 ];

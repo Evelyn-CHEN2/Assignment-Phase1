@@ -20,6 +20,6 @@ export interface Group {
 export interface Channel {
     id: string;
     channelname: string;
-    chats: [];
+    messages: { sender: number; text: string; timestamp: Date }[];
     groupid: string;  //Store group.id
 }

@@ -21,6 +21,10 @@ export class GroupService {
     return this.http.get<Channel[]>(this.server + '/api/allchannels')
   }
 
+  getChannelUsers(id: string): Observable<User[]> {
+    return this.http.get<User[]>(this.server + '/api/channelusers');
+  }
+
   createGroup(groupname: string, description: string , channelNames: string[], currentUser: User): Observable<void> {
     return this.http.post<void>(this.server + '/api/creategroup', {groupname, description, channelNames, currentUser});
   }
@@ -39,5 +43,9 @@ export class GroupService {
 
   deleteChannel(id: string): Observable<void> {
     return this.http.delete<void>(`${this.server}/api/deletechannel/${id}`);
+  }
+
+  addMsgToChannel(channelId: string, userId: number, text: string): Observable<Channel> {
+    return this.http.post<Channel>(this.server + '/api/addmessage', { channelId, userId, text });
   }
 }

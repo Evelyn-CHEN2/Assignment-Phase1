@@ -1,0 +1,45 @@
+<div class="chat-window">
+    <!-- Basic information of channel -->
+    <div class="chat-header">
+      <div class="chan-info">
+        <button type="button" class="back-btn" (click)="goBack()">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <div class="avatar">
+            {{ (currentUser?.username || '?') | slice:0:1 | uppercase }}
+        </div>
+        <strong>{{ currentUser?.username }}</strong>
+      </div>
+  
+      <h2 class="chan-name"># {{ channel?.channelname }}</h2>
+    </div>
+  
+    <!-- Messages -->
+    <div class="chat-body" #scrollArea>
+      <ul class="msg-list">
+        @for (m of channel?.messages; track $index) {
+          <li class="msg" [class.is-mine]="m.sender === currentUser?.id">
+            <div class="msg-avatar">
+              {{ (userById[m.sender]) || 'U'}}
+            </div>
+            <div class="msg-bubble">
+              <div class="msg-text">{{ m.text }}</div>
+            </div>
+            <time class="msg-time" [attr.datatime]="m.timestamp">
+              {{ m.timestamp | date: 'short' }}
+            </time>
+          </li>
+        }
+      </ul>
+    </div>
+  
+    <!-- Text input area -->
+    <form class="chat-input" (ngSubmit)="sendMessage($event)">
+      <input class="form-control me-2" type="text" [(ngModel)]="draftMsg" name="draftMsg" placeholder="What do you want to say?" required/>
+      <button class="send-btn" type="submit">Send</button>
+    </form>
+    @if (errMsg) {
+        <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
+    }
+</div>
+  

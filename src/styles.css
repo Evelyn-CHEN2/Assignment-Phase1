@@ -5,6 +5,15 @@
   display: block;
 }
 
+.input-compact {
+  font-size: 13px;          
+}
+
+.input-compact:focus {
+  box-shadow: 0 0 0 .001rem #8d99ae; 
+  border-color: #8d99ae;              
+}
+
 .invalid-feedback {
   display: none;
   width: 100%;

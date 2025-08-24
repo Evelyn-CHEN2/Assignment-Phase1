@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { User } from '../../interface';
-import { Group } from '../../interface';
+import { Group, Channel, User } from '../../interface';
 import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,6 +17,7 @@ export class Account implements OnInit {
   user: User | null = null;
   userGroups: Group[] = [];
   loggedUser: User | null = null;
+  channel: Channel | null = null;
 
   private authService = inject(AuthService);
   private userService = inject(UserService);
@@ -81,7 +81,13 @@ export class Account implements OnInit {
     })
   }
 
-
+  // Choose the channel to join
+  joinChannel(channel: Channel): void {
+    this.channel = channel;
+    console.log('Joining channel:', channel);
+    // Navigate to the chat window with the selected channel
+    this.router.navigate(['/chatwindow', channel.id])
+  }
 }
 
 
