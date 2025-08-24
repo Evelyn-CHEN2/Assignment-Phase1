@@ -35,7 +35,7 @@ module.exports = {
                 req.body.username,
                 req.body.email,
                 req.body.pwd,
-                ["chatuser"],
+                "chatuser",
                 [],
                 true
             );

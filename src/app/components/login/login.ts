@@ -30,7 +30,7 @@ export class Login implements OnInit {
       if (currentUser.role === 'super') {
         this.router.navigate(['/dashboard']);
       } else {
-        this.router.navigate(['/account']);
+        this.router.navigate(['/account',currentUser.id]);
       }
     } else {
       console.log('No user logged in, redirecting to login page.');
@@ -59,10 +59,10 @@ export class Login implements OnInit {
           this.authService.setCurrentUser(user, this.rememberMe); //Store logged user data to localStorage
           
           // If user is super, redirect to dashboard after login, otherwise to account page
-          if (user.role === 'super') {
+          if (user.role === 'super' || user.role === 'admin') {
             this.router.navigate(['/dashboard']);
           } else {
-            this.router.navigate(['/account'])
+            this.router.navigate(['/account', user.id]);
           } 
         }
       },
