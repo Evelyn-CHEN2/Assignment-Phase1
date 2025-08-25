@@ -26,7 +26,9 @@ export interface Channel {
 
 export interface Notification {
     id: string;
-    userId: number; //Store user.id
-    groupsToApply: string[]; //Store group.id
+    applier: number; // Store user.id who applies
+    groupToApply: string; // Store group.id
+    groupCreator: number; // Store user.id who create the group
     isApproved: boolean;
+    applyAppending: boolean;
 }

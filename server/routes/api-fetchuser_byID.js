@@ -12,7 +12,7 @@ module.exports = {
             return Array.isArray(users) ? users : [];
         };
 
-        app.get('/api/fetchuser_byID/:id', (req, res) => {
+        app.get('/api/fetchuserbyID/:id', (req, res) => {
             if (!req.params.id) {
                 return res.status(400).json({ error: 'No user ID provided' });
             }

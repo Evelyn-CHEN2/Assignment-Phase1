@@ -9,6 +9,7 @@ import { authGuard } from './guards/auth-guard';
 import { adminAuthGuard } from './guards/admin-auth-guard';
 import { GroupForm } from './components/group-form/group-form';
 import { Chatwindow } from './components/chatwindow/chatwindow';
+import { Notifications } from './components/notifications/notifications';
 
 export const routes: Routes = [
     {
@@ -36,7 +37,7 @@ export const routes: Routes = [
                 path: 'group-form', component: GroupForm, canActivate: [adminAuthGuard]
             },
             {
-                path: 'notifications', component: Users, canActivate: [adminAuthGuard]
+                path: 'notifications', component: Notifications, canActivate: [adminAuthGuard]
             }
         ]
     },

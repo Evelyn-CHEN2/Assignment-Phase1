@@ -11,12 +11,12 @@ export class NotificationService {
   private http = inject(HttpClient)
   private server = 'http://localhost:3000';
 
-  createNotification(userId: number, groupId: string): Observable<void> {
-    return this.http.post<void>(this.server + '/api/createnotification', { userId, groupId });
+  createNotification(userId: number, groupId: string, groupCreatorId: number): Observable<Notification> {
+    return this.http.post<Notification>(this.server + '/api/createnotification', { userId, groupId, groupCreatorId });
   }
 
-  getNotifications(): Observable<Notification[]> {
-    return this.http.get<Notification[]>(this.server + '/api/getnotifications/');
+  fetchNotifications(): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.server + '/api/fetchnotifications');
   }
 
   updateNotification(id: string): Observable<void> {

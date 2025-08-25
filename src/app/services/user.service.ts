@@ -15,7 +15,7 @@ export class UserService {
   }
 
   getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.server}/api/fetchuser_byID/${id}`);
+    return this.http.get<User>(`${this.server}/api/fetchuserbyID/${id}`);
   }
 
   updateUserRole(newRole: string, id: number): Observable<User> {

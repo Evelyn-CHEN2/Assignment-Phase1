@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GroupService } from '../../services/group.service';
 import { NotificationService } from '../../services/notification.service';
-import { Group, User } from '../../interface';
+import { Group, User, Notification } from '../../interface';
 import { Channel } from '../../interface';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -180,6 +180,7 @@ export class Groups implements OnInit {
   // Actions for chatusers
   applyToJoinGroup(group: Group, event: any): void {
     const groupId = group.id;
+    const groupCreatorId = group.createdBy;
     if (this.applyPending[groupId]) return;
     this.applyPending[groupId] = true;  
     
@@ -187,20 +188,31 @@ export class Groups implements OnInit {
       this.errMsg = 'User ID is required to send a notification.';
       return;
     }
-    
-    this.notificationService.createNotification(this.user.id, groupId).subscribe({
-      next: () => {
+
+    if (groupCreatorId === undefined) {
+      this.errMsg = 'Group creator ID is undefined.';
+      return;
+    }
+
+    this.notificationService.createNotification(this.user.id, groupId, groupCreatorId).subscribe({
+      next: (newNotification: Notification) => {
         alert('Application sent. Please wait for admin approval.');
+        this.applyPending[groupId] = newNotification.applyAppending;
+        localStorage.setItem('applyPending_' + groupId, JSON.stringify(this.applyPending[groupId]));
       },
       error: (error: any) => {
         console.error('Error sending application:', error);
         this.errMsg = error.error.error || 'Failed to send application.';
       },
       complete: () => {
-        console.log('Application request completed.');
-        this.applyPending[groupId] = false;  
+        console.log('Application request completed.');  
       }
     })
   }
+
+
+
+
+
 }
  

@@ -1,10 +1,10 @@
 [
   {
-    "id": "2025-08-25T06:24:35.438Z",
-    "userId": 3,
-    "groupsToApply": [
-      "g1756080867629"
-    ],
-    "isApproved": false
+    "id": "2025-08-25T12:56:14.195Z",
+    "applier": 3,
+    "groupToApply": "g1756080867629",
+    "groupCreator": 4,
+    "isApproved": false,
+    "applyAppending": true
   }
 ]

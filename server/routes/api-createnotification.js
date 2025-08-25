@@ -29,14 +29,16 @@ module.exports = {
             const newNotification = new Notification(
                 new Date().toISOString(),
                 req.body.userId,
-                [req.body.groupId],
+                req.body.groupId,
+                req.body.groupCreatorId,
                 false,
+                true
             )
 
             notifications.push(newNotification);
             try {
                 writeNotifications(notifications);
-                res.sendStatus(204);
+                res.send(newNotification);
             }
             catch (error) {
                 console.error('Error creating notifications:', error);
