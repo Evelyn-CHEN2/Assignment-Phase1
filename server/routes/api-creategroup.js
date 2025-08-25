@@ -32,8 +32,22 @@ module.exports = {
             fs.writeFileSync(groupsFile, JSON.stringify(groups, null, 2), 'utf8');
         };
 
+        // Function to read users from file
+        const readUsers = () => {
+            const usersFile = path.join(__dirname, '../data/users.json');
+            const data = fs.readFileSync(usersFile, 'utf8');
+            const users = JSON.parse(data);
+            return Array.isArray(users) ? users : [];
+        };
+
+        // Write users to file
+        const writeUsers = (users) => {
+            const usersFile = path.join(__dirname, '../data/users.json');
+            fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
+        }
+
         app.post('/api/creategroup', (req, res) => {
-            try {
+          
                 if (!req.body || !req.body.groupname || !req.body.description || !req.body.channelNames || !req.body.currentUser) {
                     return res.status(400).json({ error: 'Invalid request data' });
                 }
@@ -72,13 +86,24 @@ module.exports = {
                     req.body.currentUser.id,
                 )
                 groups.push(newgroup);
-                writeGroups(groups);
-                res.send({ group: newgroup, channels: newchannels });
-            }
-            catch (error) {
-                console.error('Created group failed:', error);
-                return res.status(500).json({ error: 'Failed to create group!' });
-            } 
+
+                // Add new group to the user who created it
+                let users = readUsers();
+                const creator = users.find(u => u.id === req.body.currentUser.id);
+                creator.groups.push(newGroupid);
+
+                try {
+                    writeGroups(groups);
+                    writeUsers(users);
+                    res.send(newgroup);
+                }
+                catch (error) {
+                    console.error('Error creating new group:', error);
+                    res.status(500).json({ error: 'Failed to create group' });
+                }
+                
+            
+           
         })
     }
 }

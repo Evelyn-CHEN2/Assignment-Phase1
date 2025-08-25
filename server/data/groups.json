@@ -54,5 +54,14 @@
       "c1756081043744"
     ],
     "createdBy": 2
+  },
+  {
+    "id": "g1756090568490",
+    "groupname": "test",
+    "description": "test",
+    "channels": [
+      "c1756090568490"
+    ],
+    "createdBy": 4
   }
 ]

@@ -68,6 +68,11 @@
         "sender": 2,
         "text": "adgfgergha",
         "timestamp": "2025-08-24T09:45:21.391Z"
+      },
+      {
+        "sender": 4,
+        "text": "test2",
+        "timestamp": "2025-08-25T00:34:55.049Z"
       }
     ]
   },
@@ -153,6 +158,36 @@
     "id": "c1756081043744",
     "channelname": "serverless",
     "groupid": "g1756081043742",
+    "messages": []
+  },
+  {
+    "id": "c1756084901175",
+    "channelname": "qert",
+    "groupid": "g1756084901175",
+    "messages": []
+  },
+  {
+    "id": "c1756085119138",
+    "channelname": "set2",
+    "groupid": "g1756085119138",
+    "messages": []
+  },
+  {
+    "id": "c1756085168230",
+    "channelname": "set2",
+    "groupid": "g1756085168230",
+    "messages": []
+  },
+  {
+    "id": "c1756085903479",
+    "channelname": "sdgse",
+    "groupid": "g1756085903479",
+    "messages": []
+  },
+  {
+    "id": "c1756090568490",
+    "channelname": "setste",
+    "groupid": "g1756090568490",
     "messages": []
   }
 ]
