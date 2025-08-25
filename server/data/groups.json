@@ -21,5 +21,38 @@
       "c9"
     ],
     "createdBy": 4
+  },
+  {
+    "id": "g1756080867629",
+    "groupname": "Web Development",
+    "description": "Frontend, backend, and DevOps discussions.",
+    "channels": [
+      "c1756080867629",
+      "c1756080867630",
+      "c1756080867631"
+    ],
+    "createdBy": 4
+  },
+  {
+    "id": "g1756080958422",
+    "groupname": "Artificial Intelligence",
+    "description": "Research, neural networks, and ethical AI.",
+    "channels": [
+      "c1756080958422",
+      "c1756080958424",
+      "c1756080958425"
+    ],
+    "createdBy": 2
+  },
+  {
+    "id": "g1756081043742",
+    "groupname": "Cloud Computing",
+    "description": "Infrastructure, serverless apps, and scaling solutions.",
+    "channels": [
+      "c1756081043742",
+      "c1756081043743",
+      "c1756081043744"
+    ],
+    "createdBy": 2
   }
 ]

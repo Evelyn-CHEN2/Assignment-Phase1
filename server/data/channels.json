@@ -100,5 +100,59 @@
     "channelname": "playbooks",
     "groupid": "g3",
     "messages": []
+  },
+  {
+    "id": "c1756080867629",
+    "channelname": "frontend",
+    "groupid": "g1756080867629",
+    "messages": []
+  },
+  {
+    "id": "c1756080867630",
+    "channelname": "backend",
+    "groupid": "g1756080867629",
+    "messages": []
+  },
+  {
+    "id": "c1756080867631",
+    "channelname": "devops",
+    "groupid": "g1756080867629",
+    "messages": []
+  },
+  {
+    "id": "c1756080958422",
+    "channelname": "deep-learning",
+    "groupid": "g1756080958422",
+    "messages": []
+  },
+  {
+    "id": "c1756080958424",
+    "channelname": "nlp",
+    "groupid": "g1756080958422",
+    "messages": []
+  },
+  {
+    "id": "c1756080958425",
+    "channelname": "ai-ethics",
+    "groupid": "g1756080958422",
+    "messages": []
+  },
+  {
+    "id": "c1756081043742",
+    "channelname": "aws-azure-gcp",
+    "groupid": "g1756081043742",
+    "messages": []
+  },
+  {
+    "id": "c1756081043743",
+    "channelname": "kubernetes",
+    "groupid": "g1756081043742",
+    "messages": []
+  },
+  {
+    "id": "c1756081043744",
+    "channelname": "serverless",
+    "groupid": "g1756081043742",
+    "messages": []
   }
 ]

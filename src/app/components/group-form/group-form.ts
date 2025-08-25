@@ -49,10 +49,17 @@ export class GroupForm {
       console.error('No current user found. Cannot create group.');
       return;
     }
+    // Only let admin and super to create groups
+    if (currentUser.role !== 'admin' && currentUser.role !== 'super') {
+      this.errMsg = 'You do not have permission to create groups.';
+      return;
+    }
     this.groupService.createGroup(this.groupname, this.description, channelNames, currentUser).subscribe({
       next: () => {
         console.log('Group created successfully'); 
         this.router.navigate(['/dashboard/groups']);
+        // Add created group to super/admin groups
+        
         // Reset form fields after successful creation
         this.onReset(f);
       }
