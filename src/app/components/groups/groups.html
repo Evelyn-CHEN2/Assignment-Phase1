@@ -7,7 +7,7 @@
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
-                @if (user?.role === 'super' || user?.role === 'admin') {
+                @if ((user?.role === 'super' || user?.role === 'admin') && group.createdBy === user?.id) {
                   <button class="btn p-0" style="color: green;" type="button" (click)="editGroup(group, $event)">
                     <i class="bi bi-pencil-fill fs-6"></i>
                   </button>
@@ -59,18 +59,13 @@
 
             <!--super/admin to add channel -->
             <div class="d-flex justify-content-end m-2">
-              @if (user?.role === 'super' || user?.role === 'admin') {
-                <button type="button" class="btn btn-sm btn-outline-secondary me-2" (click)="editGroup(group, $event)">
-                  <i class="bi bi-pencil-square"></i> Edit Group
-                </button>
-              
+              @if ((user?.role === 'super' || user?.role === 'admin') && group.createdBy === user?.id) {
                 <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
                   <span>Channel</span>
                   <span class="add-circle"><i class="bi bi-plus-lg"></i></span>
                 </button>
               }
             </div>
-
 
             @if (showAdd[group.id]){
               <div class="add-pop mt-2">
