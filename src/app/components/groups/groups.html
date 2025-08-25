@@ -18,11 +18,16 @@
                 <!-- If user is already a member of the group, show check icon, otherwise show heart icon -->
                 @if (user?.role === 'chatuser' && user?.groups?.includes(group.id)) {
                   <button class="btn p-0" style="color: #40916c;" type="button">
-                    <i class="bi bi-patch-check-fill fs-6"></i>
+                    <i class="bi bi-check2-all fs-6"></i>
                   </button>
                 } @else {
-                  <button class="btn p-0" style="color: #ef233c;" type="button">
-                    <i class="bi bi-suit-heart-fill fs-6"></i>
+                  <button class="btn p-0" style="color: #ef233c;" type="button" (click)="applyToJoinGroup(group, $event)">
+                    <i class="bi fs-6" 
+                      [ngClass]="{
+                        'bi-suit-heart-fill': !applyPending[(group.id)],
+                        'bi-hourglass-split': applyPending[(group.id)]
+                      }"
+                      [style.color]="applyPending[(group.id)] ? '#f59f00' : '#ef233c'"></i>
                   </button>
                 }
                   <button class="btn p-0" type="button">

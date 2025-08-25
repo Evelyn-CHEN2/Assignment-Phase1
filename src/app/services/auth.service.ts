@@ -2,8 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../interface';
-import { map, distinctUntilChanged } from 'rxjs/operators';
-
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +13,6 @@ export class AuthService {
 
   private currentUserSubject = new BehaviorSubject<User | null>(this.readFromStorage());
   currentUser$: Observable<User | null> = this.currentUserSubject.asObservable()
-
-//   window.addEventListener('storage', (e) => {
-//     if (e.key === 'currentUser') {
-//       this.currentUserSubject.next(this.readFromStorage());
-//     }
-//   });
-// }
 
   login(username: string, pwd: string): Observable<User> {
     return this.http.post<User>(this.server + '/api/login', { username: username, pwd: pwd });
@@ -40,8 +31,6 @@ export class AuthService {
     } else {
       sessionStorage.setItem('currentUser', JSON.stringify(newuser));
     }
-    
-    
     this.currentUserSubject.next(newuser);
   }
 
@@ -54,12 +43,6 @@ export class AuthService {
   }
 
   getCurrentUser(): User | null {
-    // const currentUser = localStorage.getItem('currentUser')
-    // if (currentUser) {
-    //   return JSON.parse(currentUser) as User;
-      
-    // }
-    // return null;
     return this.currentUserSubject.value
   }
 

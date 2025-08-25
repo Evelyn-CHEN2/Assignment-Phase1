@@ -22,6 +22,7 @@ require('./routes/api-allchannels.js').route(app);
 require('./routes/api-createchannel.js').route(app);
 require('./routes/api-deletechannel.js').route(app);
 require('./routes/api-addmessage.js').route(app);
+require('./routes/api-createnotification.js').route(app);
 
 require('./listen.js').start(app, PORT);
 

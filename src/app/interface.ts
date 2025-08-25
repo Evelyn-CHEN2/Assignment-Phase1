@@ -20,6 +20,13 @@ export interface Group {
 export interface Channel {
     id: string;
     channelname: string;
-    messages: { sender: number; text: string; timestamp: Date }[]; //sender is user.id
+    messages: { sender: number; text: string; timestamp: Date }[]; // Sender is user.id
     groupid: string;  //Store group.id
+}
+
+export interface Notification {
+    id: string;
+    userId: number; //Store user.id
+    groupsToApply: string[]; //Store group.id
+    isApproved: boolean;
 }

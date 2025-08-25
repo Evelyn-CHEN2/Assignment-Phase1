@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GroupService } from '../../services/group.service';
+import { NotificationService } from '../../services/notification.service';
 import { Group, User } from '../../interface';
 import { Channel } from '../../interface';
 import { forkJoin } from 'rxjs';
@@ -7,11 +8,12 @@ import { map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgClass],
   templateUrl: './groups.html',
   styleUrl: './groups.css'
 })
@@ -24,10 +26,12 @@ export class Groups implements OnInit {
   selectedGroup: Group | null = null;
   selectedChannel: Channel | null = null;
   errMsg: string = '';
+  applyPending: Record<string, boolean> = {};
 
   private groupService = inject (GroupService)
   private userService = inject(UserService);
   private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
   declare bootstrap: any;
 
   ngOnInit(): void {
@@ -76,6 +80,7 @@ export class Groups implements OnInit {
     // })
   }
 
+  // Actions for super and admin
   // Edit a group
   editGroup(group: Group, event: any): void {
 
@@ -170,5 +175,32 @@ export class Groups implements OnInit {
         console.log('Channel creation request completed.');
       }
     })
+  }
+
+  // Actions for chatusers
+  applyToJoinGroup(group: Group, event: any): void {
+    const groupId = group.id;
+    if (this.applyPending[groupId]) return;
+    this.applyPending[groupId] = true;  
+    
+    if (this.user?.id === undefined) {
+      this.errMsg = 'User ID is required to send a notification.';
+      return;
+    }
+    
+    this.notificationService.createNotification(this.user.id, groupId).subscribe({
+      next: () => {
+        alert('Application sent. Please wait for admin approval.');
+      },
+      error: (error: any) => {
+        console.error('Error sending application:', error);
+        this.errMsg = error.error.error || 'Failed to send application.';
+      },
+      complete: () => {
+        console.log('Application request completed.');
+        this.applyPending[groupId] = false;  
+      }
+    })
+  }
 }
-}
+ 
