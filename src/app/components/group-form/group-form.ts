@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { Channel } from '../../interface';
 import { Group } from '../../interface';
 import { Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-group-form',
@@ -56,15 +57,19 @@ export class GroupForm {
     }
     this.groupService.createGroup(this.groupname, this.description, channelNames, currentUser).subscribe({
       next: () => {
-        console.log('Group created successfully'); 
         this.router.navigate(['/dashboard/groups']);
-        // Add created group to super/admin groups
-        
-        // Reset form fields after successful creation
         this.onReset(f);
+        this.errMsg = '';
+        this.submitted = false;
+      }, 
+      error: (error: any) => {
+        console.error('Error creating group:', error);
+        this.errMsg = error.error?.error;
+      },
+      complete: () => {
+        console.log('Group created successfully.');
       }
     })
-
 
   }
 }

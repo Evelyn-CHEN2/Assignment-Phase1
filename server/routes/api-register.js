@@ -30,8 +30,9 @@ module.exports = {
                 return res.status(400).json({ error: 'Username already exists' });
             }
 
+            const maxId = users.reduce((max, user) => Math.max(max, user.id), 0);
             const newUser = new User(
-                users.length + 1,
+                maxId + 1,
                 req.body.username,
                 req.body.email,
                 req.body.pwd,

@@ -18,6 +18,7 @@ export class Account implements OnInit {
   userGroups: Group[] = [];
   loggedUser: User | null = null;
   channel: Channel | null = null;
+  selectedGroup: Group | null = null; 
 
   private authService = inject(AuthService);
   private userService = inject(UserService);
@@ -64,7 +65,7 @@ export class Account implements OnInit {
   }
 
   // Delete user account, operated by logged user self
-  confirmDelete(user: User, event: any): void {
+  confirmDeleteUser(user: User, event: any): void {
     event.preventDefault();
     this.userService.deleteUser(user.id).subscribe({
       next: () => {
@@ -79,6 +80,29 @@ export class Account implements OnInit {
         console.log('User self deletion complete.');
       }
     })
+  }
+
+  // Toggle to leave group
+  openLeaveGroupModal(group: Group): void {
+    this.selectedGroup = group;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmLeaveGroupModal')!).show();
+  }
+
+  // Leave a group
+  confirmLeaveGroup(group: Group, user: User, event: any): void {
+    event.preventDefault();
+    this.groupService.deleteGroupFromUser(group.id, user.id).subscribe({
+      next: () => {
+        console.log('User left group successfully:', group);
+        this.userGroups = this.userGroups.filter(g => g.id !== group.id);
+      }, 
+      error: (error: any) => {
+        console.error('Error leaving group:', error);
+      },
+      complete: () => {
+        console.log('Leave group request completed.');
+      }
+    });
   }
 
   // Choose the channel to join

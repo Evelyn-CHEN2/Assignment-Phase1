@@ -2,7 +2,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
-export const viewOtherAccountGuard: CanActivateFn = (route) => {
+export const adminAuthGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
   const router = inject(Router);
   const me = auth.getCurrentUser();
@@ -15,5 +15,4 @@ export const viewOtherAccountGuard: CanActivateFn = (route) => {
     return true;
   }
   return router.navigate(['/account']);
-  
 };

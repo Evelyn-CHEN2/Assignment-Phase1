@@ -1,42 +1,60 @@
 [
-  {
-    "id": 2,
-    "username": "Tom",
-    "email": "Tom@com",
-    "pwd": "1234",
-    "role": "admin",
-    "groups": [
-      "g1",
-      "g2",
-      "g3",
-      "g1756080958422",
-      "g1756081043742"
-    ],
-    "valid": false
-  },
-  {
-    "id": 3,
-    "username": "Jerry",
-    "email": "Jerry@com",
-    "pwd": "1234",
-    "role": "chatuser",
-    "groups": [
-      "g2",
-      "g3"
-    ],
-    "valid": false
-  },
-  {
-    "id": 4,
-    "username": "super",
-    "email": "super@com",
-    "pwd": "123",
-    "role": "super",
-    "groups": [
-      "g2",
-      "g3",
-      "g1756080867629"
-    ],
-    "valid": false
-  }
+    {
+        "id": 2,
+        "username": "Tom",
+        "email": "Tom@com",
+        "pwd": "1234",
+        "role": "admin",
+        "groups": [
+            "g1",
+            "g2",
+            "g3",
+            "g1756080958422",
+            "g1756081043742"
+        ],
+        "valid": false
+    },
+    {
+        "id": 3,
+        "username": "Jerry",
+        "email": "Jerry@com",
+        "pwd": "1234",
+        "role": "chatuser",
+        "groups": [
+            "g2",
+            "g3"
+        ],
+        "valid": false
+    },
+    {
+        "id": 4,
+        "username": "super",
+        "email": "super@com",
+        "pwd": "123",
+        "role": "super",
+        "groups": [
+            "g2",
+            "g3",
+            "g1756080867629"
+        ],
+        "valid": false
+    },
+    {
+        "id": 6,
+        "username": "Caca",
+        "email": "caca@com",
+        "pwd": "1234",
+        "role": "chatuser",
+        "groups": [],
+        "valid": true
+    },
+    {
+        "id": 7,
+        "username": "Caleb",
+        "email": "caleb@com",
+        "pwd": "1234",
+        "role": "chatuser",
+        "groups": [],
+        "valid": true
+    }
 ]

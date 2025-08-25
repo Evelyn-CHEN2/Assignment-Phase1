@@ -6,7 +6,7 @@ import { Account } from './components/account/account';
 import { Users } from './components/users/users'
 import { Groups } from './components/groups/groups'
 import { authGuard } from './guards/auth-guard';
-import { viewOtherAccountGuard } from './guards/view-other-account-guard';
+import { adminAuthGuard } from './guards/admin-auth-guard';
 import { GroupForm } from './components/group-form/group-form';
 import { Chatwindow } from './components/chatwindow/chatwindow';
 
@@ -21,19 +21,22 @@ export const routes: Routes = [
         path: 'register', component: Register
     },
     {
-        path: 'dashboard', component: Dashboard, canActivate: [authGuard],
+        path: 'dashboard', component: Dashboard, canActivate: [authGuard, adminAuthGuard],
         children: [
             {
                 path: '', component: Users
             },
             {
-                path: 'users', component: Users, canActivate: [authGuard]
+                path: 'users', component: Users
             },
             {
-                path: 'groups', component: Groups, canActivate: [authGuard]
+                path: 'groups', component: Groups
             },
             {
-                path: 'group-form', component: GroupForm, canActivate: [authGuard]
+                path: 'group-form', component: GroupForm
+            },
+            {
+                path: 'notifications', component: Users
             }
         ]
     },
@@ -41,7 +44,7 @@ export const routes: Routes = [
         path: 'account', component: Account, canActivate: [authGuard]
     },
     {
-        path: 'account/:id', component: Account, canActivate: [viewOtherAccountGuard, authGuard],
+        path: 'account/:id', component: Account, canActivate: [authGuard, adminAuthGuard],
     },
     {
         path: 'chatwindow/:id', component: Chatwindow, canActivate: [authGuard]

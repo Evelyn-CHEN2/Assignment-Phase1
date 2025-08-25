@@ -18,7 +18,9 @@
         <div class="invalid-feedback">Add at least one channel.</div>
     </div>
 
-  
+    @if (errMsg) {
+        <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
+    }
     <div class="actions">
         <button type="reset" class="btn" style="background-color: white;" (click)="onReset(f)">Reset</button>
         <button type="submit" class="btn" style="background-color: #8d99ae;">Create</button>

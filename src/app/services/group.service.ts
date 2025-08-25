@@ -21,14 +21,18 @@ export class GroupService {
     return this.http.get<Channel[]>(this.server + '/api/allchannels')
   }
 
-  getChannelUsers(id: string): Observable<User[]> {
-    return this.http.get<User[]>(this.server + '/api/channelusers');
+  // getChannelUsers(id: string): Observable<User[]> {
+  //   return this.http.get<User[]>(this.server + '/api/channelusers');
+  // }
+
+  createGroup(groupname: string, description: string , channelNames: string[], currentUser: User): Observable<Group> {
+    return this.http.post<Group>(this.server + '/api/creategroup', { groupname, description, channelNames, currentUser });
   }
 
-  createGroup(groupname: string, description: string , channelNames: string[], currentUser: User): Observable<void> {
-    return this.http.post<void>(this.server + '/api/creategroup', {groupname, description, channelNames, currentUser});
+  addGroupToUser(groupId: string, userId: number): Observable<void> {
+    return this.http.post<void>(`${this.server}/api/addgrouptouser`, { groupId, userId });
   }
-
+  
   editGroup(group: Group): Observable<Group> {
     return this.http.put<Group>(`${this.server}/api/editgroup/${group.id}`, group);
   }
@@ -37,8 +41,12 @@ export class GroupService {
     return this.http.delete<void>(`${this.server}/api/deletegroup/${id}`);
   }
 
+  deleteGroupFromUser(groupId: string, userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.server}/api/deletegroupfromuser`, { params: { groupId, userId } });
+  }
+
   createChannel(group: Group, channelName: string): Observable<Channel> {
-    return this.http.post<Channel>(this.server + '/api/createchannel', {group, channelName});
+    return this.http.post<Channel>(this.server + '/api/createchannel', { group, channelName });
   }
 
   deleteChannel(id: string): Observable<void> {
