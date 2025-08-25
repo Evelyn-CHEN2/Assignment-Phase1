@@ -21,22 +21,22 @@ export const routes: Routes = [
         path: 'register', component: Register
     },
     {
-        path: 'dashboard', component: Dashboard, canActivate: [authGuard, adminAuthGuard],
+        path: 'dashboard', component: Dashboard, canActivate: [authGuard],
         children: [
             {
                 path: '', component: Users
             },
             {
-                path: 'users', component: Users
+                path: 'users', component: Users, canActivate: [adminAuthGuard]
             },
             {
                 path: 'groups', component: Groups
             },
             {
-                path: 'group-form', component: GroupForm
+                path: 'group-form', component: GroupForm, canActivate: [adminAuthGuard]
             },
             {
-                path: 'notifications', component: Users
+                path: 'notifications', component: Users, canActivate: [adminAuthGuard]
             }
         ]
     },
