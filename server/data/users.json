@@ -4,7 +4,9 @@
     "username": "Tom",
     "email": "Tom@com",
     "pwd": "1234",
-    "role": ["chatuser"],
+    "role": 
+      "chatuser"
+    ,
     "groups": [
       "g1",
       "g2",
@@ -19,10 +21,13 @@
     "username": "Jerry",
     "email": "Jerry@com",
     "pwd": "1234",
-    "role": ["chatuser"],
+    "role": 
+      "chatuser",
     "groups": [
       "g2",
-      "g3"
+      "g3",
+      "g1756080958422",
+      "g1756081043742"
     ],
     "valid": false
   },
@@ -31,7 +36,9 @@
     "username": "super",
     "email": "super@com",
     "pwd": "123",
-    "role": ["super"],
+    "role": 
+      "super"
+    ,
     "groups": [
       "g2",
       "g3",
@@ -45,7 +52,9 @@
     "username": "Caca",
     "email": "caca@com",
     "pwd": "1234",
-    "role": ["chatuser"],
+    "role": 
+      "chatuser"
+    ,
     "groups": [],
     "valid": true
   },
@@ -54,7 +63,9 @@
     "username": "Caleb",
     "email": "caleb@com",
     "pwd": "1234",
-    "role": ["chatuser"],
+    "role": 
+      "chatuser"
+    ,
     "groups": [],
     "valid": true
   }

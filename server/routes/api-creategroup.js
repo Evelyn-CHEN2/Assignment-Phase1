@@ -84,6 +84,7 @@ module.exports = {
                     description.trim(),
                     newchannels.map(channel => channel.id),
                     req.body.currentUser.id,
+                    [req.body.currentUser.id] // Add the creator as the first admin
                 )
                 groups.push(newgroup);
 

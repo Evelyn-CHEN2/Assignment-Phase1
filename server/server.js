@@ -10,7 +10,7 @@ require('./routes/api-login.js').route(app);
 require('./routes/api-register.js').route(app);
 require('./routes/api-fetchusers.js').route(app);
 require('./routes/api-fetchuserByID.js').route(app);
-require('./routes/api-updateuser.js').route(app);
+require('./routes/api-updateuserrole.js').route(app);
 require('./routes/api-deleteuser.js').route(app);
 require('./routes/api-fetchallgroups.js').route(app);
 require('./routes/api-creategroup.js').route(app);
