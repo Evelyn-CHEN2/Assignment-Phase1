@@ -15,10 +15,11 @@ import { map, switchMap, of } from 'rxjs';
 })
 export class Account implements OnInit {
   user: User | null = null;
+  viewer: User | null = null;
   userGroups: Group[] = [];
-  loggedUser: User | null = null;
   channel: Channel | null = null;
   selectedGroup: Group | null = null; 
+  
 
   private authService = inject(AuthService);
   private userService = inject(UserService);
@@ -31,6 +32,7 @@ export class Account implements OnInit {
     this.route.params.pipe(
       switchMap(params => {
         const viewer = this.authService.getCurrentUser();
+        this.viewer = viewer;
         // Get the user ID from route parameters or use the viewer's ID
         const userId = params['id'] || (viewer ? viewer.id : null);
         console.log('Fetching user with ID:', userId);
@@ -60,7 +62,7 @@ export class Account implements OnInit {
 
   // Toggle delete confirmation modal
   openDeleteModal(user: User): void {
-    this.loggedUser = user;
+    this.user = user;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteModal')!).show();
   }
 
