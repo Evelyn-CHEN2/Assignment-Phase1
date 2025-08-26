@@ -14,18 +14,16 @@ import { Router } from '@angular/router';
   styleUrl: './header.css'
 })
 export class Header {
-  userrole: string = '';
   welcomeMsg: string = 'Welcome, ';
   username: string = '';
   remember: boolean = false;
 
   private authService = inject(AuthService);
-  private userService = inject(UserService);
   private router = inject(Router);
 
   user$ = this.authService.currentUser$;
   userRole$ = this.user$.pipe(
-    map(u => u ? u.role : '')
+    map(u => u ? u.role : [])
   );
 
   logout(event: any): void {

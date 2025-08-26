@@ -4,7 +4,7 @@ export interface User {
     pwd: string;
     email: string;
     groups: string[];  // Store group data to get direct access
-    role: string[];
+    role: string;
     status: boolean;
     valid: boolean;
 }
@@ -32,4 +32,9 @@ export interface Notification {
     groupCreator: number; // Store user.id who create the group
     isApproved: boolean;
     applyAppending: boolean;
+}
+
+export interface UpdatedUserRole {
+    user: User;
+    group: Group;
 }

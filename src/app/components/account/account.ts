@@ -1,30 +1,33 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { AuthService } from '../../services/auth.service';
 import { Group, Channel, User } from '../../interface';
 import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { map, switchMap, of } from 'rxjs';
-import { FormsModule } from '@angular/forms';
+import { map, switchMap, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-account',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule, NgSelectModule],
   templateUrl: './account.html',
   styleUrl: './account.css'
 })
 export class Account implements OnInit {
   user: User | null = null;
   viewer: User | null = null;
-  users: User[] = []; 
   userGroups: Group[] = [];
   channel: Channel | null = null;
-  selectedGroup: Group | null = null; 
-  showUpdateRole: Record<string, boolean> = {};
-  newRole: Record<number, string> = {};
+  selectedGroup: Group | null = null;
+  showUpdateRole: Record<string, boolean> = {}; 
+  newRole: Record<string, string> = {}; // For selecting new role in each group
+  userRole: string = ''; // Current role of the user in the selected group
+  roleByGroup: Record<string, string> = {}; 
+  errMsg: string = '';
   
-
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private groupService = inject(GroupService);
@@ -36,9 +39,9 @@ export class Account implements OnInit {
     this.route.params.pipe(
       switchMap(params => {
         const viewer = this.authService.getCurrentUser();
-        this.viewer = viewer;
         // Get the user ID from route parameters or use the viewer's ID
         const userId = params['id'] || (viewer ? viewer.id : null);
+        this.viewer = viewer;
         console.log('Fetching user with ID:', userId);
         return this.userService.getUserById(userId);
       }),
@@ -53,48 +56,61 @@ export class Account implements OnInit {
           groups: this.groupService.getGroups(),
           channels: this.groupService.getChannels()
         }).pipe(
-          map(({ groups, channels }) => {
-            return groups.filter(g => user.groups.includes(g.id)).map(group => ({
-                ...group,
-                channels: channels.filter(c => c.groupid === group.id)
-            }));
-          })
+          map(({ groups, channels }) => 
+            groups.filter(g => user.groups.includes(g.id)).map(group => ({
+              ...group,
+              channels: channels.filter(c => c.groupid === group.id)
+            }))
+          ),
+          tap(groups => {
+            // Display the role of the user in each group
+            this.roleByGroup = Object.fromEntries(
+              groups.map(g => {
+                if (g.admins.includes(user.id)) {
+                  return [g.id, user.role];
+                } else {
+                  return [g.id, 'chatuser'];
+                }
+              })
+            )
+          }
+          )
         );
       }),
     ).subscribe(groups => this.userGroups = groups || []);
   }
 
-  // Operations for super/admin
+  // Operations for super
   // Update user role
   toggleUpdateRole(group: Group): void {
-    if (!group) return;
     this.showUpdateRole[group.id] = !this.showUpdateRole[group.id];
   }
-  updateRole(user: User, event: any): void {
-    event.preventDefault();
-    if (!this.newRole[user.id]) {
-      console.error('New role is not set for user:', user);
+  
+  // Update user role
+  updateRole(user: User, group: Group) {
+    if (!user || !group) {
+      console.error('User or Group is not defined');
       return;
     }
-    const newRole = this.newRole[user.id];
-    this.userService.updateUserRole(newRole, user.id).subscribe({
-      next: (updatedUser: User) => {
-        console.log('User role updated successfully: ', updatedUser);
-        // Update the local users array
-        const index = this.users.findIndex(u => u.id === updatedUser.id);
-        if (index !== -1) {
-          this.users[index] = updatedUser;
+    const newRole = this.newRole[group.id];
+    this.userService.updateUserRole(newRole, user.id, group.id).subscribe({
+      next: ({user, group}) => {
+        // Update the local group object
+        if (group.admins.includes(user.id)) {
+          this.userRole = newRole;
+        } else {
+          this.userRole = 'chatuser';
         }
       },
       error: (error: any) => {
         console.error('Error updating user role:', error);
+        this.errMsg = error.error?.error || 'An error occurred while updating the user role.';
       },
       complete: () => { 
         console.log('User role update complete.');
       }
-    });
+    })
   }
-
 
 
   // Operations for user self

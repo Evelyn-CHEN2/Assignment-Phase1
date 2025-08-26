@@ -31,12 +31,11 @@
           <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard/group-form">
             <i class="bi bi-snapchat me-2 icon-size"></i> + Group</a>
         </li>
-      }
-      @if ((userRole$ | async) === 'chatuser') { 
+      } @else { 
         <li class="nav-item">
             <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard/groups">
               <i class="bi bi-people me-2 icon-size"></i> Groups</a>
-        </li>
+        </li> 
       }
 
       <li class="nav-item">

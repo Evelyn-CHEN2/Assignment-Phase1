@@ -39,13 +39,13 @@ module.exports = {
                 return res.status(400).json({ error: 'Missing id or new role to update user role' });
             }
             
-            // Check if the users file exists
+            // Check if the user's file exists
             const users = readUsers();
             const userIndex = users.findIndex(user => user.id === Number(userId));
             if (userIndex === -1) {
                 return res.status(404).json({ error: 'User to update not found' });
             }
-            // Update the user
+            // Update the user role
             users[userIndex].role = newRole;
 
             // Check if the group exists
@@ -55,18 +55,16 @@ module.exports = {
                 return res.status(404).json({ error: 'Group to add admins not found' });
             }
             // Update the group admins
-            if (groups[groupIndex].admins.includes(Number(userId))) {
-                return res.status(400).json({ error: 'User is already an admin of this group' });
-            } else {
-                groups[groupIndex].admins.push(Number(userId));
-            }
+            groups[groupIndex].admins.push(Number(userId));
             
-
             // Write the updated user to file
             try {
                 writeUsers(users);
                 writeGroups(groups);
-                res.send(groups[groupIndex]); // Return the updated group
+                res.send({
+                    user:users[userIndex],
+                    group:groups[groupIndex]
+                }); // Return the updated user and group
             } 
             catch (error) {
                 console.error('Error writing updated user file:', error);
