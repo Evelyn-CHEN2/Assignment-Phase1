@@ -6,19 +6,23 @@ import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { map, switchMap, of } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-account',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './account.html',
   styleUrl: './account.css'
 })
 export class Account implements OnInit {
   user: User | null = null;
   viewer: User | null = null;
+  users: User[] = []; 
   userGroups: Group[] = [];
   channel: Channel | null = null;
   selectedGroup: Group | null = null; 
+  showUpdateRole: Record<string, boolean> = {};
+  newRole: Record<number, string> = {};
   
 
   private authService = inject(AuthService);
@@ -60,6 +64,40 @@ export class Account implements OnInit {
     ).subscribe(groups => this.userGroups = groups || []);
   }
 
+  // Operations for super/admin
+  // Update user role
+  toggleUpdateRole(group: Group): void {
+    if (!group) return;
+    this.showUpdateRole[group.id] = !this.showUpdateRole[group.id];
+  }
+  updateRole(user: User, event: any): void {
+    event.preventDefault();
+    if (!this.newRole[user.id]) {
+      console.error('New role is not set for user:', user);
+      return;
+    }
+    const newRole = this.newRole[user.id];
+    this.userService.updateUserRole(newRole, user.id).subscribe({
+      next: (updatedUser: User) => {
+        console.log('User role updated successfully: ', updatedUser);
+        // Update the local users array
+        const index = this.users.findIndex(u => u.id === updatedUser.id);
+        if (index !== -1) {
+          this.users[index] = updatedUser;
+        }
+      },
+      error: (error: any) => {
+        console.error('Error updating user role:', error);
+      },
+      complete: () => { 
+        console.log('User role update complete.');
+      }
+    });
+  }
+
+
+
+  // Operations for user self
   // Toggle delete confirmation modal
   openDeleteModal(user: User): void {
     this.user = user;

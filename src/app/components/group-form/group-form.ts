@@ -51,7 +51,7 @@ export class GroupForm {
       return;
     }
     // Only let admin and super to create groups
-    if (currentUser.role !== 'admin' && currentUser.role !== 'super') {
+    if (currentUser.role.includes('admin') && currentUser.role.includes('super')) {
       this.errMsg = 'You do not have permission to create groups.';
       return;
     }

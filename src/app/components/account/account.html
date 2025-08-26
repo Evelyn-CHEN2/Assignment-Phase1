@@ -8,9 +8,6 @@
     </div>
    
     <div class="header-actions">
-      <span class="roles-badge" [attr.data-role]="user?.role">
-        {{ user?.role }}
-      </span>
       <!-- This button is used for user to remove the account self -->
       @if (viewer?.id === user?.id) {
         <button
@@ -39,6 +36,7 @@
               </button>
             }
           </div>
+
           @if (viewer?.id === user?.id) {
             <button 
               class="btn p-0 ms-auto" style="color: #ef233c" type="button" 
@@ -46,14 +44,34 @@
               (click)="openLeaveGroupModal(group)">
               <i class="bi bi-box-arrow-right"></i>
             </button>
+            <!-- Actions only display for super -->
+          } @else {
+            <button class="roles-badge" type="button" (click)="toggleUpdateRole(group)">
+              {{ user?.role }}
+            </button>
           }
         </li>
+        @if (user && showUpdateRole[group.id]) {
+          <div class="update-role-pop mt-2 gap-2 d-flex align-items-center" >
+              <select class="form-select flex-grow-1" [(ngModel)]="newRole[user.id]" name="newRole{{user.id}}">
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                  <option value="super">Super</option>
+              </select>
+              <button 
+                class="roles-badge--sm roles-badge--btn roles-badge--green" 
+                type="button" 
+                (click)="user && updateRole(user, $event)">
+                Update
+              </button>
+          </div>
+        }
       }
     </ul>
   </div>
 </div>
 
-<!-- Delete user confirmation modal -->
+<!-- Delete user self confirmation modal -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-m">
     <div class="modal-content">

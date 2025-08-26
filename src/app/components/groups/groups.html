@@ -7,7 +7,7 @@
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
-                @if ((user?.role === 'super' || user?.role === 'admin') && group.createdBy === user?.id) {
+                @if ((user?.role?.includes('super') || user?.role?.includes('admin')) && group.createdBy === user?.id) {
                   <button class="btn p-0" style="color: green;" type="button" (click)="editGroup(group, $event)">
                     <i class="bi bi-pencil-fill fs-6"></i>
                   </button>
@@ -16,7 +16,7 @@
                   </button>
                 }
                 <!-- If user is already a member of the group, show check icon, otherwise show heart icon -->
-                @if (user?.role === 'chatuser' && user?.groups?.includes(group.id)) {
+                @if (user?.role?.includes('super') || user?.role?.includes('admin')) {
                   <i class="bi bi-check2-all fs-6" style="color: #40916c;"></i>
                  
                 } @else {
@@ -31,11 +31,6 @@
                       [style.color]="applyPending[(group.id)] ? '#f59f00' : '#ef233c'"></i>
                   </button>
                 }
-                  <button class="btn p-0" type="button">
-                    <i class="bi bi-box-arrow-right fs-6"></i>
-                  </button>
-                
-
               </div>
               
             </div>
@@ -48,7 +43,7 @@
                     <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
                       {{channel.channelname}}
                       <!-- super/admin to delete channel button -->
-                      @if (user?.role === 'super' || user?.role === 'admin') {
+                      @if (user?.role?.includes('super') || user?.role?.includes('admin')) {
                         <button class="btn btn-link text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteChannelModal" type="button" (click)="openDeleteChannelModal(channel)">
                           <i class="bi bi-x-square fs-6"></i>
                         </button>
@@ -59,7 +54,7 @@
 
             <!--super/admin to add channel -->
             <div class="d-flex justify-content-end m-2">
-              @if ((user?.role === 'super' || user?.role === 'admin') && group.createdBy === user?.id) {
+              @if ((user?.role?.includes('super') || user?.role?.includes('admin')) && group.createdBy === user?.id) {
                 <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
                   <span>Channel</span>
                   <span class="add-circle"><i class="bi bi-plus-lg"></i></span>

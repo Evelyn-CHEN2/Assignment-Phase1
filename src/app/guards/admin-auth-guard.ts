@@ -10,7 +10,7 @@ export const adminAuthGuard: CanActivateFn = (route, state) => {
   const targetUserId = route.paramMap.get('id');
   if (targetUserId && targetUserId === String(me?.id)) return true;
 
-  const isAdmin = me?.role === 'admin' || me?.role === 'super';
+  const isAdmin = me?.role.includes('admin') || me?.role.includes('super');
   if (isAdmin) {
     return true;
   }

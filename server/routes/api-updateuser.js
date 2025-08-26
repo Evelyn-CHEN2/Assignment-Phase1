@@ -28,7 +28,7 @@ module.exports = {
                 return res.status(404).json({ error: 'User to update not found' });
             }
             // Update the user
-            users[userIndex].role = newRole;
+            users[userIndex].role.push[newRole];
             
             // Write the updated user to file
             try {

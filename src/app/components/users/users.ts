@@ -37,35 +37,6 @@ export class Users {
     });
   }
 
-  // Update user role
-  toggleUpdateRole(user: User): void {
-    this.showUpdateRole[user.id] = !this.showUpdateRole[user.id];
-  }
-  updateRole(user: User, event: any): void {
-    event.preventDefault();
-    if (!this.newRole[user.id]) {
-      console.error('New role is not set for user:', user);
-      return;
-    }
-    const newRole = this.newRole[user.id];
-    this.userService.updateUserRole(newRole, user.id).subscribe({
-      next: (updatedUser: User) => {
-        console.log('User role updated successfully: ', updatedUser);
-        // Update the local users array
-        const index = this.users.findIndex(u => u.id === updatedUser.id);
-        if (index !== -1) {
-          this.users[index] = updatedUser;
-        }
-      },
-      error: (error: any) => {
-        console.error('Error updating user role:', error);
-      },
-      complete: () => { 
-        console.log('User role update complete.');
-      }
-    });
-  }
-
   // Toggle delete confirmation modal
   openDeleteModal(user: User): void {
     this.selectedUser = user;

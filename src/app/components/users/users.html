@@ -18,9 +18,7 @@
             
             <td class="position-relative text-center align-top">
                 <div class="d-inline-flex gap-4">
-                    <button class="btn btn-sm p-0" style="color: #40916c;" type="button" (click)="toggleUpdateRole(user)">
-                      <i class="bi bi-pencil-square"></i>
-                    </button>
+                    <p>AlertofUser</p>
                     <button 
                       class="btn btn-sm text-danger p-0" 
                       data-bs-toggle="modal" 
@@ -30,20 +28,6 @@
                       <i class="bi bi-x-square"></i>
                     </button>
                 </div>
-                @if (showUpdateRole[user.id]) {
-                    <div class="update-role-pop mt-2 gap-2 d-flex align-items-center" >
-                        <select class="form-select flex-grow-1" [(ngModel)]="newRole[user.id]" name="newRole{{user.id}}">
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                        <button 
-                          class="roles-badge--sm roles-badge--btn roles-badge--green" 
-                          type="button" 
-                          (click)="updateRole(user, $event)">
-                          Update
-                        </button>
-                    </div>
-                }
             </td>
         </tr>
     } 

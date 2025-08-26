@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 import { User } from '../../interface';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { Header } from '../header/header';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +26,7 @@ export class Login implements OnInit {
     if (currentUser) {
       console.log('User alreafy logged in: ', currentUser);
       // If user is super, redirect to dashboard, otherwise to account page
-      if (currentUser.role === 'super') {
+      if (currentUser.role.includes('super') || currentUser.role.includes('admin')) {
         this.router.navigate(['/dashboard']);
       } else {
         this.router.navigate(['/account',currentUser.id]);
@@ -59,7 +58,7 @@ export class Login implements OnInit {
           this.authService.setCurrentUser(user, this.rememberMe); //Store logged user data to localStorage
           
           // If user is super, redirect to dashboard after login, otherwise to account page
-          if (user.role === 'super' || user.role === 'admin') {
+          if (user.role.includes('super') || user.role.includes('admin')) {
             this.router.navigate(['/dashboard']);
           } else {
             this.router.navigate(['/account', user.id]);
