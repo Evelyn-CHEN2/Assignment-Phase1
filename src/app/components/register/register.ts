@@ -1,24 +1,32 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { NgSelectModule } from '@ng-select/ng-select';  
+import { Group } from '../../interface';
+import { GroupService } from '../../services/group.service';
+ 
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule, NgSelectModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
-export class Register {
+export class Register implements OnInit {
   submitted = false;
   username: string = '';
   email: string ='';
   pwd: string = '';
   groups: string[] = [];
   errMsg: string = '';
+  availableGroups: Group[] = [];
+  selectedGroupIds: string[] = [];
 
   private authService = inject(AuthService);
+  private groupService = inject(GroupService);
   private router = inject(Router);
 
   onReset(f: NgForm): void {
@@ -26,9 +34,15 @@ export class Register {
     this.submitted = false;
     f.resetForm();
   }
-  
+
+  ngOnInit(): void {
+    this.groupService.getGroups().subscribe(groups =>{
+      this.availableGroups = groups;
+    })
+  }
+
   register(f: NgForm): void {
-    this.errMsg = ''; // Reset error messages
+    this.errMsg = ''; 
     this.submitted = true;
     if (f.invalid) {
       return;

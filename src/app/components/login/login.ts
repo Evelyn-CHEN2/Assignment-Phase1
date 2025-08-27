@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { User } from '../../interface';
 import { AuthService } from '../../services/auth.service';
@@ -17,6 +17,7 @@ export class Login implements OnInit {
   pwd: string = '';
   errMsg: string = '';
   rememberMe: boolean = false;
+  submitted = false;
 
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -37,16 +38,10 @@ export class Login implements OnInit {
     }
   }
 
-  login(event: any): void {
-    event.preventDefault();
+  login(f: NgForm): void {
     this.errMsg = ''; 
-    // Validate input fields
-    if (this.username === '') {
-      this.errMsg = 'User name is required.';
-      return;
-    }
-    if (this.pwd === '') {
-      this.errMsg = 'Password is required.';
+    this.submitted = true;
+    if (f.invalid) {
       return;
     }
 
