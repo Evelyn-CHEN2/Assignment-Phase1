@@ -18,7 +18,4 @@ export class NotificationService {
     return this.http.get<Notification[]>(this.server + '/api/fetchnotifications');
   }
 
-  updateNotification(id: string): Observable<void> {
-    return this.http.put<void>(`${this.server}/api/updatenotification/${id}`, {});
-  }
 }

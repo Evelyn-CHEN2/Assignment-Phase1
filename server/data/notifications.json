@@ -1,10 +1,16 @@
 [
   {
-    "id": "2025-08-25T12:56:14.195Z",
-    "applier": 3,
-    "groupToApply": "g1756080867629",
+    "id": "2025-08-27T07:58:47.609Z",
+    "applier": 6,
+    "groupToApply": "g2",
     "groupCreator": 4,
-    "isApproved": false,
-    "applyAppending": true
+    "status": "approved"
+  },
+  {
+    "id": "2025-08-27T08:12:18.492Z",
+    "applier": 6,
+    "groupToApply": "g3",
+    "groupCreator": 4,
+    "status": "approved"
   }
 ]

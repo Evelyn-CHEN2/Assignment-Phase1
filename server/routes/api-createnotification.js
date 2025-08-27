@@ -31,8 +31,7 @@ module.exports = {
                 req.body.userId,
                 req.body.groupId,
                 req.body.groupCreatorId,
-                false,
-                true
+                'pending'  // initial status is pending
             )
 
             notifications.push(newNotification);

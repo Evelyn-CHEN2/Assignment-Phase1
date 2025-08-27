@@ -29,8 +29,8 @@ export class GroupService {
     return this.http.post<Group>(this.server + '/api/creategroup', { groupname, description, channelNames, currentUser });
   }
 
-  addGroupToUser(groupId: string, userId: number): Observable<void> {
-    return this.http.post<void>(`${this.server}/api/addgrouptouser`, { groupId, userId });
+  addGroupToUser(userId: number, groupId: string, notificationId: string): Observable<void> {
+    return this.http.put<void>(`${this.server}/api/addgrouptouser`, { groupId, userId, notificationId });
   }
   
   editGroup(group: Group): Observable<Group> {

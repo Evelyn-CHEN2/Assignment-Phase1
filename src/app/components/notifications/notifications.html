@@ -1,7 +1,10 @@
 @for (notification of notifications; track notification.id) {
   {{notification.id}}<br>
-  {{userById[notification.applier]}}<br>
-  {{groupById[notification.groupToApply]}}<br>
-  
+  <strong>{{userById[notification.applier]}}</strong><br>
+  {{groupById[notification.groupToApply]}}<br> 
+  {{userById[notification.groupCreator]}}<br>
+  {{notification.status}} <br>
+
+  <button type="button" (click)="approve(notification, $event)">Approve</button>
 }
-<p>works</p>
+

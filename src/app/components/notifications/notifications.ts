@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { GroupService } from '../../services/group.service';
 import { forkJoin, map, of, switchMap } from 'rxjs';
+import { not } from 'rxjs/internal/util/not';
 
 @Component({
   selector: 'app-notifications',
@@ -14,8 +15,8 @@ import { forkJoin, map, of, switchMap } from 'rxjs';
 })
 export class Notifications implements OnInit {
   notifications: Notification[] = [];
+  notiStatus: string = '';
   errMsg: string = '';
-  applierName: string = '';
   userById: Record<number, string> = {};
   groupById: Record<string, string> = {};
 
@@ -25,18 +26,7 @@ export class Notifications implements OnInit {
   private groupService = inject(GroupService);
 
   ngOnInit(): void {
-    // this.notificationService.fetchNotifications().subscribe({
-    //   next: (data) => {
-    //     console.log('Notifications data:', data);
-    //     this.notifications = data;
-    //   },
-    //   error: (error) => {
-    //     this.errMsg = error.error.error || 'Error fetching notifications';
-    //   },
-    //   complete: () => {
-    //     console.log('Fetched notifications');
-    //   }
-    // })
+    // Fetch all group applications for groups created by current super/admin
     const currentUser = this.authService.getCurrentUser();
     this.notificationService.fetchNotifications().pipe(
       map((notifications: Notification[]) => {
@@ -45,7 +35,6 @@ export class Notifications implements OnInit {
         
       }),
       switchMap((adminNotifications: Notification[]) => {
-        // if (adminNotifications.length === 0) return of(null);
         return forkJoin({
           users: this.userService.getUsers(),
           groups: this.groupService.getGroups()
@@ -65,8 +54,26 @@ export class Notifications implements OnInit {
       this.notifications = adminNotifications;
       this.userById = userById;
       this.groupById = groupById;
-      
     })
   }
+
+  // Confirm group application
+  approve(notification: Notification, event: any): void {
+    event.preventDefault();
+    const userId = notification.applier; // Applier stores user ID
+    const groupId = notification.groupToApply; // GroupToApply stores group ID
+    this.groupService.addGroupToUser(userId, groupId, notification.id).subscribe({
+      next: () => {
+        // Update notification status to 'approved'
+        notification.status = 'approved';
+      }
+    });
+   
+  }
+    
+
+
+
+
 
 }
