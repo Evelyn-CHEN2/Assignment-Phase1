@@ -18,7 +18,9 @@
 
                 <!-- If user is already a member of the group, show check icon, otherwise show heart icon -->
                 @if (user?.groups?.includes(group.id)) {
-                  <i class="bi bi-check2-all fs-6" style="color: #40916c;"></i>
+               
+                    <i class="bi bi-person-check-fill" aria-hidden="true"></i>
+               
                  
                 } @else {
                   <button class="btn p-0" style="color: #ef233c;" type="button" 
@@ -45,7 +47,11 @@
                       
                       <!-- super/admin to delete channel button -->
                       @if (user?.role === 'super' || user?.role === 'admin') {
-                        <button class="btn btn-link text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteChannelModal" type="button" (click)="openDeleteChannelModal(channel)">
+                        <button 
+                          class="btn btn-link text-danger p-0" type="button"
+                          data-bs-toggle="modal" 
+                          data-bs-target="#confirmDeleteChannelModal" 
+                          (click)="openDeleteChannelModal(channel)">
                           <i class="bi bi-x-square fs-6"></i>
                         </button>
                       }

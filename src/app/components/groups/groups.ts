@@ -37,7 +37,6 @@ export class Groups implements OnInit {
   ngOnInit(): void {
     // Retrive user data from localStorage
     const currentUser = this.authService.getCurrentUser();
-    this.user = currentUser;
     console.log('Current user:', this.user);
     // Fetch all groups, channels, and users in parallel
     forkJoin({
@@ -46,10 +45,9 @@ export class Groups implements OnInit {
       allusers: this.userService.getUsers()
     }).pipe(
       map(({ groups, allchannels, allusers }) => {
-        // Refresh user data (so on .html user?.groups.includes(group.id) can work after user joins a new group)
+        // Refresh user data (so user?.groups.includes(group.id) can work after user joins a new group)
         const freshUser = allusers.find(u => u.id === currentUser?.id) ?? currentUser;
         this.user = freshUser;
-
         const userById = Object.fromEntries(
           allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         );
@@ -60,14 +58,6 @@ export class Groups implements OnInit {
           }
         });
 
-        // restore pending state per group (optional but handy)
-        for (const g of formattedGroups) {
-          const k = g.id;
-          this.applyPending[k] = JSON.parse(localStorage.getItem('applyPending_' + k) || 'false');
-}
-
-
-
         return { userById, formattedGroups };
       }),
     ).subscribe(({ userById, formattedGroups }) => {
@@ -77,10 +67,7 @@ export class Groups implements OnInit {
     });
   }
 
-
-
-
-  // Actions for super and admin
+  // <-- Actions for super and admin -->
   // Edit a group
   editGroup(group: Group, event: any): void {
 
@@ -177,18 +164,13 @@ export class Groups implements OnInit {
     })
   }
 
-  // Actions for chatusers
+  // <-- Actions for chatusers -->
   // Apply to join a group
   applyToJoinGroup(group: Group, event: any): void {
     event.preventDefault();
     const groupId = group.id;
     const groupCreatorId = group.createdBy;
     this.applyPending[groupId] = false; 
-    
-    if (this.user?.groups.includes(groupId)) {
-      alert('You are already a member of this group.');
-      return;
-    }
     
     if (this.user?.id === undefined) {
       this.errMsg = 'User ID is required to send a notification.';

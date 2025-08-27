@@ -18,4 +18,8 @@ export class NotificationService {
     return this.http.get<Notification[]>(this.server + '/api/fetchnotifications');
   }
 
+  deleteNotification(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.server}/api/deletenotification/${id}`);
+  }
+
 }

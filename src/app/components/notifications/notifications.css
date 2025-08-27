@@ -1,0 +1,38 @@
+/* Layout */
+.notif-list { list-style: none; }
+.notif-card { border: 1px solid #e9ecef; border-radius: 1rem; }
+.notif-card .card-body { padding: 0.9rem 1rem; }
+
+/* Title + meta */
+.notif-title { font-weight: 600; font-size: 1rem; }
+.notif-meta { font-size: 0.85rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.5rem; }
+.notif-meta .meta { white-space: nowrap; }
+.notif-meta .dot { opacity: 0.6; }
+
+/* Status pill */
+.status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+  border: 1px solid transparent;
+}
+
+/* Color mapping by status value */
+.status-pill.pending    { color: #856404; }
+.status-pill.approved   { color: #0f5132; }
+
+/* Buttons */
+.btn-approve { background: #ecfdf5; color:#065f46; border-color: #badbcc; }
+.btn-approve:hover { filter: brightness(0.95); }
+.btn-delete { color: #ef233c; }
+.btn-delete:hover { filter: brightness(0.75); }
+
+/* Responsive design */
+@media (max-width: 576px) {
+  .notif-actions { width: 100%; margin-top: 0.5rem; }
+  .notif-actions .btn-group { width: 100%; }
+  .notif-actions .btn-group .btn { flex: 1 1 0; }
+}

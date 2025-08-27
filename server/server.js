@@ -24,6 +24,7 @@ require('./routes/api-deletechannel.js').route(app);
 require('./routes/api-addmessage.js').route(app);
 require('./routes/api-createnotification.js').route(app);
 require('./routes/api-fetchnotifications.js').route(app);
+require('./routes/api-deletenotification.js').route(app);
 
 
 require('./listen.js').start(app, PORT);

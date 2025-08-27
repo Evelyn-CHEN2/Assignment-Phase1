@@ -27,7 +27,7 @@ module.exports = {
 
             try {
                 writeUsers(users);
-                return res.sendStatus(204); // No response expected
+                res.sendStatus(204); // No response expected
             } 
             catch (error) {
                 console.error('Error deleting user:', error);

@@ -1,9 +1,23 @@
 [
   {
-    "id": "2025-08-27T09:26:48.617Z",
-    "applier": 6,
-    "groupToApply": "g2",
+    "id": "2025-08-27T10:04:29.452Z",
+    "applier": 7,
+    "groupToApply": "g1756080958422",
+    "groupCreator": 2,
+    "status": "approved"
+  },
+  {
+    "id": "2025-08-27T11:49:44.956Z",
+    "applier": 7,
+    "groupToApply": "g1756080867629",
     "groupCreator": 4,
     "status": "approved"
+  },
+  {
+    "id": "2025-08-27T11:54:33.959Z",
+    "applier": 7,
+    "groupToApply": "g1756081043742",
+    "groupCreator": 2,
+    "status": "pending"
   }
 ]

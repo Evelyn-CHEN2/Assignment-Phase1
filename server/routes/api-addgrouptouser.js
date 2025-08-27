@@ -50,18 +50,17 @@ module.exports = {
 
             // Find the notification by ID
             let notifications = readNotifications();
-            const notification = notifications.find(n => n.id === req.body.notificationId)
-            if (notification.length === 0) {
+            const approvedNotification = notifications.find(n => n.id === req.body.notificationId)
+            if (approvedNotification.length === 0) {
                 return res.status(404).json({ error: 'Notification not found' });
             }
             // Update status of the notification
-            notification.status = 'approved';
-            console.log('Updated notification:', notification);
+            approvedNotification.status = 'approved';
 
             try {
                 writeUsers(users);
                 writeNotifications(notifications);
-                res.sendStatus(200);
+                res.sendStatus(204);
             }
             catch (error) {
                 console.error('Error adding new group to user:', error);

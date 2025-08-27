@@ -114,7 +114,7 @@
   },
   {
     "id": "c1756080958424",
-    "channelname": "nlp",
+    "channelname": "updates",
     "groupid": "g1756080958422",
     "messages": []
   },
@@ -127,6 +127,18 @@
   {
     "id": "c1756081043742",
     "channelname": "aws-azure-gcp",
+    "groupid": "g1756081043742",
+    "messages": []
+  },
+  {
+    "id": "c1756081043743",
+    "channelname": "resources",
+    "groupid": "g1756081043742",
+    "messages": []
+  },
+  {
+    "id": "c1756081043744",
+    "channelname": "tips",
     "groupid": "g1756081043742",
     "messages": []
   }
