@@ -15,8 +15,9 @@
                     <i class="bi bi-x fs-5"></i>
                   </button>
                 }
+
                 <!-- If user is already a member of the group, show check icon, otherwise show heart icon -->
-                @if (user?.role === 'super' || user?.role === 'admin') {
+                @if (user?.groups?.includes(group.id)) {
                   <i class="bi bi-check2-all fs-6" style="color: #40916c;"></i>
                  
                 } @else {
@@ -36,12 +37,12 @@
             </div>
             <p class="card-text mb-2">{{group.description}}</p>
             <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}</p>
-  
             <div class="channels text-muted small">
                 <label class="form-label fs-6 text-muted">Channels:</label><br> 
                 @for (channel of group.channels; track channel.id) {
                     <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
                       {{channel.channelname}}
+                      
                       <!-- super/admin to delete channel button -->
                       @if (user?.role === 'super' || user?.role === 'admin') {
                         <button class="btn btn-link text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteChannelModal" type="button" (click)="openDeleteChannelModal(channel)">

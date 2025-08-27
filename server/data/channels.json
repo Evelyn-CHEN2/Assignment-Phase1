@@ -1,23 +1,5 @@
 [
   {
-    "id": "c1",
-    "channelname": "announces",
-    "groupid": "g1",
-    "messages": []
-  },
-  {
-    "id": "c2",
-    "channelname": "help-and-fix",
-    "groupid": "g1",
-    "messages": []
-  },
-  {
-    "id": "c3",
-    "channelname": "jobs-and-gigs",
-    "groupid": "g1",
-    "cmessages": []
-  },
-  {
     "id": "c4",
     "channelname": "reading-group",
     "groupid": "g2",
@@ -146,48 +128,6 @@
     "id": "c1756081043742",
     "channelname": "aws-azure-gcp",
     "groupid": "g1756081043742",
-    "messages": []
-  },
-  {
-    "id": "c1756081043743",
-    "channelname": "kubernetes",
-    "groupid": "g1756081043742",
-    "messages": []
-  },
-  {
-    "id": "c1756081043744",
-    "channelname": "serverless",
-    "groupid": "g1756081043742",
-    "messages": []
-  },
-  {
-    "id": "c1756084901175",
-    "channelname": "qert",
-    "groupid": "g1756084901175",
-    "messages": []
-  },
-  {
-    "id": "c1756085119138",
-    "channelname": "set2",
-    "groupid": "g1756085119138",
-    "messages": []
-  },
-  {
-    "id": "c1756085168230",
-    "channelname": "set2",
-    "groupid": "g1756085168230",
-    "messages": []
-  },
-  {
-    "id": "c1756085903479",
-    "channelname": "sdgse",
-    "groupid": "g1756085903479",
-    "messages": []
-  },
-  {
-    "id": "c1756090568490",
-    "channelname": "setste",
-    "groupid": "g1756090568490",
     "messages": []
   }
 ]

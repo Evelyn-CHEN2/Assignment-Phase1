@@ -41,7 +41,10 @@ module.exports = {
             if (user.length === 0) {
                 return res.status(404).json({ error: 'User not found' });
             }
-
+            // Double check if the user is already in the group
+            if (user.groups.includes(req.body.groupId)) {
+                return res.status(400).json({ error: "You're already in the group!" });
+            }
             // Add the group to the user's groups
             user.groups.push(req.body.groupId);
 

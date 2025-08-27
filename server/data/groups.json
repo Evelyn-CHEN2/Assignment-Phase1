@@ -11,8 +11,7 @@
     ],
     "createdBy": 4,
     "admins": [
-      4,
-      3
+      4
     ]
   },
   {
@@ -69,18 +68,6 @@
     "createdBy": 2,
     "admins": [
       2
-    ]
-  },
-  {
-    "id": "g1756090568490",
-    "groupname": "test",
-    "description": "test",
-    "channels": [
-      "c1756090568490"
-    ],
-    "createdBy": 4,
-    "admins": [
-      4
     ]
   }
 ]

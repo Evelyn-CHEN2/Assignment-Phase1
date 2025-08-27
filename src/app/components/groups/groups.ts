@@ -38,6 +38,7 @@ export class Groups implements OnInit {
     // Retrive user data from localStorage
     const currentUser = this.authService.getCurrentUser();
     this.user = currentUser;
+    console.log('Current user:', this.user);
     // Fetch all groups, channels, and users in parallel
     forkJoin({
       groups: this.groupService.getGroups(),
@@ -45,6 +46,10 @@ export class Groups implements OnInit {
       allusers: this.userService.getUsers()
     }).pipe(
       map(({ groups, allchannels, allusers }) => {
+        // Refresh user data (so on .html user?.groups.includes(group.id) can work after user joins a new group)
+        const freshUser = allusers.find(u => u.id === currentUser?.id) ?? currentUser;
+        this.user = freshUser;
+
         const userById = Object.fromEntries(
           allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         );
@@ -54,31 +59,26 @@ export class Groups implements OnInit {
             channels: allchannels.filter(c => c.groupid === group.id),
           }
         });
+
+        // restore pending state per group (optional but handy)
+        for (const g of formattedGroups) {
+          const k = g.id;
+          this.applyPending[k] = JSON.parse(localStorage.getItem('applyPending_' + k) || 'false');
+}
+
+
+
         return { userById, formattedGroups };
       }),
     ).subscribe(({ userById, formattedGroups }) => {
       this.userById = userById;
       this.groups = formattedGroups;
       console.log('All groups fetched successfully:', this.groups);
-    })
-    // }).subscribe(({ groups, allchannels, allusers }) => {
-    //   // this.usersById = Object.fromEntries(
-    //   //   allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
-    //   // )
-    //   this.userById = allusers.reduce((acc, user) => {
-    //     acc[user.id] = user.username.charAt(0).toUpperCase() + user.username.slice(1);
-    //     return acc;
-    //   }, {} as Record<number, string>);
-
-    //   this.groups = groups.map(group => {
-    //     return {
-    //       ...group,
-    //       channels: allchannels.filter(c => c.groupid === group.id),
-    //     };
-    //   });
-    //   console.log('All groups fetched successfully:', this.groups);
-    // })
+    });
   }
+
+
+
 
   // Actions for super and admin
   // Edit a group
@@ -89,7 +89,7 @@ export class Groups implements OnInit {
   // Toggle delete confirmation modal
   openDeleteGroupModal(group: Group): void {
     this.selectedGroup = group;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteModal')!).show();
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteGroupModal')!).show();
   }
 
   // Delete a group
@@ -178,11 +178,17 @@ export class Groups implements OnInit {
   }
 
   // Actions for chatusers
+  // Apply to join a group
   applyToJoinGroup(group: Group, event: any): void {
+    event.preventDefault();
     const groupId = group.id;
     const groupCreatorId = group.createdBy;
-    if (this.applyPending[groupId]) return;
-    this.applyPending[groupId] = true;  
+    this.applyPending[groupId] = false; 
+    
+    if (this.user?.groups.includes(groupId)) {
+      alert('You are already a member of this group.');
+      return;
+    }
     
     if (this.user?.id === undefined) {
       this.errMsg = 'User ID is required to send a notification.';
@@ -197,7 +203,7 @@ export class Groups implements OnInit {
     this.notificationService.createNotification(this.user.id, groupId, groupCreatorId).subscribe({
       next: (newNotification: Notification) => {
         alert('Application sent. Please wait for admin approval.');
-        this.applyPending[groupId] = newNotification.applyAppending;
+        this.applyPending[groupId] = true;
         localStorage.setItem('applyPending_' + groupId, JSON.stringify(this.applyPending[groupId]));
       },
       error: (error: any) => {

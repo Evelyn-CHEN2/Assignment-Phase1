@@ -30,6 +30,20 @@ module.exports = {
             fs.writeFileSync(channelsFile, JSON.stringify(channels, null, 2), 'utf8');
         }
 
+        // Function to read users from file
+        const readUsers = () => {
+            const usersFile = path.join(__dirname, '../data/users.json');
+            const data = fs.readFileSync(usersFile, 'utf8');
+            const users = JSON.parse(data);
+            return Array.isArray(users) ? users : [];
+        };
+
+        // Function to write users to file
+        const writeUsers = (users) => {
+            const usersFile = path.join(__dirname, '../data/users.json');
+            fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
+        }
+
         app.delete('/api/deletegroup/:id', (req, res) => {
             if (!req.params.id) {
                 return res.status(400).json({ error: 'No group ID provided' });
@@ -51,8 +65,15 @@ module.exports = {
             channels = channels.filter(c => c.groupid != req.params.id);
             writeChannels(channels);
 
+            // Remove the group from all users' groups array
+            let users = readUsers();
+            users.map(user => {
+                user.groups = user.groups.filter(gid => gid !== req.params.id);
+            });
+
             try {
                 writeGroups(groups);
+                writeUsers(users);
                 // Send a 204 No Content response, not ideal to do res.send(groups) since deleteGroup is not expecting a response
                 return res.sendStatus(204)
             } catch (error) {
