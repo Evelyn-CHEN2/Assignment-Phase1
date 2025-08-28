@@ -46,7 +46,9 @@ export class Users {
           )
       }
       )
-    ).subscribe(users => this.users = users)
+    ).subscribe(users => 
+      this.users = users.filter(u => u.id !== currentUser?.id) // Exclude current user
+    )
   }
 
   // Toggle delete confirmation modal
