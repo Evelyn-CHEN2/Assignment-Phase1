@@ -24,6 +24,8 @@ export class Groups implements OnInit {
   user: User | null = null;
   showAdminGroups: boolean = false;
   showAdd: Record<string, boolean> = {};
+  showEdit: Record<string, boolean> = {};
+  newGroupName: Record<string, string> = {};
   newChannelName: Record<string, string> = {};
   selectedGroup: Group | null = null;
   selectedChannel: Channel | null = null;
@@ -71,14 +73,36 @@ export class Groups implements OnInit {
   }
 
   // <-- Actions for super and admin -->
-  //Add a new channel to a group
+  // Switch to administered groups view
   toggleAdminGroups(): void {
     this.showAdminGroups = !this.showAdminGroups
   }
 
+  // Toggle edit group form
+  toggleEditGroup(group: Group): void {
+    this.showEdit[group.id] = !this.showEdit[group.id];
+  }
+
   // Edit a group
   editGroup(group: Group, event: any): void {
-
+    event.preventDefault();
+    this.errMsg = '';
+    const groupId = group.id;
+    const newGroupName = this.newGroupName[group.id];
+    this.groupService.editGroup(groupId, newGroupName).subscribe({
+      next: () => {
+        // Update group name for UI display immediately
+        group.groupname = newGroupName;
+        this.showEdit[group.id] = false;
+      },
+      error: (error: any) => {
+        console.error('Error editing group:', error);
+        this.errMsg = error.error.error || 'Failed to edit group.';
+      },
+      complete: () => {
+        console.log('Group edit request completed.');
+      }
+    })
   }
 
   // Toggle delete confirmation modal

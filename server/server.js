@@ -35,7 +35,7 @@ require('./routes/api-banuserByID.js').route(app);
 // Routes for groups management
 require('./routes/api-fetchallgroups.js').route(app);
 require('./routes/api-creategroup.js').route(app);
-// require('./routes/api-editgroup.js').route(app);
+require('./routes/api-editgroup.js').route(app);
 require('./routes/api-deletegroup.js').route(app);
 require('./routes/api-deletegroupfromuser.js').route(app);
 
@@ -49,7 +49,6 @@ require('./routes/api-addmessage.js').route(app);
 require('./routes/api-createnotification.js').route(app);
 require('./routes/api-fetchnotifications.js').route(app);
 require('./routes/api-deletenotification.js').route(app);
-
 
 // require('./listen.js').start(app, PORT);
 

@@ -21,10 +21,6 @@ export class GroupService {
     return this.http.get<Channel[]>(this.server + '/api/allchannels')
   }
 
-  // getChannelUsers(id: string): Observable<User[]> {
-  //   return this.http.get<User[]>(this.server + '/api/channelusers');
-  // }
-
   createGroup(groupname: string, description: string , channelNames: string[], currentUser: User): Observable<Group> {
     return this.http.post<Group>(this.server + '/api/creategroup', { groupname, description, channelNames, currentUser });
   }
@@ -33,8 +29,8 @@ export class GroupService {
     return this.http.put<void>(`${this.server}/api/addgrouptouser`, { groupId, userId, notificationId });
   }
   
-  editGroup(group: Group): Observable<Group> {
-    return this.http.put<Group>(`${this.server}/api/editgroup/${group.id}`, group);
+  editGroup(groupId: String, newGroupName: string): Observable<Group> {
+    return this.http.put<Group>(`${this.server}/api/editgroup/${groupId}`, { newGroupName });
   }
 
   deleteGroup(id: string): Observable<void> {
@@ -57,3 +53,6 @@ export class GroupService {
     return this.http.post<Channel>(this.server + '/api/addmessage', { channelId, userId, chatMsg });
   }
 }
+
+
+//Angular put method requires a body, if no body, send an empty{}

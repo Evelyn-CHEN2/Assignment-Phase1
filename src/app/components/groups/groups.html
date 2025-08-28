@@ -16,16 +16,25 @@
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
-                  <button class="btn p-0" style="color: green;" type="button" (click)="editGroup(group, $event)">
+                  <button class="btn p-0" style="color: green;" type="button" (click)="toggleEditGroup(group)">
                     <i class="bi bi-pencil-fill fs-6"></i>
                   </button>
                   <button class="btn text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteGroupModal" type="button" (click)="openDeleteGroupModal(group)">
                     <i class="bi bi-x fs-5"></i>
                   </button>
               </div>
-              
             </div>
             <p class="card-text mb-2">{{group.description}}</p>
+            <!-- button for admin to edit group  -->
+            @if (showEdit[group.id]){
+              <div class="add-pop mt-2">
+                <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New group name" 
+                [(ngModel)]="newGroupName[group.id]" name="newGroupName{{group.id}}" />
+                <button class="btn btn-sm btn-outline-secondary" style="font-size:x-small; background-color:#b7e4c7; color: black;" type="button" (click)="editGroup(group, $event)">Confirm</button>
+                <button class="btn btn-sm ms-2" style="font-size:x-small;" type="button" (click)="toggleEditGroup(group)">Cancel</button>
+              </div>
+            }
+            
             <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}</p>
             <div class="channels text-muted small">
                 <label class="form-label fs-6 text-muted">Channels:</label><br> 
@@ -79,7 +88,7 @@
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
                 @if (user?.role === 'super') {
-                  <button class="btn p-0" style="color: green;" type="button" (click)="editGroup(group, $event)">
+                  <button class="btn p-0" style="color: green;" type="button" (click)="toggleEditGroup(group)">
                     <i class="bi bi-pencil-fill fs-6"></i>
                   </button>
                   <button class="btn text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteGroupModal" type="button" (click)="openDeleteGroupModal(group)">
@@ -107,6 +116,15 @@
               
             </div>
             <p class="card-text mb-2">{{group.description}}</p>
+            <!-- button for admin to edit group  -->
+            @if (showEdit[group.id]){
+              <div class="add-pop mt-2">
+                <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New group name" 
+                [(ngModel)]="newGroupName[group.id]" name="newGroupName{{group.id}}" />
+                <button class="btn btn-sm btn-outline-secondary" style="font-size:x-small; background-color:#b7e4c7; color: black;" type="button" (click)="editGroup(group, $event)">Confirm</button>
+                <button class="btn btn-sm ms-2" style="font-size:x-small;" type="button" (click)="toggleEditGroup(group)">Cancel</button>
+              </div>
+            }
             <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}</p>
             <div class="channels text-muted small">
                 <label class="form-label fs-6 text-muted">Channels:</label><br> 
