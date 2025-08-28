@@ -11,7 +11,7 @@ export class UserService {
   private server = 'http://localhost:3000';
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.server + '/api/fetchusers')
+    return this.http.get<User[]>(this.server + '/api/fetchallusers')
   }
 
   getUserById(id: number): Observable<User> {

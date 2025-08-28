@@ -1,3 +1,14 @@
+.back-btn{
+  border: 0;
+  background: transparent;
+  padding: 6px;
+  border-radius: 8px;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; 
+}
+
 .add-btn{
     position: relative;
     display: inline-flex;
@@ -47,5 +58,6 @@
     box-shadow: 0 0 0 .25rem rgba(141,153,174,.25);
     outline: none;
   }
+
 
   

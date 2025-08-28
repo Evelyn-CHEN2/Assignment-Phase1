@@ -19,8 +19,10 @@ import { NgClass } from '@angular/common';
 })
 export class Groups implements OnInit {
   groups: Group[] = [];
+  adminGroups: Group[] = [];
   userById: Record<number, string> = {};
   user: User | null = null;
+  showAdminGroups: boolean = false;
   showAdd: Record<string, boolean> = {};
   newChannelName: Record<string, string> = {};
   selectedGroup: Group | null = null;
@@ -51,7 +53,7 @@ export class Groups implements OnInit {
         const userById = Object.fromEntries(
           allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         );
-        // All groups seen by super
+        // Fetch all groups with their channels
         const formattedGroups = groups.map(group => {
           return {
             ...group,
@@ -64,17 +66,18 @@ export class Groups implements OnInit {
       }),
     ).subscribe(({ userById, formattedGroups, adminGroups }) => {
       this.userById = userById;
-      // Determine which groups to display based on the user role
-      if (this.user?.role === 'super') {
-        this.groups = formattedGroups;
-      } else if (this.user?.role === 'admin') {
-        this.groups = adminGroups;
-      }
+      this.groups = formattedGroups;
+      this.adminGroups = adminGroups;
       console.log('All groups fetched successfully:', this.groups);
     });
   }
 
   // <-- Actions for super and admin -->
+  //Add a new channel to a group
+  toggleAdminGroups(): void {
+    this.showAdminGroups = !this.showAdminGroups
+  }
+
   // Edit a group
   editGroup(group: Group, event: any): void {
 
@@ -115,6 +118,7 @@ export class Groups implements OnInit {
 
   // Delete a channel from a group
   deleteChannel(channel: Channel, event: any): void {
+    event.preventDefault();
     this.errMsg = '';
     const channelID = channel.id;
     this.groupService.deleteChannel(channelID).subscribe({
@@ -186,6 +190,11 @@ export class Groups implements OnInit {
 
     if (groupCreatorId === undefined) {
       this.errMsg = 'Group creator ID is undefined.';
+      return;
+    }
+    // Double make sure user cannot apply again if already pending
+    if (this.user?.groups.includes(groupId) || this.applyPending[groupId]) {
+      alert('You have already joined or applied to this group. Please wait for admin approval.');
       return;
     }
 

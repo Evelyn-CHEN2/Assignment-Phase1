@@ -8,7 +8,7 @@ app.use(express.json());
 
 require('./routes/api-login.js').route(app);
 require('./routes/api-register.js').route(app);
-require('./routes/api-fetchusers.js').route(app);
+require('./routes/api-fetchallusers.js').route(app);
 require('./routes/api-fetchuserByID.js').route(app);
 require('./routes/api-updateuserrole.js').route(app);
 require('./routes/api-deleteuser.js').route(app);

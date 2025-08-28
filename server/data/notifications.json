@@ -18,6 +18,13 @@
     "applier": 7,
     "groupToApply": "g1756081043742",
     "groupCreator": 2,
-    "status": "pending"
+    "status": "approved"
+  },
+  {
+    "id": "2025-08-28T01:42:14.100Z",
+    "applier": 3,
+    "groupToApply": "g2",
+    "groupCreator": 4,
+    "status": "approved"
   }
 ]

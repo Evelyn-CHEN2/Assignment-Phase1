@@ -36,7 +36,7 @@ export class GroupForm {
     if (f.invalid) {
       return;
     }
-    // Double check if the user is super or admin
+    // Only allow super or admin to create groups
     this.user = this.authService.getCurrentUser();
     if (this.user?.role !== 'admin' && this.user?.role !== 'super') {
       this.errMsg = 'You do not have permission to create groups!';

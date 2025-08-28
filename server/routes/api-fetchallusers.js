@@ -12,7 +12,7 @@ module.exports = {
             return Array.isArray(users) ? users : [];
         };
 
-        app.get('/api/fetchusers', (req, res) => {
+        app.get('/api/fetchallusers', (req, res) => {
             try {
                 const users = readUsers();
                 res.send(users);

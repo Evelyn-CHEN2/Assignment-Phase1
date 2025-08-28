@@ -1,5 +1,76 @@
+@if (user?.role === 'admin') {
+  <button type="button" class="back-btn" (click)="toggleAdminGroups()">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+<button type="button" (click)="toggleAdminGroups()">My admin groups</button>
+
+}
 
 <div class="row">
+  <!-- Display groups that are managed by admin user -->
+  @if (showAdminGroups) {
+    @for (group of adminGroups; track group.id) {
+      <div class="col-md-12 mb-12">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class ="d-flex justify-content-between">
+              <h5 class="card-title mb-1">{{group.groupname}}</h5>
+              <div style="gap: 10px; display: flex;">
+                  <button class="btn p-0" style="color: green;" type="button" (click)="editGroup(group, $event)">
+                    <i class="bi bi-pencil-fill fs-6"></i>
+                  </button>
+                  <button class="btn text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteGroupModal" type="button" (click)="openDeleteGroupModal(group)">
+                    <i class="bi bi-x fs-5"></i>
+                  </button>
+              </div>
+              
+            </div>
+            <p class="card-text mb-2">{{group.description}}</p>
+            <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}</p>
+            <div class="channels text-muted small">
+                <label class="form-label fs-6 text-muted">Channels:</label><br> 
+                @for (channel of group.channels; track channel.id) {
+                    <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
+                      {{channel.channelname}}   
+                      <!-- Button for admin to delete channel -->
+                      @if (user?.role === 'super' || user?.role === 'admin') {
+                        <button 
+                          class="btn btn-link text-danger p-0" type="button"
+                          data-bs-toggle="modal" 
+                          data-bs-target="#confirmDeleteChannelModal" 
+                          (click)="openDeleteChannelModal(channel)">
+                          <i class="bi bi-x-square fs-6"></i>
+                        </button>
+                      }
+                  </li>
+                }
+            </div>
+
+            <!--Button for admin to add channel -->
+            <div class="d-flex justify-content-end m-2">
+              @if (user?.role === 'admin') {
+                <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
+                  <span>Channel</span>
+                  <span class="add-circle"><i class="bi bi-plus-lg"></i></span>
+                </button>
+              }
+            </div>
+
+            @if (showAdd[group.id]){
+              <div class="add-pop mt-2">
+                <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New channel name" 
+                [(ngModel)]="newChannelName[group.id]" name="newChannelName{{group.id}}" />
+                <button class="btn btn-sm btn-outline-secondary" style="font-size:x-small; background-color:#b7e4c7; color: black;" type="button" (click)="confirmAddChannel(group, $event)">Confirm</button>
+                <button class="btn btn-sm ms-2" style="font-size:x-small;" type="button" (click)="toggleAddChannel(group)">Cancel</button>
+              </div>
+            }
+          </div>  
+        </div>
+      </div>
+    }
+  }
+  <!-- Display all groups for super and chatusers -->
+  @else {
     @for (group of groups; track group.id) {
       <div class="col-md-12 mb-12">
         <div class="card shadow-sm h-100">
@@ -7,7 +78,7 @@
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
-                @if ((user?.role === 'super' || user?.role === 'admin') && group.createdBy === user?.id) {
+                @if (user?.role === 'super') {
                   <button class="btn p-0" style="color: green;" type="button" (click)="editGroup(group, $event)">
                     <i class="bi bi-pencil-fill fs-6"></i>
                   </button>
@@ -43,8 +114,8 @@
                     <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
                       {{channel.channelname}}
                       
-                      <!-- super/admin to delete channel button -->
-                      @if (user?.role === 'super' || user?.role === 'admin') {
+                      <!-- Button for super to delete channel -->
+                      @if (user?.role === 'super') {
                         <button 
                           class="btn btn-link text-danger p-0" type="button"
                           data-bs-toggle="modal" 
@@ -59,7 +130,7 @@
 
             <!--super/admin to add channel -->
             <div class="d-flex justify-content-end m-2">
-              @if ((user?.role === 'super' || user?.role === 'admin') && group.createdBy === user?.id) {
+              @if (user?.role === 'super') {
                 <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
                   <span>Channel</span>
                   <span class="add-circle"><i class="bi bi-plus-lg"></i></span>
@@ -79,6 +150,7 @@
         </div>
       </div>
     }
+  }
 </div>
 
 <!-- Delete confirmation modals for group -->
