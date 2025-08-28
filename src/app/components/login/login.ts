@@ -26,7 +26,7 @@ export class Login implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       console.log('User alreafy logged in: ', currentUser);
-      // If user is super, redirect to dashboard, otherwise to account page
+      // If user is super/admin, redirect to dashboard, otherwise to account page
       if (currentUser.role.includes('super') || currentUser.role.includes('admin')) {
         this.router.navigate(['/dashboard']);
       } else {
@@ -44,6 +44,8 @@ export class Login implements OnInit {
     if (f.invalid) {
       return;
     }
+    // Check if the user is banned
+    
     // Proceed with data sent back from server
     this.authService.login(this.username, this.pwd).subscribe({
       next: (user: User) => {

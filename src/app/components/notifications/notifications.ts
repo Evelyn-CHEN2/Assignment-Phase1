@@ -15,6 +15,7 @@ import { forkJoin, map, switchMap } from 'rxjs';
 })
 export class Notifications implements OnInit {
   notifications: Notification[] = [];
+  usersReported: string[] = [];
   errMsg: string = '';
   userById: Record<number, string> = {};
   groupById: Record<string, string> = {};
@@ -29,13 +30,15 @@ export class Notifications implements OnInit {
   ngOnInit(): void {
     // Fetch all group applications for groups created by current super/admin
     const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      return;
+    }
     this.notificationService.fetchNotifications().pipe(
       map((notifications: Notification[]) => {
-        console.log('Notifications for admin:', notifications);
-        return notifications.filter(n => n.groupCreator === currentUser?.id)
-        
+        console.log('All notifications fetched:', notifications);
+        return notifications
       }),
-      switchMap((adminNotifications: Notification[]) => {
+      switchMap((notifications: Notification[]) => {
         return forkJoin({
           users: this.userService.getUsers(),
           groups: this.groupService.getGroups()
@@ -47,12 +50,22 @@ export class Notifications implements OnInit {
             const groupById = Object.fromEntries(
               groups.map(g => [g.id, g.groupname])
             )
-            return { adminNotifications, userById, groupById };
+            // Filter notifications for groups administered by current user
+            const adminNotifications = notifications.filter(n => {
+              const groupApplying = groups.find(g => g.id === n.groupToApply);
+              return groupApplying?.admins.includes(currentUser.id);
+            });
+
+            return { notifications, adminNotifications, userById, groupById };
           })
         )
       })
-    ).subscribe(({ adminNotifications, userById, groupById }) => {
-      this.notifications = adminNotifications;
+    ).subscribe(({ notifications, adminNotifications, userById, groupById }) => {
+      if (currentUser?.role === 'super') {
+        this.notifications = notifications;
+      } else if (currentUser?.role === 'admin') {
+        this.notifications = adminNotifications;
+      }
       this.userById = userById;
       this.groupById = groupById;
     })
@@ -62,7 +75,7 @@ export class Notifications implements OnInit {
   formatDate(id: string | number): string {
     const n = Number(id);
     if (Number.isFinite(n)) {
-      const d = String(id).length >= 13 ? new Date(n) : new Date(n * 1000);
+      const d = String(id).length >= 13 ? new Date(n) : new Date(n * 100);
       return d.toLocaleString();
     }
     return String(id);

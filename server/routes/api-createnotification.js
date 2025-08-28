@@ -30,14 +30,13 @@ module.exports = {
                 new Date().toISOString(),
                 req.body.userId,
                 req.body.groupId,
-                req.body.groupCreatorId,
                 'pending'  // initial status is pending
-            )
+            );
 
             notifications.push(newNotification);
             try {
                 writeNotifications(notifications);
-                res.send(newNotification);
+                res.sendStatus(204);
             }
             catch (error) {
                 console.error('Error creating notifications:', error);

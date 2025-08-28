@@ -29,9 +29,7 @@ export interface Notification {
     id: string;
     applier: number; // Store user.id who applies
     groupToApply: string; // Store group.id
-    groupCreator: number; // Store user.id who create the group
     status: string; // 'pending', 'approved'
-    applyAppending: boolean;
 }
 
 export interface UpdatedUserRole {

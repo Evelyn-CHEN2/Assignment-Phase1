@@ -16,10 +16,12 @@ import { switchMap, map } from 'rxjs';
 })
 export class Users {
   users: User[] = [];
+  loggedUser: User | null = null;
   showUpdateRole: Record<number, boolean> = {};
   showDelete: Record<number, boolean> = {};
   newRole: Record<number, string> = {};
   selectedUser: User | null = null; 
+  errMsg: string = '';
 
   private userService = inject(UserService);
   private authService = inject(AuthService);
@@ -29,6 +31,7 @@ export class Users {
 
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
+    this.loggedUser = currentUser;
     this.groupService.getGroups().pipe(
       map(groups => {
         // Fetch groups that the current user administers
@@ -38,17 +41,47 @@ export class Users {
       switchMap(adminGroups => {
         return this.userService.getUsers().pipe(
           map(users => {
-            return users.filter(u => 
+            const allUsers = users;
+            const adminUsers =  users.filter(u => 
               u.role !== 'super' && // Filter out super
-              u.groups.some(ug => adminGroups.some(g => g.id === ug))
+              u.groups.some(ug => adminGroups.some(ag => ag.id === ug)) // Filter users who are in groups administered by current user
             );
+            return { allUsers, adminUsers };
             })
           )
       }
       )
-    ).subscribe(users => 
-      this.users = users.filter(u => u.id !== currentUser?.id) // Exclude current user
-    )
+    ).subscribe(({ allUsers, adminUsers }) => {
+      if (currentUser?.role === 'super') {
+        this.users = allUsers.filter(u => u.id !== currentUser.id); // Exclude self
+      } else if (currentUser?.role === 'admin') {
+        this.users = adminUsers.filter(u => u.id !== currentUser.id); // Exclude self
+      }
+    })
+  }
+
+  // Toggle ban confirmation modal
+  openAlertModal(user: User): void {
+    this.selectedUser = user;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmAlertModal')!).show();
+  }
+
+  // Ban user and report to super
+  confirmBan(user: User, event: any): void {
+    event.preventDefault();
+    this.userService.banUser(user.id).subscribe({
+      next: () => {
+        user.valid = false;
+        console.log('User banned successfully:', user);
+      },
+      error: (err: any) => {
+        console.error('Error banning user:', err);
+        this.errMsg = err.error.error;
+      },
+      complete: () => { 
+        console.log('User ban complete.');
+      }
+    })
   }
 
   // Toggle delete confirmation modal

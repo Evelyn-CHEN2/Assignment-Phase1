@@ -11,15 +11,15 @@
               <span class="status-pill text-capitalize me-2"
                   [ngClass]="notification.status">
               {{ notification.status }}
-            </span>
+              </span>
             </div>
 
             <div class="notif-meta text-secondary">
-              <span class="meta"><i class="bi bi-clock me-1"></i>Applied: {{ formatDate(notification.id) }}</span>
+              <span class="meta"><i class="bi bi-clock me-1"></i>Applied at: {{ formatDate(notification.id) }}</span>
               <span class="dot mx-2">•</span>
               <span class="meta"><i class="bi bi-person me-1"></i>Applier: {{ userById[notification.applier] }}</span>
               <span class="dot mx-2">•</span>
-              <span class="meta"><i class="bi bi-shield-lock me-1"></i>Admin: {{ userById[notification.groupCreator] }}</span>
+
             </div>
           </div>
 

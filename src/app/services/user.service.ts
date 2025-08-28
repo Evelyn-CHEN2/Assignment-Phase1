@@ -25,4 +25,8 @@ export class UserService {
   deleteUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.server}/api/deleteuser/${id}`);
   } 
+
+  banUser(id: number): Observable<void> {
+    return this.http.put<void>(`${this.server}/api/banuserbyID/${id}`, {});
+  }
 }

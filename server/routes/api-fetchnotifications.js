@@ -15,7 +15,6 @@ module.exports = {
 
         app.get('/api/fetchnotifications', (req, res) => {
             const notifications = readNotifications();
-            console.log('Fetched notifications:', notifications);
             res.send(notifications);
         })
     }

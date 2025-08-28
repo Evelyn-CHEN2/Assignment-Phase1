@@ -37,9 +37,7 @@ export class Groups implements OnInit {
   declare bootstrap: any;
 
   ngOnInit(): void {
-    // Retrive user data from localStorage
     const currentUser = this.authService.getCurrentUser();
-    console.log('Current user:', this.user);
     // Fetch all groups, channels, and users in parallel
     forkJoin({
       groups: this.groupService.getGroups(),
@@ -180,29 +178,18 @@ export class Groups implements OnInit {
   applyToJoinGroup(group: Group, event: any): void {
     event.preventDefault();
     const groupId = group.id;
-    const groupCreatorId = group.createdBy;
-    this.applyPending[groupId] = false; 
+    // this.applyPending[groupId] = false; 
     
     if (this.user?.id === undefined) {
       this.errMsg = 'User ID is required to send a notification.';
       return;
     }
 
-    if (groupCreatorId === undefined) {
-      this.errMsg = 'Group creator ID is undefined.';
-      return;
-    }
-    // Double make sure user cannot apply again if already pending
-    if (this.user?.groups.includes(groupId) || this.applyPending[groupId]) {
-      alert('You have already joined or applied to this group. Please wait for admin approval.');
-      return;
-    }
-
-    this.notificationService.createNotification(this.user.id, groupId, groupCreatorId).subscribe({
-      next: (newNotification: Notification) => {
+    this.notificationService.createNotification(this.user.id, groupId).subscribe({
+      next: () => {
         alert('Application sent. Please wait for admin approval.');
         this.applyPending[groupId] = true;
-        localStorage.setItem('applyPending_' + groupId, JSON.stringify(this.applyPending[groupId]));
+        //localStorage.setItem('applyPending_' + groupId, JSON.stringify(this.applyPending[groupId]));
       },
       error: (error: any) => {
         console.error('Error sending application:', error);
