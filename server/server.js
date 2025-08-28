@@ -1,10 +1,24 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-
-const cors = require('cors');  
+const cors = require('cors'); 
 app.use(cors());
 app.use(express.json());
+
+const server = require('http').createServer(app);
+const options = {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+}
+const io = require('socket.io')(server, options);
+const sockets = require('./socket.js');
+sockets.connect(io, PORT);
+
+server.listen(PORT, () => {
+    console.log(`HTTP + Socket.IO listening on http://localhost:${PORT}`);
+  });
 
 // Routes to handle user authentication
 require('./routes/api-login.js').route(app);
@@ -37,6 +51,6 @@ require('./routes/api-fetchnotifications.js').route(app);
 require('./routes/api-deletenotification.js').route(app);
 
 
-require('./listen.js').start(app, PORT);
+// require('./listen.js').start(app, PORT);
 
   

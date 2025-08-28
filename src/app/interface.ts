@@ -21,7 +21,7 @@ export interface Group {
 export interface Channel {
     id: string;
     channelname: string;
-    messages: { sender: number; text: string; timestamp: Date }[]; // Sender is user.id
+    messages: { sender: number; message: string; timestamp: Date }[]; // Sender is user.id
     groupid: string;  // Store group.id
 }
 

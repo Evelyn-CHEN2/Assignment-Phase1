@@ -3,60 +3,7 @@
     "id": "c4",
     "channelname": "reading-group",
     "groupid": "g2",
-    "messages": [
-      {
-        "sender": 2,
-        "timestamp": "2025-08-24T09:04:18.728Z"
-      },
-      {
-        "sender": 2,
-        "timestamp": "2025-08-24T09:04:44.397Z"
-      },
-      {
-        "sender": 2,
-        "timestamp": "2025-08-24T09:05:42.163Z"
-      },
-      {
-        "sender": 2,
-        "timestamp": "2025-08-24T09:05:43.446Z"
-      },
-      {
-        "sender": 2,
-        "timestamp": "2025-08-24T09:05:44.709Z"
-      },
-      {
-        "sender": 2,
-        "timestamp": "2025-08-24T09:05:45.965Z"
-      },
-      {
-        "sender": 2,
-        "timestamp": "2025-08-24T09:05:47.897Z"
-      },
-      {
-        "sender": 2,
-        "timestamp": "2025-08-24T09:14:53.562Z"
-      },
-      {
-        "sender": 2,
-        "text": "testtesteset",
-        "timestamp": "2025-08-24T09:16:56.112Z"
-      },
-      {
-        "sender": 2,
-        "text": "ryhaerhe",
-        "timestamp": "2025-08-24T09:17:03.936Z"
-      },
-      {
-        "sender": 2,
-        "text": "adgfgergha",
-        "timestamp": "2025-08-24T09:45:21.391Z"
-      },
-      {
-        "sender": 4,
-        "text": "test2",
-        "timestamp": "2025-08-25T00:34:55.049Z"
-      }
-    ]
+    "messages": []
   },
   {
     "id": "c5",

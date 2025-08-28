@@ -6,7 +6,7 @@
           <i class="bi bi-chevron-left"></i>
         </button>
         <div class="avatar">
-            {{ (currentUser?.username || '?') | slice:0:1 | uppercase }}
+            {{ (currentUser?.username) | slice:0:1 | uppercase }}
         </div>
         <strong>{{ currentUser?.username }}</strong>
       </div>
@@ -23,10 +23,10 @@
               {{ (userById[m.sender]) || 'U'}}
             </div>
             <div class="msg-bubble">
-              <div class="msg-text">{{ m.text }}</div>
+              <div class="msg-text">{{ m.message }}</div>
             </div>
             <time class="msg-time" [attr.datatime]="m.timestamp">
-              {{ m.timestamp | date: 'short' }}
+              {{ m.timestamp | date: 'short' : 'Australia/Brisbane' }}
             </time>
           </li>
         }
@@ -35,7 +35,7 @@
   
     <!-- Text input area -->
     <form class="chat-input" (ngSubmit)="sendMessage($event)">
-      <input class="form-control me-2" type="text" [(ngModel)]="draftMsg" name="draftMsg" placeholder="What do you want to say?" required/>
+      <input class="form-control me-2" type="text" [(ngModel)]="message" name="message" placeholder="Express your ideas ..." required/>
       <button class="send-btn" type="submit">Send</button>
     </form>
     @if (errMsg) {

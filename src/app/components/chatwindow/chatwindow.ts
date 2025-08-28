@@ -7,6 +7,7 @@ import { SlicePipe, UpperCasePipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { map, switchMap } from 'rxjs';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-chatwindow',
@@ -17,9 +18,10 @@ import { map, switchMap } from 'rxjs';
 })
 export class Chatwindow implements OnInit{
   channel: Channel | null = null;
+  channelId: string = '';
   currentUser: User | null = null;
   userById: Record<number, string> = {};
-  draftMsg: string = '';
+  message: string = '';
   errMsg: string = '';
 
   private route = inject(ActivatedRoute);
@@ -27,29 +29,45 @@ export class Chatwindow implements OnInit{
   private groupService = inject(GroupService);
   private userService = inject(UserService);
   private router = inject(Router);
+  private socketService = inject(SocketService);
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
-    const channelID = this.route.snapshot.params['id'];
-    if (!channelID) {
-      console.error('Channel ID is not provided in the route parameters.');
+    this.channelId = this.route.snapshot.params['id'];
+    if (!this.channelId) {
+      console.error('Channel ID is missing in the route parameters.');
       return;
     }
-    // Fetch the channel by ID
-    this.groupService.getChannels().subscribe({
-      next: (channels: Channel[]) => {
-        this.channel = channels.find(c => c.id === channelID) || null;
-        if (!this.channel) {
-          console.error(`Channel with ID ${channelID} not found.`);
-          return;
-        };
-      },
-      error: (error: any) => {
-        console.error('Error fetching channels:', error);
-      },
-      complete: () => {
-        console.log('Channel fetched successfully:', this.channel);
-      }
+    // Fetch channel and users for displaying names
+    this.groupService.getChannels().pipe(
+      map((channels: Channel[]) => {
+        return channels.find(c => c.id === this.channelId );
+      })
+    ).subscribe(channel => {
+      this.channel = channel ?? null;
+      console.log('Loaded channel:', channel);
+      if (!this.channel) {
+        console.error(`Channel ${this.channelId} not found.`);
+        return;
+      };
+      this.userService.getUsers().subscribe((users: User[]) => {
+        this.userById = Object.fromEntries(
+          users.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
+        )
+      })
+    });
+
+    // Socket.io integration
+    this.socketService.initSocket();
+    this.socketService.joinChannel(this.channelId);
+    this.socketService.getMessage((m: any) =>{
+      const message = {
+        sender: m.sender,
+        message: m.message,
+        timestamp: new Date(m.timestamp)
+      };
+      console.log('Received message:', message);
+      (this.channel as Channel).messages.push(message);
     })
   }
 
@@ -58,36 +76,26 @@ export class Chatwindow implements OnInit{
     this.router.navigate(['/account']);
   }
 
-  // Add a message to the channel
-  sendMessage(event: any): void {
-    const text = this.draftMsg.trim();
-    this.currentUser = this.authService.getCurrentUser();
-    const userId = this.currentUser?.id;
-    const channelID = this.route.snapshot.params['id'];
-    if (!this.draftMsg) {
+  // Send a new message
+  sendMessage(event: any): void{
+    event.preventDefault();
+    if (!this.message.trim()) {
       this.errMsg = 'Message cannot be empty.';
       return;
     }
-    if (!userId) {
+    if (!this.currentUser) {
       this.errMsg = 'User not found.';
       return;
     }
-    this.groupService.addMsgToChannel(channelID, userId, text).pipe(
-      switchMap((updatedChannel: Channel) =>
-        this.userService.getUsers().pipe(
-          map((users: User[]) => {
-            const userById = Object.fromEntries(
-              users.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
-            )
-            return { updatedChannel, userById }
-          })
-        )
-      )  
-    ).subscribe(({ updatedChannel, userById }) => {
-      this.channel = updatedChannel;
-      this.userById = userById;
-      this.draftMsg = ''; 
-      this.errMsg = ''; 
-    })
+    if (!this.channel) {
+      this.errMsg = 'Channel not found.';
+      return;
+    }
+    console.log('Sending message:', this.message);
+    const newMessage = this.message.trim();
+    const sender = this.currentUser.id;
+    // Emit message via Socket.io
+    this.socketService.sendMessage(this.channelId, sender, newMessage);
+    this.message = '';
   }
 }

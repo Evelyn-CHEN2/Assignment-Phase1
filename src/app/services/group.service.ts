@@ -53,7 +53,7 @@ export class GroupService {
     return this.http.delete<void>(`${this.server}/api/deletechannel/${id}`);
   }
 
-  addMsgToChannel(channelId: string, userId: number, text: string): Observable<Channel> {
-    return this.http.post<Channel>(this.server + '/api/addmessage', { channelId, userId, text });
+  addMsgToChannel(channelId: string, userId: number, chatMsg: string): Observable<Channel> {
+    return this.http.post<Channel>(this.server + '/api/addmessage', { channelId, userId, chatMsg });
   }
 }
