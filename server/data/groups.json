@@ -13,9 +13,7 @@
     ],
     "createdBy": 4,
     "admins": [
-      4,
-      2,
-      2
+      4
     ]
   },
   {
@@ -29,8 +27,7 @@
     ],
     "createdBy": 4,
     "admins": [
-      4,
-      2
+      4
     ]
   },
   {
@@ -74,6 +71,18 @@
     "createdBy": 2,
     "admins": [
       2
+    ]
+  },
+  {
+    "id": "g1756341180874",
+    "groupname": "TESTE",
+    "description": "SETST",
+    "channels": [
+      "c1756341180874"
+    ],
+    "createdBy": 4,
+    "admins": [
+      4
     ]
   }
 ]

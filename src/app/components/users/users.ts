@@ -2,7 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { GroupService } from '../../services/group.service';
+import { AuthService } from '../../services/auth.service';
 import { User } from '../../interface'
+import { switchMap, map } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -18,23 +21,32 @@ export class Users {
   newRole: Record<number, string> = {};
   selectedUser: User | null = null; 
 
-  private userService = inject(UserService)
+  private userService = inject(UserService);
+  private authService = inject(AuthService);
+  private groupService = inject(GroupService);
   private router = inject(Router);
   declare bootstrap: any
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe({
-      next: (users: User[]) => {
-        this.users = users;
-        console.log('All users fetched successfully:', this.users);
-      },
-      error: (error: any) => {
-        console.error('Error fetching users:', error);
-      },
-      complete: () => { 
-        console.log('Groups fetching complete.');
+    const currentUser = this.authService.getCurrentUser();
+    this.groupService.getGroups().pipe(
+      map(groups => {
+        // Fetch groups that the current user administers
+        const adminGroups = currentUser ? groups.filter(g => g.admins?.includes(currentUser.id)) : [];
+        return adminGroups;
+      }),
+      switchMap(adminGroups => {
+        return this.userService.getUsers().pipe(
+          map(users => {
+            return users.filter(u => 
+              u.role !== 'super' && // Filter out super
+              u.groups.some(ug => adminGroups.some(g => g.id === ug))
+            );
+            })
+          )
       }
-    });
+      )
+    ).subscribe(users => this.users = users)
   }
 
   // Toggle delete confirmation modal

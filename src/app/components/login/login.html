@@ -7,14 +7,14 @@
             
     
                 <div class="field">
-                    <label for="pwd" class="form-label">User name <span class="req">*</span></label>
+                    <label for="username" class="form-label">User name <span class="req">*</span></label>
                     <div class="input-group has-validation">
                         <span class="input-group-text"><i class="bi bi-person" aria-hidden="true"></i></span>
-                        <input id="pwd"
+                        <input id="username"
                                 class="form-control"
-                                name="pwd"
+                                name="username"
                                 type="username"
-                                [(ngModel)]="pwd"
+                                [(ngModel)]="username"
                                 placeholder="Enter your user name"
                                 required />
                         <div class="invalid-feedback">Valid user name is required.</div>
@@ -50,7 +50,6 @@
             </div>
         </form>
             
-
         <div class="mt-3 d-flex align-items-center justify-content-between">
             <p class="text-center fs-6 mb-0">Don't have an account? </p>
             <button type="button" class="btn text-decoration-none" style="width: 25%; color:#023e8a;" routerLink="/register">Register</button>

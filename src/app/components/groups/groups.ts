@@ -51,18 +51,25 @@ export class Groups implements OnInit {
         const userById = Object.fromEntries(
           allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         );
+        // All groups seen by super
         const formattedGroups = groups.map(group => {
           return {
             ...group,
             channels: allchannels.filter(c => c.groupid === group.id),
           }
         });
-
-        return { userById, formattedGroups };
+        // Groups seen by admin who mangages certain groups
+        const adminGroups = freshUser ? formattedGroups.filter(g => g.admins?.includes(freshUser.id)) : [];
+        return { userById, formattedGroups, adminGroups };
       }),
-    ).subscribe(({ userById, formattedGroups }) => {
+    ).subscribe(({ userById, formattedGroups, adminGroups }) => {
       this.userById = userById;
-      this.groups = formattedGroups;
+      // Determine which groups to display based on the user role
+      if (this.user?.role === 'super') {
+        this.groups = formattedGroups;
+      } else if (this.user?.role === 'admin') {
+        this.groups = adminGroups;
+      }
       console.log('All groups fetched successfully:', this.groups);
     });
   }
