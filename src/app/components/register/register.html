@@ -2,41 +2,75 @@
 <form class="group-form" novalidate #f="ngForm" (ngSubmit)="register(f)" [class.was-validated]="submitted">
     <div style="flex:8;">
     <div class="field">
-        <label for="username" class="form-label">User Name <span class="req">*</span></label>
-        <input class="form-control" name="username" type="text" [(ngModel)]="username" placeholder="Enter your username" required/>
+        <label for="username" class="form-label">
+            User Name <span class="req">*</span>
+        </label>
+        <input 
+            class="form-control" type="text"
+            name="username" 
+            [(ngModel)]="username" 
+            placeholder="Enter your username" required/>
         <div class="invalid-feedback">Valid user name is required.</div>
     </div>
 
     <div class="field">
-        <label for="email" class="form-label">Email <span class="req">*</span></label>
+        <label for="email" class="form-label">
+            Email <span class="req">*</span>
+        </label>
         <div class="input-group has-validation">
             <span class="input-group-text">@</span>
-            <input class="form-control" name="email" type="email" [(ngModel)]="email" placeholder="you@example.com" required/>
+            <input 
+                class="form-control" type="email"
+                name="email" 
+                [(ngModel)]="email" 
+                placeholder="you@example.com" required/>
             <div class="invalid-feedback">Valid email is required.</div>
         </div>
     </div>
 
     <div class="field">
-        <label for="groups" class="form-label">Interested Groups <span class="req">*</span></label>
-        <input class="form-control" name="groups" type="text" [(ngModel)]="groups" placeholder="engineering, marketing" required/>
+        <label for="groups" class="form-label">
+            Interested Groups <span class="req">*</span>
+        </label>
+        <input 
+            class="form-control" type="text"
+            name="groups" 
+            [(ngModel)]="groups" 
+            placeholder="engineering, marketing" required/>
         <div class="invalid-feedback">Please choose at least one group.</div>
     </div>
 
     <div class="field"> 
-        <label for="pwd" class="form-label">Passsword <span class="req">*</span></label>
+        <label for="pwd" class="form-label">
+            Passsword <span class="req">*</span>
+        </label>
         <div class="input-group has-validation">
-            <span class="input-group-text"><i class="bi bi-lock-fill" aria-hidden="true"></i></span>
-            <input class="form-control" name="pwd" type="password" [(ngModel)]="pwd" placeholder="Choose a strong password" required/>
+            <span class="input-group-text">
+                <i class="bi bi-lock-fill" aria-hidden="true"></i>
+            </span>
+            <input 
+                class="form-control" type="password"
+                name="pwd" 
+                [(ngModel)]="pwd" 
+                placeholder="Choose a strong password" required/>
             <div class="invalid-feedback">Password is required</div>
         </div>
     </div>
     @if (errMsg) {
-        <p class="text text-danger" style="font-size: small;">{{errMsg}}</p>
+        <p class="text text-danger" style="font-size: small;">*{{errMsg}}</p>
     }
     </div>
     <div class="actions" style="flex:2;">
-        <button type="reset" class="btn" style="background-color: white;" (click)="onReset(f)">Reset</button>
-        <button type="submit" class="btn primary">Register</button>
+        <button 
+            type="reset" class="btn" 
+            style="background-color: white;" 
+            (click)="onReset(f)">
+            Reset
+        </button>
+        <button 
+            type="submit" class="btn primary">
+            Register
+        </button>
     </div>
 </form>
 

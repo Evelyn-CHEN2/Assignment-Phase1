@@ -53,10 +53,11 @@ export class Users {
       )
     ).subscribe(({ allUsers, adminUsers }) => {
       if (currentUser?.role === 'super') {
-        this.users = allUsers.filter(u => u.id !== currentUser.id); // Exclude self
+        this.users = allUsers.filter(u => u.id !== currentUser.id); // Exclude super self
       } else if (currentUser?.role === 'admin') {
-        this.users = adminUsers.filter(u => u.id !== currentUser.id); // Exclude self
+        this.users = adminUsers.filter(u => u.id !== currentUser.id); // Exclude admin self
       }
+      this.errMsg = '';
     })
   }
 
@@ -72,11 +73,10 @@ export class Users {
     this.userService.banUser(user.id).subscribe({
       next: () => {
         user.valid = false;
-        console.log('User banned successfully:', user);
       },
       error: (err: any) => {
         console.error('Error banning user:', err);
-        this.errMsg = err.error.error;
+        this.errMsg = err.error.error || 'Error happened while banning a user.';
       },
       complete: () => { 
         console.log('User ban complete.');
@@ -89,17 +89,18 @@ export class Users {
     this.selectedUser = user;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteModal')!).show();
   }
+
   // Delete user
   confirmDelete(user: User, event: any): void {
     event.preventDefault();
     this.userService.deleteUser(user.id).subscribe({
       next: () => {
-        console.log('User deleted successfully:', user);
-        // Remove the deleted user from the users array
+        // Update UI display after removing the user
         this.users = this.users.filter(u => u.id !== user.id);
       },
-      error: (error: any) => {
-        console.error('Error deleting user:', error);
+      error: (err: any) => {
+        console.error('Error deleting user:', err);
+        this.errMsg = err.error.error || 'Error happended while deleting a user.';
       },
       complete: () => { 
         console.log('User deletion complete.');

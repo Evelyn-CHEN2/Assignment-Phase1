@@ -38,7 +38,7 @@ export class Chatwindow implements OnInit{
       console.error('Channel ID is missing in the route parameters.');
       return;
     }
-    // Fetch channel and users for displaying names
+    // Fetch channel and users for displaying channel and user names on the header
     this.groupService.getChannels().pipe(
       map((channels: Channel[]) => {
         return channels.find(c => c.id === this.channelId );
@@ -53,7 +53,8 @@ export class Chatwindow implements OnInit{
       this.userService.getUsers().subscribe((users: User[]) => {
         this.userById = Object.fromEntries(
           users.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
-        )
+        );
+        this.errMsg = '';
       })
     });
 
@@ -66,7 +67,6 @@ export class Chatwindow implements OnInit{
         message: m.message,
         timestamp: new Date(m.timestamp)
       };
-      console.log('Received message:', message);
       (this.channel as Channel).messages.push(message);
     })
   }

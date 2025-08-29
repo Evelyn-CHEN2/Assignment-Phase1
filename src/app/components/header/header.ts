@@ -14,7 +14,6 @@ import { Router } from '@angular/router';
   styleUrl: './header.css'
 })
 export class Header {
-  welcomeMsg: string = 'Welcome, ';
   username: string = '';
   remember: boolean = false;
 

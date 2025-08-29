@@ -1,16 +1,14 @@
 <div style="width: 180px; margin-right: 10px;" >
   <nav class="d-flex flex-column p-3 flex-shrink-0 text-white" style="min-height: 100vh; background-color: #2b2d42;">
     
-    <a href="/" class="d-flex align-items-center justify-content-between  mb-md-0 me-md-auto text-white text-decoration-none">
+    <div class="d-flex align-items-center justify-content-between text-white text-decoration-none" style="background-color: aliceblue;">
       <span class="fs-4">Chats</span>
-      <span class="px-3 text-end" style="font-size: x-small;">
+      <span class="px-4" style="font-size: x-small; background-color: red;">
         @if (user$ | async; as user) {
-          Welcome, {{ user.username | titlecase }}!
-        } @else {
-          Welcome, Guest
+          Hi, {{ user.username | titlecase }}!
         }
       </span>
-    </a>
+    </div>
     <hr>
 
     <ul class="nav nav-pills flex-column mb-auto">

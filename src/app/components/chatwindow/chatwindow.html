@@ -30,16 +30,20 @@
             </time>
           </li>
         }
+        @if (errMsg) {
+          <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
+        }
       </ul>
     </div>
   
     <!-- Text input area -->
     <form class="chat-input" (ngSubmit)="sendMessage($event)">
-      <input class="form-control me-2" type="text" [(ngModel)]="message" name="message" placeholder="Express your ideas ..." required/>
+      <input 
+        class="form-control me-2" type="text" 
+        [(ngModel)]="message" 
+        name="message" 
+        placeholder="Express your ideas ..." required/>
       <button class="send-btn" type="submit">Send</button>
     </form>
-    @if (errMsg) {
-        <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
-    }
 </div>
   

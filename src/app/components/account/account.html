@@ -56,7 +56,10 @@
         </li>
         @if (showUpdateRole[group.id]) {
           <div class="update-role-pop mt-2 gap-2 d-flex align-items-center" >
-              <select class="form-select flex-grow-1" [(ngModel)]="newRole[group.id]" name="newRole{{group.id}}">
+              <select 
+                class="form-select flex-grow-1" 
+                [(ngModel)]="newRole[group.id]" 
+                name="newRole{{group.id}}">
                   <option value="chatuser">Chat User</option>
                   <option value="admin">Admin</option>
                   <option value="super">Super</option>
@@ -79,13 +82,21 @@
   <div class="modal-dialog modal-dialog-centered modal-m">
     <div class="modal-content">
       <div class="modal-body py-3">
-        <p class="mb-0" id="confirmDeleteLabel">Are you sure to delete your account permanently?</p>
+        <p class="mb-0" id="confirmDeleteLabel">
+          Are you sure to delete your account permanently?
+        </p>
         <small class="text-muted">This action cannot be undone.</small>
       </div>
       <div class="modal-footer py-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" (click)="user && confirmDeleteUser(user!, $event)"> 
-                                                                                                      <!-- user! is for check user is not null -->
+        <button 
+          type="button" class="btn btn-sm btn-outline-secondary" 
+          data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button 
+          type="button" class="btn btn-sm btn-danger" 
+          data-bs-dismiss="modal" 
+          (click)="user && confirmDeleteUser(user!, $event)"> <!-- user! is for check user is not null -->
           Delete
         </button>
       </div>
@@ -98,18 +109,31 @@
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
       <div class="modal-body py-3">
-        <p class="mb-0" id="confirmLeaveGroupLabel">Are you sure to leave Group ?</p>
+        <p class="mb-0" id="confirmLeaveGroupLabel">
+          Are you sure to leave Group ?
+        </p>
         @if (selectedGroup) {
           <strong>{{selectedGroup.groupname}}</strong>
         }
       </div>
       <div class="modal-footer py-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" (click)="selectedGroup && confirmLeaveGroup(selectedGroup, user!, $event)">  
+        <button 
+          type="button" class="btn btn-sm btn-outline-secondary" 
+          data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button 
+          type="button" class="btn btn-sm btn-danger" 
+          data-bs-dismiss="modal" 
+          (click)="selectedGroup && confirmLeaveGroup(selectedGroup, user!, $event)">  
           Leave
         </button>
       </div>
     </div>
   </div>
 </div>
+
+@if (errMsg) {
+  <p class="text-danger mb-0" style="font-size: small;">*{{ errMsg }}</p>
+}
         

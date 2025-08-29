@@ -68,7 +68,7 @@ export class Groups implements OnInit {
       this.userById = userById;
       this.groups = formattedGroups;
       this.adminGroups = adminGroups;
-      console.log('All groups fetched successfully:', this.groups);
+      this.errMsg = ''
     });
   }
 
@@ -114,17 +114,16 @@ export class Groups implements OnInit {
   // Delete a group
   deleteGroup(group: Group, event: any): void {
     event.preventDefault();
-    this.errMsg = '';
-    const groupID = group.id;
-    this.groupService.deleteGroup(groupID).subscribe({
+    const groupId = group.id;
+    this.groupService.deleteGroup(groupId).subscribe({
       next: () => {
-        console.log('Group deleted successfully:', group);
         // Remove the deleted group from the groups array for UI display immediately
-        this.groups = this.groups.filter(g => g.id !== groupID);
+        this.groups = this.groups.filter(g => g.id !== groupId); // For super
+        this.adminGroups = this.adminGroups.filter(g => g.id !== groupId) // For admin
       },
-      error: (error: any) => {
-        console.error('Error deleting group:', error);
-        this.errMsg = error.error.error || 'Failed to delete group.';
+      error: (err: any) => {
+        console.error('Error deleting group:', err);
+        this.errMsg = err.error.error || 'Failed to delete group.';
       },
       complete: () => {
         console.log('Group deletion request completed.');
@@ -141,22 +140,20 @@ export class Groups implements OnInit {
   // Delete a channel from a group
   deleteChannel(channel: Channel, event: any): void {
     event.preventDefault();
-    this.errMsg = '';
-    const channelID = channel.id;
-    this.groupService.deleteChannel(channelID).subscribe({
+    const channelId = channel.id;
+    this.groupService.deleteChannel(channelId).subscribe({
       next: () => {
-        console.log('Channel deleted successfully:', channel);
         // Remove the deleted channel from the group's channels
         const group = this.groups.find(g => g.id === channel.groupid);
         if (group) {
-          group.channels = group.channels.filter(c => c.id !== channelID);
+          group.channels = group.channels.filter(c => c.id !== channelId);
         } else {
           console.warn('Group not found for channel deletion:', channel.groupid);
         }
       },
-      error: (error: any) => {
-        console.error('Error deleting channel:', error);
-        this.errMsg = error.error.error || 'Failed to delete channel.';
+      error: (err: any) => {
+        console.error('Error deleting channel:', err);
+        this.errMsg = err.error.error || 'Failed to delete channel.';
       },
       complete: () => {
         console.log('Channel deletion request completed.');
@@ -171,7 +168,6 @@ export class Groups implements OnInit {
 
   confirmAddChannel(group: Group, event: any): void {
     event.preventDefault();
-    this.errMsg = '';
     const channelName = this.newChannelName[group.id];
     if (channelName === '') {
       this.errMsg = 'Channel name is required.';
@@ -180,16 +176,15 @@ export class Groups implements OnInit {
     this.groupService.createChannel(group, channelName).subscribe({
       next: (newChannel: Channel) => {
         if (newChannel) {
-          console.log('Channel created successfully:', newChannel);
           // Add the new channel to the group's channels
           group.channels.push(newChannel);
           // Reset channel name input
           this.newChannelName[group.id] = '';
         }
       },
-      error: (error: any) => {
-        console.error('Error creating channel:', error);
-        this.errMsg = error.error.error || 'Failed to create channel.';
+      error: (err: any) => {
+        console.error('Error creating channel:', err);
+        this.errMsg = err.error.error || 'Failed to create channel.';
       },
       complete: () => {
         console.log('Channel creation request completed.');
@@ -202,8 +197,6 @@ export class Groups implements OnInit {
   applyToJoinGroup(group: Group, event: any): void {
     event.preventDefault();
     const groupId = group.id;
-    // this.applyPending[groupId] = false; 
-    
     if (this.user?.id === undefined) {
       this.errMsg = 'User ID is required to send a notification.';
       return;
@@ -213,11 +206,10 @@ export class Groups implements OnInit {
       next: () => {
         alert('Application sent. Please wait for admin approval.');
         this.applyPending[groupId] = true;
-        //localStorage.setItem('applyPending_' + groupId, JSON.stringify(this.applyPending[groupId]));
       },
-      error: (error: any) => {
-        console.error('Error sending application:', error);
-        this.errMsg = error.error.error || 'Failed to send application.';
+      error: (err: any) => {
+        console.error('Error sending application:', err);
+        this.errMsg = err.error.error || 'Failed to send application.';
       },
       complete: () => {
         console.log('Application request completed.');  

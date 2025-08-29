@@ -19,7 +19,6 @@ export class GroupForm {
   description: string = '';
   channelnames: string = '';
   errMsg: string = '';
-  testname: string = 'test';
 
   private groupService = inject(GroupService);
   private authService = inject(AuthService);
@@ -27,6 +26,7 @@ export class GroupForm {
 
   onReset(f: NgForm): void {
     this.submitted = false;
+    this.errMsg = '';
     f.resetForm();
   }
  
@@ -55,12 +55,10 @@ export class GroupForm {
       next: () => {
         this.router.navigate(['/dashboard/groups']);
         this.onReset(f);
-        this.errMsg = '';
-        this.submitted = false;
       }, 
-      error: (error: any) => {
-        console.error('Error creating group:', error);
-        this.errMsg = error.error?.error;
+      error: (err: any) => {
+        console.error('Error creating group:', err);
+        this.errMsg = err.error?.error || 'An error occurred while creating a group.';
       },
       complete: () => {
         console.log('Group created successfully.');

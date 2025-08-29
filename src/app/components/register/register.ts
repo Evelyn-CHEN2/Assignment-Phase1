@@ -50,15 +50,14 @@ export class Register implements OnInit {
     this.authService.register(this.username, this.email, this.pwd).subscribe({
       next: (user: any) => {
         if (user.valid === true) {
-          console.log('Registration successful:', user);
           // Store registered user data to localStorage
           this.authService.setCurrentUser(user); 
           this.router.navigate(['/account']);
         }
       },
-      error: (error: any) => {
-        console.error('Registration error:', error);
-        this.errMsg = error.error.error || 'Registration failed. Please try again.';
+      error: (err: any) => {
+        console.error('Registration error:', err);
+        this.errMsg = err.error.error || 'Registration failed. Please try again.';
       },
       complete: () => {
         console.log('Registration request completed.');

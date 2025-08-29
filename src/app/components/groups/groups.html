@@ -3,7 +3,9 @@
     <i class="bi bi-chevron-left"></i>
   </button>
 <button type="button" (click)="toggleAdminGroups()">My admin groups</button>
-
+}
+@if (errMsg) {
+  <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
 }
 
 <div class="row">
@@ -16,11 +18,19 @@
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
-                  <button class="btn p-0" style="color: green;" type="button" (click)="toggleEditGroup(group)">
+                  <button 
+                    class="btn p-0" style="color: green;" 
+                    type="button" 
+                    (click)="toggleEditGroup(group)">
                     <i class="bi bi-pencil-fill fs-6"></i>
                   </button>
-                  <button class="btn text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteGroupModal" type="button" (click)="openDeleteGroupModal(group)">
-                    <i class="bi bi-x fs-5"></i>
+                  <button 
+                    class="btn text-danger p-0" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#confirmDeleteGroupModal" 
+                    type="button" 
+                    (click)="openDeleteGroupModal(group)">
+                    <i class="bi bi-dash-circle-dotted fs-6"></i>
                   </button>
               </div>
             </div>
@@ -28,14 +38,30 @@
             <!-- button for admin to edit group  -->
             @if (showEdit[group.id]){
               <div class="add-pop mt-2">
-                <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New group name" 
-                [(ngModel)]="newGroupName[group.id]" name="newGroupName{{group.id}}" />
-                <button class="btn btn-sm btn-outline-secondary" style="font-size:x-small; background-color:#b7e4c7; color: black;" type="button" (click)="editGroup(group, $event)">Confirm</button>
-                <button class="btn btn-sm ms-2" style="font-size:x-small;" type="button" (click)="toggleEditGroup(group)">Cancel</button>
+                <input 
+                  class="form-control me-2" style="font-size: 13px" 
+                  type="text" placeholder="New group name" 
+                  [(ngModel)]="newGroupName[group.id]" 
+                  name="newGroupName{{group.id}}"/>
+                <button 
+                  class="btn btn-sm btn-outline-secondary" 
+                  style="font-size:x-small; background-color:#b7e4c7; color: black;" 
+                  type="button" 
+                  (click)="editGroup(group, $event)">
+                  Confirm
+                </button>
+                <button 
+                  class="btn btn-sm ms-2" style="font-size:x-small;" 
+                  type="button" 
+                  (click)="toggleEditGroup(group)">
+                  Cancel
+                </button>
               </div>
             }
             
-            <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}</p>
+            <p class="text-secondary small mb-2 text-end">
+              Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}
+            </p>
             <div class="channels text-muted small">
                 <label class="form-label fs-6 text-muted">Channels:</label><br> 
                 @for (channel of group.channels; track channel.id) {
@@ -67,10 +93,25 @@
 
             @if (showAdd[group.id]){
               <div class="add-pop mt-2">
-                <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New channel name" 
-                [(ngModel)]="newChannelName[group.id]" name="newChannelName{{group.id}}" />
-                <button class="btn btn-sm btn-outline-secondary" style="font-size:x-small; background-color:#b7e4c7; color: black;" type="button" (click)="confirmAddChannel(group, $event)">Confirm</button>
-                <button class="btn btn-sm ms-2" style="font-size:x-small;" type="button" (click)="toggleAddChannel(group)">Cancel</button>
+                <input 
+                  class="form-control me-2" 
+                  style="font-size: 13px" type="text" 
+                  placeholder="New channel name" 
+                  [(ngModel)]="newChannelName[group.id]" 
+                  name="newChannelName{{group.id}}"/>
+                <button 
+                  class="btn btn-sm btn-outline-secondary" 
+                  style="font-size:x-small; background-color:#b7e4c7; color: black;" 
+                  type="button" 
+                  (click)="confirmAddChannel(group, $event)">
+                  Confirm
+                </button>
+                <button 
+                  class="btn btn-sm ms-2" style="font-size:x-small;" 
+                  type="button" 
+                  (click)="toggleAddChannel(group)">
+                  Cancel
+                </button>
               </div>
             }
           </div>  
@@ -78,6 +119,7 @@
       </div>
     }
   }
+
   <!-- Display all groups for super and chatusers -->
   @else {
     @for (group of groups; track group.id) {
@@ -88,18 +130,23 @@
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
                 @if (user?.role === 'super') {
-                  <button class="btn p-0" style="color: green;" type="button" (click)="toggleEditGroup(group)">
+                  <button 
+                    class="btn p-0" style="color: green;" 
+                    type="button" (click)="toggleEditGroup(group)">
                     <i class="bi bi-pencil-fill fs-6"></i>
                   </button>
-                  <button class="btn text-danger p-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteGroupModal" type="button" (click)="openDeleteGroupModal(group)">
-                    <i class="bi bi-x fs-5"></i>
+                  <button 
+                    class="btn text-danger p-0" type="button"
+                    data-bs-toggle="modal" 
+                    data-bs-target="#confirmDeleteGroupModal"  
+                    (click)="openDeleteGroupModal(group)">
+                    <i class="bi bi-dash-circle-dotted fs-6"></i>
                   </button>
                 }
 
                 <!-- If user is already a member of the group, show check icon, otherwise show heart icon -->
                 @if (user?.groups?.includes(group.id)) {
                     <i class="bi bi-person-check-fill" aria-hidden="true"></i>
-               
                 } @else {
                   <button class="btn p-0" style="color: #ef233c; border: none;" type="button" 
                           [disabled]="applyPending[(group.id)]"
@@ -121,17 +168,29 @@
               <div class="add-pop mt-2">
                 <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New group name" 
                 [(ngModel)]="newGroupName[group.id]" name="newGroupName{{group.id}}" />
-                <button class="btn btn-sm btn-outline-secondary" style="font-size:x-small; background-color:#b7e4c7; color: black;" type="button" (click)="editGroup(group, $event)">Confirm</button>
-                <button class="btn btn-sm ms-2" style="font-size:x-small;" type="button" (click)="toggleEditGroup(group)">Cancel</button>
+                <button 
+                  class="btn btn-sm btn-outline-secondary" 
+                  style="font-size:x-small; background-color:#b7e4c7; color: black;" 
+                  type="button" 
+                  (click)="editGroup(group, $event)">
+                  Confirm
+                </button>
+                <button 
+                  class="btn btn-sm ms-2" 
+                  style="font-size:x-small;" type="button" 
+                  (click)="toggleEditGroup(group)">
+                  Cancel
+                </button>
               </div>
             }
-            <p class="text-secondary small mb-2 text-end">Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}</p>
+            <p class="text-secondary small mb-2 text-end">
+              Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}
+            </p>
             <div class="channels text-muted small">
                 <label class="form-label fs-6 text-muted">Channels:</label><br> 
                 @for (channel of group.channels; track channel.id) {
                     <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
                       {{channel.channelname}}
-                      
                       <!-- Button for super to delete channel -->
                       @if (user?.role === 'super') {
                         <button 
@@ -149,7 +208,9 @@
             <!--super/admin to add channel -->
             <div class="d-flex justify-content-end m-2">
               @if (user?.role === 'super') {
-                <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
+                <button 
+                  type="button" class="add-btn" 
+                  (click)="toggleAddChannel(group)">
                   <span>Channel</span>
                   <span class="add-circle"><i class="bi bi-plus-lg"></i></span>
                 </button>
@@ -158,10 +219,25 @@
 
             @if (showAdd[group.id]){
               <div class="add-pop mt-2">
-                <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New channel name" 
-                [(ngModel)]="newChannelName[group.id]" name="newChannelName{{group.id}}" />
-                <button class="btn btn-sm btn-outline-secondary" style="font-size:x-small; background-color:#b7e4c7; color: black;" type="button" (click)="confirmAddChannel(group, $event)">Confirm</button>
-                <button class="btn btn-sm ms-2" style="font-size:x-small;" type="button" (click)="toggleAddChannel(group)">Cancel</button>
+                <input 
+                  class="form-control me-2" 
+                  style="font-size: 13px" type="text" 
+                  placeholder="New channel name" 
+                  [(ngModel)]="newChannelName[group.id]" 
+                  name="newChannelName{{group.id}}"/>
+                <button 
+                  class="btn btn-sm btn-outline-secondary" 
+                  style="font-size:x-small; background-color:#b7e4c7; color: black;" 
+                  type="button" 
+                  (click)="confirmAddChannel(group, $event)">
+                  Confirm
+                </button>
+                <button 
+                  class="btn btn-sm ms-2" style="font-size:x-small;" 
+                  type="button" 
+                  (click)="toggleAddChannel(group)">
+                  Cancel
+                </button>
               </div>
             }
           </div>  
@@ -183,8 +259,15 @@
         </p>
       </div>
       <div class="modal-footer py-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-sm btn-danger" (click)="selectedGroup && deleteGroup(selectedGroup, $event)" data-bs-dismiss="modal">
+        <button 
+          type="button" class="btn btn-sm btn-outline-secondary" 
+          data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button 
+          type="button" class="btn btn-sm btn-danger" 
+          (click)="selectedGroup && deleteGroup(selectedGroup, $event)" 
+          data-bs-dismiss="modal">
           Delete
         </button>
       </div>
@@ -204,8 +287,14 @@
         </p>
       </div>
       <div class="modal-footer py-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-sm btn-danger" (click)="selectedChannel && deleteChannel(selectedChannel, $event)" data-bs-dismiss="modal">
+        <button 
+          type="button" class="btn btn-sm btn-outline-secondary" 
+          data-bs-dismiss="modal">
+        </button>
+        <button 
+          type="button" class="btn btn-sm btn-danger" 
+          (click)="selectedChannel && deleteChannel(selectedChannel, $event)" 
+          data-bs-dismiss="modal">
           Delete
         </button>
       </div>

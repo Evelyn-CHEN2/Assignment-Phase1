@@ -1,20 +1,32 @@
 <form class="group-form" novalidate #f="ngForm" (ngSubmit)="createGroup(f)" [class.was-validated]="submitted">
     <div class="field">
         <label for="groupname">Group Name <span class="req">*</span></label>
-        <input type="text" name="groupname" [(ngModel)]="groupname" maxlength="50" placeholder="(testname ? {{testname}} : 'e.g. Engineering')" required>
+        <input 
+            type="text" name="groupname" 
+            [(ngModel)]="groupname" maxlength="50" 
+            placeholder="e.g. Engineering ..." required>
         <div class="invalid-feedback">Group name is required.</div>
     </div>
 
     <div class="field">
         <label for="description">Description <span class="req">*</span></label>
-        <textarea id="description" name="description" [(ngModel)]="description" rows="3" maxlength="300" placeholder="Describe the purpose of this group..." required></textarea>
+        <textarea 
+            id="description" name="description" 
+            [(ngModel)]="description" 
+            rows="3" maxlength="300" 
+            placeholder="Describe the purpose of this group..." required>
+        </textarea>
         <div class="invalid-feedback">Group name is required.</div>
     </div>
 
  
     <div class="field">
         <label for="channelnames">Channels (one per line) <span class="req">*</span></label>
-        <textarea id="channelnames" name="channelnames" [(ngModel)]="channelnames" rows="5" placeholder="general&#10;announcements&#10;random" required></textarea>
+        <textarea 
+            id="channelnames" name="channelnames" 
+            [(ngModel)]="channelnames" rows="5" 
+            placeholder="general&#10;announcements&#10;random" required>
+        </textarea>
         <div class="invalid-feedback">Add at least one channel.</div>
     </div>
 
@@ -22,8 +34,17 @@
         <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
     }
     <div class="actions">
-        <button type="reset" class="btn" style="background-color: white;" (click)="onReset(f)">Reset</button>
-        <button type="submit" class="btn" style="background-color: #8d99ae;">Create</button>
+        <button 
+            type="reset" class="btn" 
+            style="background-color: white;" 
+            (click)="onReset(f)">
+            Reset
+        </button>
+        <button 
+            type="submit" class="btn" 
+            style="background-color: #8d99ae;">
+            Create
+        </button>
     </div>
 </form>
 

@@ -23,7 +23,7 @@ export class Dashboard implements OnInit {
       this.authService.logout();
     } else {
       console.log('Current user:', this.user);
-    }
+    };
   }
   
 }

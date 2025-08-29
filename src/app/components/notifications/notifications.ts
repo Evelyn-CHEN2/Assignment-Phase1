@@ -50,7 +50,7 @@ export class Notifications implements OnInit {
             const groupById = Object.fromEntries(
               groups.map(g => [g.id, g.groupname])
             )
-            // Filter notifications for groups administered by current user
+            // Filter notifications for groups administered by current user(admin)
             const adminNotifications = notifications.filter(n => {
               const groupApplying = groups.find(g => g.id === n.groupToApply);
               return groupApplying?.admins.includes(currentUser.id);
@@ -68,6 +68,7 @@ export class Notifications implements OnInit {
       }
       this.userById = userById;
       this.groupById = groupById;
+      this.errMsg = '';
     })
   }
 
@@ -86,6 +87,7 @@ export class Notifications implements OnInit {
     this.selectedNotification = notification;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('approveApplicationModal')!).show();
   }
+
   // Approve group application
   approve(notification: Notification, event: any): void {
     event.preventDefault();
@@ -113,6 +115,7 @@ export class Notifications implements OnInit {
     this.selectedNotification = notification;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteApplicationModal')!).show();
   }
+  
   // Delete a notification
   delete(notification: Notification, event: any): void {
     event.preventDefault();

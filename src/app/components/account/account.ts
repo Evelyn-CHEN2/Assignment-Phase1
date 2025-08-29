@@ -77,10 +77,13 @@ export class Account implements OnInit {
           )
         );
       }),
-    ).subscribe(groups => this.userGroups = groups || []);
+    ).subscribe(groups => { 
+      this.userGroups = groups || []
+      this.errMsg = '';
+    });
   }
 
-  // Operations for super
+  // <-- Operations for super -->
   // Update user role
   toggleUpdateRole(group: Group): void {
     this.showUpdateRole[group.id] = !this.showUpdateRole[group.id];
@@ -95,16 +98,16 @@ export class Account implements OnInit {
     const newRole = this.newRole[group.id];
     this.userService.updateUserRole(newRole, user.id, group.id).subscribe({
       next: ({user, group}) => {
-        // Update the local group object
+        // Update the UI display 
         if (group.admins.includes(user.id)) {
           this.userRole = newRole;
         } else {
           this.userRole = 'chatuser';
         }
       },
-      error: (error: any) => {
-        console.error('Error updating user role:', error);
-        this.errMsg = error.error?.error || 'An error occurred while updating the user role.';
+      error: (err: any) => {
+        console.error('Error updating user role:', err);
+        this.errMsg = err.error?.error || 'An error occurred while updating the user role.';
       },
       complete: () => { 
         console.log('User role update complete.');
@@ -125,12 +128,12 @@ export class Account implements OnInit {
     event.preventDefault();
     this.userService.deleteUser(user.id).subscribe({
       next: () => {
-        console.log('User self deleted successfully:', user);
         this.authService.setCurrentUser(null, false); // Clear current user
         this.router.navigate(['/login']);
       }, 
-      error: (error: any) => {
-        console.error('Error deleting user self:', error);
+      error: (err: any) => {
+        console.error('Error deleting user self:', err);  
+        this.errMsg = err.error?.error || 'An error occurred while deleting the user.'
       },
       complete: () => {
         console.log('User self deletion complete.');
@@ -149,11 +152,11 @@ export class Account implements OnInit {
     event.preventDefault();
     this.groupService.deleteGroupFromUser(group.id, user.id).subscribe({
       next: () => {
-        console.log('User left group successfully:', group);
         this.userGroups = this.userGroups.filter(g => g.id !== group.id);
       }, 
-      error: (error: any) => {
-        console.error('Error leaving group:', error);
+      error: (err: any) => {
+        console.error('Error leaving group:', err);
+        this.errMsg = err.error.error || 'An error occurred while leaving the group.'
       },
       complete: () => {
         console.log('Leave group request completed.');
@@ -164,8 +167,7 @@ export class Account implements OnInit {
   // Choose the channel to join
   joinChannel(channel: Channel): void {
     this.channel = channel;
-    console.log('Joining channel:', channel);
-    // Navigate to the chat window with the selected channel
+    // Navigate to the chat window with the selected channel ID
     this.router.navigate(['/chatwindow', channel.id])
   }
 }

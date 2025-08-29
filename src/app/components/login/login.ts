@@ -50,10 +50,8 @@ export class Login implements OnInit {
     this.authService.login(this.username, this.pwd).subscribe({
       next: (user: User) => {
         if (user.valid === true) {
-          console.log('Login successful:', user);
-          this.authService.setCurrentUser(user, this.rememberMe); //Store logged user data to localStorage
-          
-          // If user is super, redirect to dashboard after login, otherwise to account page
+          this.authService.setCurrentUser(user, this.rememberMe);
+          // If user is super/admin, redirect to dashboard after login, otherwise to account page
           if (user.role === 'super' || user.role === 'admin') {
             this.router.navigate(['/dashboard']);
           } else {
@@ -61,9 +59,9 @@ export class Login implements OnInit {
           } 
         }
       },
-      error: (error) => {
-        console.error('Login failed:', error);
-        this.errMsg = error.error.error || 'Login failed. Please check your credentials and try again.';
+      error: (err) => {
+        console.error('Login failed:', err);
+        this.errMsg = err.error.error || 'Login failed. Please check your credentials and try again.';
       },
       complete: () => {
         console.info('Login request completed');
