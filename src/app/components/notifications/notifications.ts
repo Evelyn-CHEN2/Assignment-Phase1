@@ -30,9 +30,8 @@ export class Notifications implements OnInit {
   ngOnInit(): void {
     // Fetch all group applications for groups created by current super/admin
     const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) {
-      return;
-    }
+    if (!currentUser) return;
+    
     this.notificationService.fetchNotifications().pipe(
       map((notifications: Notification[]) => {
         console.log('All notifications fetched:', notifications);
@@ -91,13 +90,21 @@ export class Notifications implements OnInit {
   // Approve group application
   approve(notification: Notification, event: any): void {
     event.preventDefault();
-    const userId = notification.applier; // Applier stores user ID
+    const currentUser = this.authService.getCurrentUser(); // The user who approves the application
+    if (!currentUser) return;
+
+    const approverId = currentUser.id;
+    const applierId = notification.applier; // Applier stores user ID
     const groupId = notification.groupToApply; // GroupToApply stores group ID
-    this.groupService.addGroupToUser(userId, groupId, notification.id).subscribe({
+    this.userService.addGroupToUser(approverId, applierId, groupId, notification.id).subscribe({
       next: () => {
         // Update approved notification status to 'approved'
         this.notifications = this.notifications.map(n => 
-          n.id === notification.id ? {...n, status: 'approved'} : n
+          n.id === notification.id ? {
+            ...n, 
+            status: 'approved',
+            approvedBy: approverId
+          } : n
         )
       },
       error: (err) => {
@@ -115,7 +122,7 @@ export class Notifications implements OnInit {
     this.selectedNotification = notification;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteApplicationModal')!).show();
   }
-  
+
   // Delete a notification
   delete(notification: Notification, event: any): void {
     event.preventDefault();

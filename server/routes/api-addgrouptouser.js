@@ -31,14 +31,13 @@ module.exports = {
         }
 
         app.put('/api/addgrouptouser', (req, res) => {
-            if (!req.body || !req.body.groupId || !req.body.userId) {
+            if (!req.body) {
                 return res.status(400).json({ error: 'Invalid request data' });
             }
-
             // Find the user by ID
             let users = readUsers();
-            const user = users.find(u => u.id === req.body.userId)
-            if (user.length === 0) {
+            const user = users.find(u => u.id === req.body.applierId)
+            if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
             // Double check if the user is already in the group
@@ -51,12 +50,13 @@ module.exports = {
             // Find the notification by ID
             let notifications = readNotifications();
             const approvedNotification = notifications.find(n => n.id === req.body.notificationId)
-            if (approvedNotification.length === 0) {
+            if (!approvedNotification) {
                 return res.status(404).json({ error: 'Notification not found' });
             }
             // Update status of the notification
             approvedNotification.status = 'approved';
-
+            approvedNotification.approvedBy = req.body.approverId;
+            
             try {
                 writeUsers(users);
                 writeNotifications(notifications);

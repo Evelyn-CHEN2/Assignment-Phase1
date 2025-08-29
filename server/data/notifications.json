@@ -3,6 +3,14 @@
     "id": "2025-08-29T00:54:50.036Z",
     "applier": 3,
     "groupToApply": "g1756080867629",
-    "status": "pending"
+    "status": "approved",
+    "approvedBy": 4
+  },
+  {
+    "id": "2025-08-29T02:40:27.688Z",
+    "applier": 3,
+    "groupToApply": "g1756080958422",
+    "status": "approved",
+    "approvedBy": 2
   }
 ]

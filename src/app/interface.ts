@@ -30,6 +30,7 @@ export interface Notification {
     applier: number; // Store user.id who applies
     groupToApply: string; // Store group.id
     status: string; // 'pending', 'approved'
+    approvedBy: number; // Store user.id(super/admin)
 }
 
 export interface UpdatedUserRole {

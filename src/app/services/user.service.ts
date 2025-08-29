@@ -22,6 +22,10 @@ export class UserService {
     return this.http.put<UpdatedUserRole>(`${this.server}/api/updateuser/${userId}`, { newRole, groupId });
   }
 
+  addGroupToUser(approverId: number, applierId: number, groupId: string, notificationId: string): Observable<void> {
+    return this.http.put<void>(`${this.server}/api/addgrouptouser`, { approverId, applierId, groupId, notificationId });
+  }
+
   deleteUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.server}/api/deleteuser/${id}`);
   } 
