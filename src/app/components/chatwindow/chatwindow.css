@@ -38,6 +38,7 @@
     align-items: center;
     gap: 8px;
     min-width:0; }
+    
   .chan-name{
     margin:0;
     font-size:1rem;

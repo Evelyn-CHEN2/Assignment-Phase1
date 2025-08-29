@@ -21,6 +21,7 @@ export class Chatwindow implements OnInit{
   channelId: string = '';
   currentUser: User | null = null;
   userById: Record<number, string> = {};
+  userNums: number = 0;
   message: string = '';
   errMsg: string = '';
 
@@ -30,9 +31,11 @@ export class Chatwindow implements OnInit{
   private userService = inject(UserService);
   private router = inject(Router);
   private socketService = inject(SocketService);
+  private socket: any; // Define the socket property
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
+    if (!this.currentUser) return;
     this.channelId = this.route.snapshot.params['id'];
     if (!this.channelId) {
       console.error('Channel ID is missing in the route parameters.');
@@ -59,9 +62,12 @@ export class Chatwindow implements OnInit{
     });
 
     // Socket.io integration
+    const senderName = this.currentUser.username || 'A new user';
+    // Initialize the socket property
     this.socketService.initSocket();
-    this.socketService.joinChannel(this.channelId);
-    this.socketService.getMessage((m: any) =>{
+    this.socketService.joinChannel(this.channelId, senderName);
+    this.socketService.reqUserNum(this.channelId);
+    this.socketService.onMessage((m: any) =>{
       const message = {
         sender: m.sender,
         message: m.message,
@@ -69,6 +75,31 @@ export class Chatwindow implements OnInit{
       };
       (this.channel as Channel).messages.push(message);
     })
+
+    // Fetch notice and add it as messages 
+    this.socketService.onNotices((n: any) => {
+      if (!this.channel) return;
+      this.channel.messages.push({
+        sender: 0, // System
+        message: n,
+        timestamp: new Date()
+      })
+    })
+
+    // Request current number of users in the channel
+    this.socketService.onUserNum(({channelId, userNum}: {channelId: string, userNum: number}) => {
+      if (channelId === this.channelId) {
+        this.userNums = userNum;
+      }
+    });
+  }
+
+  // Leave the channel when component is destroyed
+  ngOnDestroy(): void {
+    if (!this.currentUser) return;
+    const senderName = this.currentUser.username || 'A new user';
+    this.socket.off('userNums');
+    this.socketService.leaveChannel(this.channelId, senderName)
   }
 
   // Back to the previous page

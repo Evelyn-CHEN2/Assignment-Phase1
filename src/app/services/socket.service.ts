@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { Channel } from '../interface';
-import { fromEvent, Observable } from 'rxjs';
 
 // namespace
 const SERVER_URL = 'http://localhost:3000/channelChat';
@@ -14,27 +12,34 @@ export class SocketService {
   constructor() { }
 
   initSocket(): void {
-    this.socket = io(SERVER_URL, { transports: ['websocket'] });
+    this.socket = io(SERVER_URL);
   }
 
-  joinChannel(channelId: string): void {
-    this.socket?.emit('joinChannel', channelId);
+  joinChannel(channelId: string, senderName: string): void {
+    this.socket?.emit('joinChannel', {channelId, senderName});
   }
 
-  leaveChannel(channelId: string): void {
-    this.socket?.emit('leaveChannel', channelId); // emit sends message to server
+  leaveChannel(channelId: string, senderName: string): void {
+    this.socket?.emit('leaveChannel', {channelId, senderName}); // emit sends message to server
   } 
 
   sendMessage(channelId: string, sender: number, message: string): void {
-    this.socket?.emit('message', { channelId, sender, message });
+    this.socket?.emit('chatMsg', { channelId, sender, message });
   }
 
-  reqNumUsers(channelId: string): void {
-    this.socket?.emit('reqNumUsers', channelId);
+  onMessage(handler: (payload: {channelId: string, sender: number, message: string, timestamp: Date}) => void): void {
+    this.socket?.on('chatMsg', handler); // Handler holds payload sent back from server
   }
 
-  getMessage(next: any): void {
-    this.socket?.on('message', next);
+  reqUserNum(channelId: string): void {
+    this.socket?.emit('reqUserNum', channelId);
   }
 
+  onUserNum(handler: (payload:{channelId: string, userNum: number}) => void): void {
+    this.socket?.on('userNum', handler);
+  }
+
+  onNotices(handler: any): void {
+    this.socket?.on('notice', handler);
+  }
 }

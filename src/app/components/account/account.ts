@@ -7,7 +7,7 @@ import { Group, Channel, User } from '../../interface';
 import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { filter, forkJoin, zipAll } from 'rxjs';
 import { map, switchMap, of, tap } from 'rxjs';
 
 @Component({
@@ -56,16 +56,25 @@ export class Account implements OnInit {
           groups: this.groupService.getGroups(),
           channels: this.groupService.getChannels()
         }).pipe(
-          map(({ groups, channels }) => 
-            groups.filter(g => user.groups.includes(g.id)).map(group => ({
+          map(({ groups, channels }) => {
+            // Fetch all groups with corresponding channels for super
+            const allGroups = groups.map(g => {
+              return {
+                ...g,
+                channels: channels.filter(c => c.groupid === g.id)
+              }
+            });
+            // Filter groups (channels) that belong to the user, exclude super
+            const filteredGroups = groups.filter(g => user.groups.includes(g.id)).map(group => ({
               ...group,
               channels: channels.filter(c => c.groupid === group.id)
-            }))
-          ),
-          tap(groups => {
+            }));
+            return { allGroups, filteredGroups };
+          }),
+          tap(({filteredGroups}) => {
             // Display the role of the user in each group
             this.roleByGroup = Object.fromEntries(
-              groups.map(g => {
+              filteredGroups.map(g => {
                 if (g.admins.includes(user.id)) {
                   return [g.id, user.role];
                 } else {
@@ -77,9 +86,32 @@ export class Account implements OnInit {
           )
         );
       }),
-    ).subscribe(groups => { 
-      this.userGroups = groups || []
-      this.errMsg = '';
+    ).subscribe({
+      next: (result) => {
+        if (!result) {
+          this.errMsg = 'User not found or access denied';
+          return;
+        }
+        const { allGroups, filteredGroups } = result;
+        if(this.viewer?.role === 'super') {
+          this.userGroups = allGroups;
+        } else {
+          this.userGroups = filteredGroups;
+        }
+        this.errMsg = '';
+      }
+    //   next: ({ allGroups, filteredGroups } ) => {
+    //   if (!allGroups || !filteredGroups) {
+    //     this.errMsg = 'User not found or access denied';
+    //     return;
+    //   }
+    //   if(this.user?.role === 'super') {
+    //     this.userGroups = allGroups;
+    //   } else {
+    //     this.userGroups = filteredGroups;
+    //   }
+    //   this.errMsg = '';
+    // }
     });
   }
 

@@ -1,9 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { map } from 'rxjs/operators';
-import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 
 @Component({

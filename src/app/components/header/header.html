@@ -1,11 +1,11 @@
 <div style="width: 180px; margin-right: 10px;" >
   <nav class="d-flex flex-column p-3 flex-shrink-0 text-white" style="min-height: 100vh; background-color: #2b2d42;">
     
-    <div class="d-flex align-items-center justify-content-between text-white text-decoration-none" style="background-color: aliceblue;">
+    <div class="position-relative align-items-center justify-content-between text-white text-decoration-none">
       <span class="fs-4">Chats</span>
-      <span class="px-4" style="font-size: x-small; background-color: red;">
+      <span class="position-absolute end-0 bottom-0 px-0 py-0" style="font-size: x-small;">
         @if (user$ | async; as user) {
-          Hi, {{ user.username | titlecase }}!
+          Hi, {{ user.username | titlecase }}
         }
       </span>
     </div>

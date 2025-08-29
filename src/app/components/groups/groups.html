@@ -8,7 +8,7 @@
   <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
 }
 
-<div class="row">
+<div class="row" #scrollArea>
   <!-- Display groups that are managed by admin user -->
   @if (showAdminGroups) {
     @for (group of adminGroups; track group.id) {
@@ -198,7 +198,7 @@
                           data-bs-toggle="modal" 
                           data-bs-target="#confirmDeleteChannelModal" 
                           (click)="openDeleteChannelModal(channel)">
-                          <i class="bi bi-x-square fs-6"></i>
+                          <i class="bi bi-dash-lg fs-6"></i>
                         </button>
                       }
                   </li>
