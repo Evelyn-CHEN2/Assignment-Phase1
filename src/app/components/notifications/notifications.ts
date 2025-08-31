@@ -70,16 +70,6 @@ export class Notifications implements OnInit {
       this.errMsg = '';
     })
   }
-
-  // Function to format date
-  formatDate(id: string | number): string {
-    const n = Number(id);
-    if (Number.isFinite(n)) {
-      const d = String(id).length >= 13 ? new Date(n) : new Date(n * 100);
-      return d.toLocaleString();
-    }
-    return String(id);
-  }
   
   // Toggle approve application modal
   openApproveModal(notification: Notification): void {
