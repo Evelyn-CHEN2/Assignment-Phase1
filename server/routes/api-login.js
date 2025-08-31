@@ -30,6 +30,8 @@ module.exports = {
                 if (!loggedUser) {
                     return res.status(401).json({ error: 'Invalid username or password' });
                 }
+
+                valid = loggedUser.valid;
     
                 const safeUser = new User(
                     loggedUser.id,
@@ -38,7 +40,7 @@ module.exports = {
                     '',
                     loggedUser.role,
                     loggedUser.groups ,
-                    true
+                    valid
                 )
                 res.send(safeUser)
             }

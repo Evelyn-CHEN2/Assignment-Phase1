@@ -41,17 +41,21 @@
           </div>
           @if (viewer?.id === user?.id) {
             <button 
-              class="btn p-0 ms-auto" style="color: #ef233c" type="button" 
-              data-bs-toggle="modal" data-bs-target="#confirmLeaveGroupModal"
+              class="btn p-0 ms-auto" style="color: #ef233c" 
+              type="button" [attr.data-role]="user?.role"
+              data-bs-toggle="modal" 
+              data-bs-target="#confirmLeaveGroupModal"
               (click)="openLeaveGroupModal(group)">
               <i class="bi bi-box-arrow-right"></i>
             </button>
           } @else {
-            <button class="btn btn-sm p-0 ms-auto" style="color: #40916c;" type="button"
-              (click)="toggleUpdateRole(group)">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            {{roleByGroup[group.id]}}
+              <button 
+                class="ms-auto roles-badge"
+                type="button" 
+                [attr.group-role]="roleByGroup[group.id]"
+                (click)="toggleUpdateRole(group)">
+                {{roleByGroup[group.id]}}
+              </button>
           }
         </li>
         @if (showUpdateRole[group.id]) {
@@ -60,7 +64,7 @@
                 class="form-select flex-grow-1" 
                 [(ngModel)]="newRole[group.id]" 
                 name="newRole{{group.id}}">
-                  <option value="chatuser">Chat User</option>
+                  <!-- <option value="chatuser">Chat User</option> -->
                   <option value="admin">Admin</option>
                   <option value="super">Super</option>
               </select>

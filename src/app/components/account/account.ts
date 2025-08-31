@@ -24,7 +24,6 @@ export class Account implements OnInit {
   selectedGroup: Group | null = null;
   showUpdateRole: Record<string, boolean> = {}; 
   newRole: Record<string, string> = {}; // For selecting new role in each group
-  userRole: string = ''; // Current role of the user in the selected group
   roleByGroup: Record<string, string> = {}; 
   errMsg: string = '';
   
@@ -42,7 +41,6 @@ export class Account implements OnInit {
         // Get the user ID from route parameters or use the viewer's ID
         const userId = params['id'] || (viewer ? viewer.id : null);
         this.viewer = viewer;
-        console.log('Fetching user with ID:', userId);
         return this.userService.getUserById(userId);
       }),
       // Fetch groups/channels for the user
@@ -57,18 +55,20 @@ export class Account implements OnInit {
           channels: this.groupService.getChannels()
         }).pipe(
           map(({ groups, channels }) => {
-            // Fetch all groups with corresponding channels for super
+            // Fetch all groups with channels for super
             const allGroups = groups.map(g => {
               return {
                 ...g,
                 channels: channels.filter(c => c.groupid === g.id)
               }
             });
-            // Filter groups (channels) that belong to the user, exclude super
-            const filteredGroups = groups.filter(g => user.groups.includes(g.id)).map(group => ({
-              ...group,
-              channels: channels.filter(c => c.groupid === group.id)
-            }));
+            // Filter groups with channels that belong to the user, exclude super
+            const filteredGroups = groups.filter(g => user.groups.includes(g.id)).map(group => {
+              return {
+                ...group,
+                channels: channels.filter(c => c.groupid === group.id)
+              }
+            });
             return { allGroups, filteredGroups };
           }),
           tap(({filteredGroups}) => {
@@ -93,25 +93,20 @@ export class Account implements OnInit {
           return;
         }
         const { allGroups, filteredGroups } = result;
-        if(this.viewer?.role === 'super') {
-          this.userGroups = allGroups;
-        } else {
+        if(this.user?.role !== 'super') {
           this.userGroups = filteredGroups;
+        } else {
+          this.userGroups = allGroups;
         }
         this.errMsg = '';
+      },
+      error: (err: any) => {
+        console.error('Error fetching user or groups:', err);
+        this.errMsg = err.error?.error || 'An error occurred while fetching user or groups.';
+      },
+      complete: () => {
+        console.log('User and groups fetching complete.');
       }
-    //   next: ({ allGroups, filteredGroups } ) => {
-    //   if (!allGroups || !filteredGroups) {
-    //     this.errMsg = 'User not found or access denied';
-    //     return;
-    //   }
-    //   if(this.user?.role === 'super') {
-    //     this.userGroups = allGroups;
-    //   } else {
-    //     this.userGroups = filteredGroups;
-    //   }
-    //   this.errMsg = '';
-    // }
     });
   }
 
@@ -129,13 +124,9 @@ export class Account implements OnInit {
     }
     const newRole = this.newRole[group.id];
     this.userService.updateUserRole(newRole, user.id, group.id).subscribe({
-      next: ({user, group}) => {
+      next: () => {
         // Update the UI display 
-        if (group.admins.includes(user.id)) {
-          this.userRole = newRole;
-        } else {
-          this.userRole = 'chatuser';
-        }
+        this.roleByGroup[group.id] = newRole;
       },
       error: (err: any) => {
         console.error('Error updating user role:', err);

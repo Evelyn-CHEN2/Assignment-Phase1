@@ -20,6 +20,9 @@ export class Header {
   private router = inject(Router);
 
   user$ = this.authService.currentUser$;
+  constructor() {
+    console.log('Current user observable:', this.user$);
+  }
   userRole$ = this.user$.pipe(
     map(u => u ? u.role : [])
   );

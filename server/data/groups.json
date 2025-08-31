@@ -6,14 +6,11 @@
     "channels": [
       "c4",
       "c5",
-      "c6",
-      "c10",
-      "c14",
-      "c16"
+      "c6"
     ],
-    "createdBy": 4,
+    "createdBy": 1,
     "admins": [
-      4
+      1
     ]
   },
   {
@@ -25,9 +22,9 @@
       "c8",
       "c9"
     ],
-    "createdBy": 4,
+    "createdBy": 1,
     "admins": [
-      4
+      1
     ]
   },
   {
@@ -37,12 +34,12 @@
     "channels": [
       "c1756080867629",
       "c1756080867630",
-      "c1756080867631",
-      "c14"
+      "c1756080867631"
     ],
-    "createdBy": 4,
+    "createdBy": 1,
     "admins": [
-      4
+      1,
+      3
     ]
   },
   {
@@ -56,7 +53,8 @@
     ],
     "createdBy": 2,
     "admins": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -71,18 +69,6 @@
     "createdBy": 2,
     "admins": [
       2
-    ]
-  },
-  {
-    "id": "g1756341180874",
-    "groupname": "TESTE",
-    "description": "SETST",
-    "channels": [
-      "c1756341180874"
-    ],
-    "createdBy": 4,
-    "admins": [
-      4
     ]
   }
 ]

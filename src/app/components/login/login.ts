@@ -57,6 +57,8 @@ export class Login implements OnInit {
           } else {
             this.router.navigate(['/account', user.id]);
           } 
+        } else {
+          alert ('Your account has been banned. Please contact the administrator for more information.');
         }
       },
       error: (err) => {

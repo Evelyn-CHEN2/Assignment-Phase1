@@ -54,6 +54,10 @@ module.exports = {
             if (groupIndex === -1) {
                 return res.status(404).json({ error: 'Group to add admins not found' });
             }
+            // If the user is already an admin, do nothing
+            if (groups[groupIndex].admins.includes(Number(userId))) {
+                return
+            }
             // Update the group admins
             groups[groupIndex].admins.push(Number(userId));
             
@@ -61,10 +65,7 @@ module.exports = {
             try {
                 writeUsers(users);
                 writeGroups(groups);
-                res.send({
-                    user:users[userIndex],
-                    group:groups[groupIndex]
-                }); // Return the updated user and group
+                res.sendStatus(204)
             } 
             catch (error) {
                 console.error('Error writing updated user file:', error);

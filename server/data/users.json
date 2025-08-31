@@ -1,5 +1,20 @@
 [
   {
+    "id": 1,
+    "username": "super",
+    "email": "super@com",
+    "pwd": "123",
+    "role": "super",
+    "groups": [
+        "g2",
+        "g3",
+        "g1756080867629",
+        "g1756080958422",
+        "g1756081043742"
+    ],
+    "valid": true
+  },
+  {
     "id": 2,
     "username": "Tom",
     "email": "Tom@com",
@@ -18,28 +33,12 @@
     "username": "Jerry",
     "email": "Jerry@com",
     "pwd": "1234",
-    "role": "chatuser",
+    "role": "admin",
     "groups": [
       "g2",
       "g3",
       "g1756080867629",
       "g1756080958422"
-    ],
-    "valid": true
-  },
-  {
-    "id": 4,
-    "username": "super",
-    "email": "super@com",
-    "pwd": "123",
-    "role": "super",
-    "groups": [
-      "g2",
-      "g3",
-      "g1756080867629",
-      "g1756080958422",
-      "g1756081043742",
-      "g1756341180874"
     ],
     "valid": true
   },

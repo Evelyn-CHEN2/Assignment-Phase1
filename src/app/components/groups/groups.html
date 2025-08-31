@@ -1,8 +1,15 @@
 @if (user?.role === 'admin') {
-  <button type="button" class="back-btn" (click)="toggleAdminGroups()">
+  <button 
+    type="button" class="back-btn" 
+    (click)="showAllGroups()" 
+    [disabled]="!adminGroupsActive">
     <i class="bi bi-chevron-left"></i>
   </button>
-<button type="button" (click)="toggleAdminGroups()">My admin groups</button>
+  <button 
+    type="button" class="btn btn-admin px-2 py-1"
+    style="font-size: small;"
+    (click)="showAdminGroups()"
+    [disabled]="adminGroupsActive">Admin Groups</button>
 }
 @if (errMsg) {
   <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
@@ -10,7 +17,7 @@
 
 <div class="row" #scrollArea>
   <!-- Display groups that are managed by admin user -->
-  @if (showAdminGroups) {
+  @if (adminGroupsActive) {
     @for (group of adminGroups; track group.id) {
       <div class="col-md-12 mb-12">
         <div class="card shadow-sm h-100">
@@ -290,6 +297,7 @@
         <button 
           type="button" class="btn btn-sm btn-outline-secondary" 
           data-bs-dismiss="modal">
+          Cancel
         </button>
         <button 
           type="button" class="btn btn-sm btn-danger" 

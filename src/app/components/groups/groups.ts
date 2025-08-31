@@ -22,7 +22,7 @@ export class Groups implements OnInit {
   adminGroups: Group[] = [];
   userById: Record<number, string> = {};
   user: User | null = null;
-  showAdminGroups: boolean = false;
+  adminGroupsActive: boolean = false;
   showAdd: Record<string, boolean> = {};
   showEdit: Record<string, boolean> = {};
   newGroupName: Record<string, string> = {};
@@ -49,6 +49,7 @@ export class Groups implements OnInit {
       map(({ groups, allchannels, allusers }) => {
         // Refresh user data (so user?.groups.includes(group.id) can work after user joins a new group)
         const freshUser = allusers.find(u => u.id === currentUser?.id) ?? currentUser;
+        console.log('Fresh user data:', freshUser);
         this.user = freshUser;
         const userById = Object.fromEntries(
           allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
@@ -73,9 +74,12 @@ export class Groups implements OnInit {
   }
 
   // <-- Actions for super and admin -->
-  // Switch to administered groups view
-  toggleAdminGroups(): void {
-    this.showAdminGroups = !this.showAdminGroups
+  // Switch to disable buttons to show groups/adminGroups
+  showAdminGroups(): void {
+    this.adminGroupsActive = true;
+  }
+  showAllGroups(): void {
+    this.adminGroupsActive = false;
   }
 
   // Toggle edit group form

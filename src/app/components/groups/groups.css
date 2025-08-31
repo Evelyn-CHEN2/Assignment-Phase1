@@ -9,6 +9,9 @@
   -webkit-tap-highlight-color: transparent; 
 }
 
+.btn-admin { background: #ecfdf5; color:#065f46; border:none; cursor: pointer; clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%);}
+.btn-admin:hover { filter: brightness(0.95); }
+
 .add-btn{
     position: relative;
     display: inline-flex;
