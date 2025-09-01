@@ -14,122 +14,13 @@
 @if (errMsg) {
   <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
 }
+<button type="button" class="btn px-1 py-1" (click)="sortGroups()">
+  <i class="bi bi-arrow-down-up"></i>
+</button>
 
-<div class="row" #scrollArea>
-  <!-- Display groups that are managed by admin user -->
-  @if (adminGroupsActive) {
-    @for (group of adminGroups; track group.id) {
-      <div class="col-md-12 mb-12">
-        <div class="card shadow-sm h-100">
-          <div class="card-body">
-            <div class ="d-flex justify-content-between">
-              <h5 class="card-title mb-1">{{group.groupname}}</h5>
-              <div style="gap: 10px; display: flex;">
-                  <button 
-                    class="btn p-0" style="color: green;" 
-                    type="button" 
-                    (click)="toggleEditGroup(group)">
-                    <i class="bi bi-pencil-fill fs-6"></i>
-                  </button>
-                  <button 
-                    class="btn text-danger p-0" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#confirmDeleteGroupModal" 
-                    type="button" 
-                    (click)="openDeleteGroupModal(group)">
-                    <i class="bi bi-dash-circle-dotted fs-6"></i>
-                  </button>
-              </div>
-            </div>
-            <p class="card-text mb-2">{{group.description}}</p>
-            <!-- button for admin to edit group  -->
-            @if (showEdit[group.id]){
-              <div class="add-pop mt-2">
-                <input 
-                  class="form-control me-2" style="font-size: 13px" 
-                  type="text" placeholder="New group name" 
-                  [(ngModel)]="newGroupName[group.id]" 
-                  name="newGroupName{{group.id}}"/>
-                <button 
-                  class="btn btn-sm btn-outline-secondary" 
-                  style="font-size:x-small; background-color:#b7e4c7; color: black;" 
-                  type="button" 
-                  (click)="editGroup(group, $event)">
-                  Confirm
-                </button>
-                <button 
-                  class="btn btn-sm ms-2" style="font-size:x-small;" 
-                  type="button" 
-                  (click)="toggleEditGroup(group)">
-                  Cancel
-                </button>
-              </div>
-            }
-            
-            <p class="text-secondary small mb-2 text-end">
-              Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}
-            </p>
-            <div class="channels text-muted small">
-                <label class="form-label fs-6 text-muted">Channels:</label><br> 
-                @for (channel of group.channels; track channel.id) {
-                    <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
-                      {{channel.channelname}}   
-                      <!-- Button for admin to delete channel -->
-                      @if (user?.role === 'super' || user?.role === 'admin') {
-                        <button 
-                          class="btn btn-link text-danger p-0" type="button"
-                          data-bs-toggle="modal" 
-                          data-bs-target="#confirmDeleteChannelModal" 
-                          (click)="openDeleteChannelModal(channel)">
-                          <i class="bi bi-x-square fs-6"></i>
-                        </button>
-                      }
-                  </li>
-                }
-            </div>
 
-            <!--Button for admin to add channel -->
-            <div class="d-flex justify-content-end m-2">
-              @if (user?.role === 'admin') {
-                <button type="button" class="add-btn" (click)="toggleAddChannel(group)">
-                  <span>Channel</span>
-                  <span class="add-circle"><i class="bi bi-plus-lg"></i></span>
-                </button>
-              }
-            </div>
-
-            @if (showAdd[group.id]){
-              <div class="add-pop mt-2">
-                <input 
-                  class="form-control me-2" 
-                  style="font-size: 13px" type="text" 
-                  placeholder="New channel name" 
-                  [(ngModel)]="newChannelName[group.id]" 
-                  name="newChannelName{{group.id}}"/>
-                <button 
-                  class="btn btn-sm btn-outline-secondary" 
-                  style="font-size:x-small; background-color:#b7e4c7; color: black;" 
-                  type="button" 
-                  (click)="confirmAddChannel(group, $event)">
-                  Confirm
-                </button>
-                <button 
-                  class="btn btn-sm ms-2" style="font-size:x-small;" 
-                  type="button" 
-                  (click)="toggleAddChannel(group)">
-                  Cancel
-                </button>
-              </div>
-            }
-          </div>  
-        </div>
-      </div>
-    }
-  }
-
-  <!-- Display all groups for super and chatusers -->
-  @else {
-    @for (group of groups; track group.id) {
+<div class="row">
+    @for (group of groups | slice: 0 : groupsToDisplay; track group.id) {
       <div class="col-md-12 mb-12">
         <div class="card shadow-sm h-100">
           <div class="card-body">
@@ -251,8 +142,27 @@
         </div>
       </div>
     }
-  }
+
+  </div>
+
+<div class="d-flex justify-content-end my-3">
+@if (groupsToDisplay < groups.length) {
+  <button 
+    class="btn btn-outline-secondary px-1 py-1" 
+    style="font-size: x-small;"
+    (click)="loadMoreGroups()">
+    More
+  </button>
+}
+@if (groupsToDisplay > 2) {
+  <button 
+    class="btn py-0 px-1"
+    (click)="resetGroupsDisplay()">
+    <i class="bi bi-arrow-bar-up fs-6"></i>
+  </button>
+}
 </div>
+
 
 <!-- Delete confirmation modals for group -->
 <div class="modal fade" id="confirmDeleteGroupModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">

@@ -9,17 +9,19 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { NgClass } from '@angular/common';
+import { SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [FormsModule, NgClass],
+  imports: [FormsModule, NgClass, SlicePipe],
   templateUrl: './groups.html',
   styleUrl: './groups.css'
 })
 export class Groups implements OnInit {
   groups: Group[] = [];
   adminGroups: Group[] = [];
+  formattedGroups: Group[] = [];  
   userById: Record<number, string> = {};
   user: User | null = null;
   adminGroupsActive: boolean = false;
@@ -31,6 +33,8 @@ export class Groups implements OnInit {
   selectedChannel: Channel | null = null;
   errMsg: string = '';
   applyPending: Record<string, boolean> = {};
+  groupsToDisplay = 2; // Number of groups to display initially
+  sortAsc: boolean = true; // Sort groups order state
 
   private groupService = inject (GroupService)
   private userService = inject(UserService);
@@ -49,7 +53,6 @@ export class Groups implements OnInit {
       map(({ groups, allchannels, allusers }) => {
         // Refresh user data (so user?.groups.includes(group.id) can work after user joins a new group)
         const freshUser = allusers.find(u => u.id === currentUser?.id) ?? currentUser;
-        console.log('Fresh user data:', freshUser);
         this.user = freshUser;
         const userById = Object.fromEntries(
           allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
@@ -69,17 +72,29 @@ export class Groups implements OnInit {
       this.userById = userById;
       this.groups = formattedGroups;
       this.adminGroups = adminGroups;
+      this.formattedGroups = formattedGroups; // Keep a copy for button 'admin groups' to switch back to all groups
       this.errMsg = ''
     });
+  }
+
+  // Sort groups by names
+  sortGroups(): void{
+    this.groups.sort((a,b) => a.groupname.localeCompare(b.groupname));
+    if (!this.sortAsc) {
+      this.groups.reverse();
+    }
+    this.sortAsc = !this.sortAsc;
   }
 
   // <-- Actions for super and admin -->
   // Switch to disable buttons to show groups/adminGroups
   showAdminGroups(): void {
     this.adminGroupsActive = true;
+    this.groups = this.adminGroups; // Refresh page to display admin groups
   }
   showAllGroups(): void {
     this.adminGroupsActive = false;
+    this.groups = this.formattedGroups; // Refresh page to display all groups
   }
 
   // Toggle edit group form
@@ -221,9 +236,14 @@ export class Groups implements OnInit {
     })
   }
 
+  // Load more groups when "More" button is clicked
+  loadMoreGroups(): void {
+    this.groupsToDisplay += 2;
+  }
 
-
-
-
+  // Load less groups when "Less" button is clicked
+  resetGroupsDisplay(): void {
+    this.groupsToDisplay = 2;
+  }
 }
  

@@ -24,7 +24,8 @@
     ],
     "createdBy": 1,
     "admins": [
-      1
+      1,
+      2
     ]
   },
   {
@@ -69,6 +70,20 @@
     "createdBy": 2,
     "admins": [
       2
+    ]
+  },
+  {
+    "id": "g1756682254638",
+    "groupname": "test",
+    "description": "setse",
+    "channels": [
+      "c1756682254638",
+      "c1756682254639",
+      "c1756682254640"
+    ],
+    "createdBy": 1,
+    "admins": [
+      1
     ]
   }
 ]
