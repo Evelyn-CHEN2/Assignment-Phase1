@@ -16,7 +16,7 @@ module.exports = {
             fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
         };
 
-        app.delete('/api/deleteuser/:userId', (req, res) => {
+        app.delete('api/removeuserfromgroup', (req, res) => {
             const userId = req.params.userId;
             const groupId = req.body.groupId;
             if (!userId || !groupId) {

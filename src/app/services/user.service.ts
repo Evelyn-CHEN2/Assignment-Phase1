@@ -30,6 +30,10 @@ export class UserService {
     return this.http.delete<void>(`${this.server}/api/deleteuser/${id}`);
   } 
 
+  removeUserFromGroup(userId: number, groupId: string): Observable<void> {
+    return this.http.put<void>(`${this.server}/api/removeuserfromgroup`, { userId, groupId });
+  }
+
   banUser(id: number): Observable<void> {
     return this.http.put<void>(`${this.server}/api/banuserbyID/${id}`, {});
   }

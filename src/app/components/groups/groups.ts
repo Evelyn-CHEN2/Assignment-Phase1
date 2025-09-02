@@ -58,15 +58,15 @@ export class Groups implements OnInit {
           allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         );
         // Fetch all groups with their channels
-        const formattedGroups = groups.map(group => {
+        const formattedGroups = groups.map(g => {
           return {
-            ...group,
-            channels: allchannels.filter(c => c.groupid === group.id),
+            ...g,
+            channels: allchannels.filter(c => c.groupid === g.id),
           }
         });
-        // Groups seen by admin who mangages certain groups
+        // Groups administered by current user
         const adminGroups = freshUser ? formattedGroups.filter(g => g.admins?.includes(freshUser.id)) : [];
-        return { userById, formattedGroups, adminGroups };
+        return { userById, formattedGroups, adminGroups };
       }),
     ).subscribe(({ userById, formattedGroups, adminGroups }) => {
       this.userById = userById;

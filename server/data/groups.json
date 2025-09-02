@@ -73,17 +73,17 @@
     ]
   },
   {
-    "id": "g1756682254638",
-    "groupname": "test",
-    "description": "setse",
+    "id": "g1756773946294",
+    "groupname": "testJerry",
+    "description": "ewatgae",
     "channels": [
-      "c1756682254638",
-      "c1756682254639",
-      "c1756682254640"
+      "c1756773946294",
+      "c1756773946295",
+      "c1756773946296"
     ],
-    "createdBy": 1,
+    "createdBy": 3,
     "admins": [
-      1
+      3
     ]
   }
 ]
