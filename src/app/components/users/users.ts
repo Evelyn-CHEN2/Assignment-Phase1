@@ -20,11 +20,13 @@ export class Users {
   userGroupsByUser: Record<number, Group[]> = {}; 
   roleByGroupByUser: Record<number, Record<string, string>> = {};
   showUserGroups: Record<number, boolean> = {};
+  showUpdateRole: Record<string,boolean> = {}; 
   showDelete: Record<number, boolean> = {};
-  newRole: Record<number, string> = {};
+  newRole: Record<number,string> = {};
   selectedUser: User | null = null; 
   selectedGroup: Group | null = null;
   errMsg: string = '';
+  sortAsc: boolean = true; // Sort groups order state
 
   private userService = inject(UserService);
   private authService = inject(AuthService);
@@ -104,15 +106,24 @@ export class Users {
     })
   }
 
+  // Sort users by names
+  sortUsers(): void{
+    this.users.sort((a,b) => a.username.localeCompare(b.username));
+    if (!this.sortAsc) {
+      this.users.reverse();
+    }
+    this.sortAsc = !this.sortAsc;
+  }
+
   // Tggle user groups display
   toggleUserGroups(user : User): void {
     this.showUserGroups[user.id] = !this.showUserGroups[user.id];
   }
 
   // Toggle ban confirmation modal
-  openAlertModal(user: User): void {
+  openBanModal(user: User): void {
     this.selectedUser = user;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmAlertModal')!).show();
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmBanModal')!).show();
   }
 
   // Ban user and report to super
@@ -153,6 +164,41 @@ export class Users {
       },
       complete: () => { 
         console.log('User remove complete.');
+      }
+    })
+  }
+
+   // Update user role
+   toggleUpdateRole(group: Group): void {
+    this.showUpdateRole[group.id] = !this.showUpdateRole[group.id];
+  }
+
+  // Toggle update confirmation modal
+  openUpdateModal(user: User, group: Group): void {
+    this.selectedUser = user;
+    this.selectedGroup = group;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmUpdateModal')!).show();
+  }
+  
+  // Update user role
+  updateRole(user: User, group: Group, event: any): void {
+    event.preventDefault();
+    if (!user || !group) {
+      console.error('User or Group is not defined');
+      return;
+    }
+    const newRole = this.newRole[user.id];
+    this.userService.updateUserRole(newRole, user.id, group.id).subscribe({
+      next: () => {
+        // Update the UI display 
+        this.roleByGroupByUser[user.id][group.id] = newRole;
+      },
+      error: (err: any) => {
+        console.error('Error updating user role:', err);
+        this.errMsg = err.error?.error || 'An error occurred while updating the user role.';
+      },
+      complete: () => { 
+        console.log('User role update complete.');
       }
     })
   }

@@ -12,14 +12,12 @@
         {{ user?.role }}
       </span>
       <!-- This button is used for user to remove the account self -->
-      @if (viewer?.id === user?.id) {
         <button
           class="roles-badge roles-badge--btn" type="button"
           data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
           (click)="user && openDeleteModal(user)">
           Remove
         </button>
-      }
     </div>
   </div>
 
@@ -33,49 +31,20 @@
             @for (channel of group.channels; track channel.id) {
               <button 
                 class="chip chip--btn" type="button" 
-                (click)="joinChannel(channel)"
-                [disabled]="viewer?.id !== user?.id">
+                (click)="joinChannel(channel)">
                 {{ channel.channelname }}
               </button>
             }
           </div>
-          @if (viewer?.id === user?.id) {
-            <button 
-              class="btn p-0 ms-auto" style="color: #ef233c" 
-              type="button" [attr.data-role]="user?.role"
-              data-bs-toggle="modal" 
-              data-bs-target="#confirmLeaveGroupModal"
-              (click)="openLeaveGroupModal(group)">
-              <i class="bi bi-box-arrow-right"></i>
-            </button>
-          } @else {
-              <button 
-                class="ms-auto roles-badge"
-                type="button" 
-                [attr.group-role]="roleByGroup[group.id]"
-                (click)="toggleUpdateRole(group)">
-                {{roleByGroup[group.id]}}
-              </button>
-          }
+          <button 
+            class="btn p-0 ms-auto" style="color: #ef233c" 
+            type="button" [attr.data-role]="user?.role"
+            data-bs-toggle="modal" 
+            data-bs-target="#confirmLeaveGroupModal"
+            (click)="openLeaveGroupModal(group)">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
         </li>
-        @if (showUpdateRole[group.id]) {
-          <div class="update-role-pop mt-2 gap-2 d-flex align-items-center" >
-              <select 
-                class="form-select flex-grow-1" 
-                [(ngModel)]="newRole[group.id]" 
-                name="newRole{{group.id}}">
-                  <!-- <option value="chatuser">Chat User</option> -->
-                  <option value="admin">Admin</option>
-                  <option value="super">Super</option>
-              </select>
-              <button 
-                class="roles-badge--sm roles-badge--btn roles-badge--grey" 
-                type="button" 
-                (click)="updateRole(user!, group)">
-                Update
-              </button>
-          </div>
-        }
       }
     </ul>
   </div>

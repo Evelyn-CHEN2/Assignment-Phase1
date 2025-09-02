@@ -115,3 +115,73 @@
     </div>
   </div>
 </div>
+<hr>
+
+<!-- Display banned users -->
+@if (loggedUser?.role === 'super') {
+  <div class="banned-list card p-3">
+    <div class="d-flex align-items-center mb-2">
+      <i class="bi bi-person-fill-lock me-2 text-danger"></i>
+      <h6 class="mb-0">Banned users</h6>
+      <span class="ms-2 badge rounded-pill text-bg-danger">
+        {{ bannedUsers.length || 0 }}
+      </span>
+    </div>
+
+    @if (bannedUsers.length) {
+      <ul class="list-unstyled mb-0">
+        @for (bannedUser of bannedUsers; track bannedUser.id) {
+          <li class="banned-item d-flex align-items-center gap-3 p-2 mb-2 border rounded-3">
+            <div class="avatar bg-danger-subtle text-danger fw-semibold">
+              {{ bannedUser.username | slice:0:1 | uppercase }}
+            </div>
+            <div class="flex-grow-1">
+              <div class="fw-semibold">
+                {{ bannedUser.username }}
+                <span class="badge text-bg-danger ms-2">Banned</span>
+              </div>
+              <div class="text-muted small">Email: {{ bannedUser.email }}</div>
+            </div>
+            <!-- Unban the user -->
+            <button 
+              class="btn btn-sm btn-outline-danger" 
+              data-bs-toggle="modal" 
+              data-bs-target="#confirmUnbanModal" 
+              (click)="openUnbanModal(bannedUser)">
+              Unban
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="text-muted small">No banned users...</div>
+    }
+  </div>
+}
+
+<!-- Confirm to unban user -->
+<div class="modal fade" id="confirmUnbanModal" tabindex="-1" aria-labelledby="confirmUnbanLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-body py-3">
+        <p class="mb-0" id="confirmUnbanLabel">
+          Are you sure you want to release user 
+            <strong>{{ bannedUser?.username }}</strong>?
+        </p>
+      </div>
+      <div class="modal-footer py-2">
+        <button 
+          type="button" class="btn btn-sm btn-outline-secondary" 
+          data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button 
+          type="button" class="btn btn-sm btn-danger" 
+          (click)="bannedUser && unBan(bannedUser, $event)" 
+          data-bs-dismiss="modal">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

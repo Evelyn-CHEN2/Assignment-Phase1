@@ -10,9 +10,8 @@
         </div>
         <strong>{{ currentUser?.username }}</strong>
       </div>
-      
       <h2 class="chan-name"># {{ channel?.channelname }}</h2>
-      <p class="chan-sub">Online: {{userNums}}</p>
+      <p class="chan-sub">Online: {{userNum}}</p>
     </div>
   
     <!-- Messages -->
@@ -20,9 +19,9 @@
       <ul class="msg-list">
         @for (m of channel?.messages; track $index) {
           <li class="msg" [class.is-mine]="m.sender === currentUser?.id">
-            <div class="msg-avatar">
+            <button class="msg-avatar">
               {{ (userById[m.sender]) || 'U'}}
-            </div>
+            </button>
             <div class="msg-bubble">
               <div class="msg-text">{{ m.message }}</div>
             </div>

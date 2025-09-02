@@ -39,6 +39,10 @@ export class SocketService {
     this.socket?.on('userNum', handler);
   }
 
+  offUserNum(handler: (payload:{channelId: string, userNum: number}) => void): void {
+    this.socket?.off('userNum', handler);
+  }
+
   onNotices(handler: any): void {
     this.socket?.on('notice', handler);
   }

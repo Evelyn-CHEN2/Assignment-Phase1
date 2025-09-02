@@ -1,2 +1,54 @@
 
+/* role badge (auto-colors by role) */
+.roles-badge{
+    margin-left: auto;
+    padding: .35rem .6rem;
+    border-radius: 9999px;
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    border: 1px solid #e5e7eb;
+    background: #f3f4f6;
+color: #111;
+}
+.roles-badge[data-role="super"]{
+background: #fef3c7; color: #92400e; border-color: #fde68a; 
+}
+.roles-badge[data-role="admin"]{
+background: #e0f2fe; color: #075985; border-color: #bae6fd; 
+}
+.roles-badge[data-role="chatuser"]{
+background: #ecfdf5; color: #065f46; border-color: #a7f3d0; 
+}
+
+button.roles-badge[group-role="admin"] {
+background: #e0f2fe; 
+color: #075985;       
+border: 1px solid #bae6fd;
+}
+
+button.roles-badge[group-role="chatuser"] {
+background: #ecfdf5;   
+color: #065f46;
+border: 1px solid #badbcc;
+}
+
+/* Make roles-badge usable as a button */
+.roles-badge--btn{
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    border: 1px solid #e5e7eb; 
+    border-radius: 9999px;
+    transition: filter .15s ease, transform .05s ease;
+  }
+  .roles-badge--btn:hover{ filter: brightness(.97); }
+  .roles-badge--btn:active{ transform: translateY(1px); }
+  .roles-badge--btn:focus-visible{
+    outline: 2px solid #8d99ae;
+    outline-offset: 2px;
+  }
   

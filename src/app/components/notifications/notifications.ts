@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Notification } from '../../interface';
+import { Notification, User } from '../../interface';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
@@ -9,17 +9,20 @@ import { forkJoin, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-notifications',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './notifications.html',
   styleUrl: './notifications.css'
 })
 export class Notifications implements OnInit {
   notifications: Notification[] = [];
-  usersReported: string[] = [];
+  bannedUsers: User[] = [];
+  loggedUser: User | null = null;
   errMsg: string = '';
   userById: Record<number, string> = {};
   groupById: Record<string, string> = {};
   selectedNotification: Notification | null = null;
+  bannedUser: User | null = null;
 
   private notificationService = inject(NotificationService);
   private authService = inject(AuthService);
@@ -31,7 +34,7 @@ export class Notifications implements OnInit {
     // Fetch all group applications for groups created by current super/admin
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) return;
-    
+    this.loggedUser = currentUser;
     this.notificationService.fetchNotifications().pipe(
       map((notifications: Notification[]) => {
         console.log('All notifications fetched:', notifications);
@@ -43,8 +46,9 @@ export class Notifications implements OnInit {
           groups: this.groupService.getGroups()
         }).pipe(
           map(({ users, groups }) => {
+            const allUsers = users;
             const userById = Object.fromEntries(
-              users.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
+              allUsers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
             )
             const groupById = Object.fromEntries(
               groups.map(g => [g.id, g.groupname])
@@ -55,11 +59,11 @@ export class Notifications implements OnInit {
               return groupApplying?.admins.includes(currentUser.id);
             });
 
-            return { notifications, adminNotifications, userById, groupById };
+            return { notifications, adminNotifications, userById, groupById, allUsers };
           })
         )
       })
-    ).subscribe(({ notifications, adminNotifications, userById, groupById }) => {
+    ).subscribe(({ notifications, adminNotifications, userById, groupById, allUsers }) => {
       if (currentUser?.role === 'super') {
         this.notifications = notifications;
       } else if (currentUser?.role === 'admin') {
@@ -67,6 +71,7 @@ export class Notifications implements OnInit {
       }
       this.userById = userById;
       this.groupById = groupById;
+      this.bannedUsers = allUsers.filter(u => u.valid === false);
       this.errMsg = '';
     })
   }
@@ -127,6 +132,31 @@ export class Notifications implements OnInit {
       },
       complete: () => {
         console.log('Notification deleted successfully.');
+      }
+    })
+  }
+
+  // Toggle unban modal
+  openUnbanModal(user: User): void {
+    this.bannedUser = user;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmUnbanModal')!).show();
+  }
+
+  // Unban a user
+  unBan(user: User, event: any): void {
+    event.preventDefault();
+    if (!user) return;
+    this.userService.unBanUser(user.id).subscribe({
+      next: () => {
+        // Remove the unbanned user from the bannedUsers array
+        this.bannedUsers = this.bannedUsers.filter(u => u.id !== user.id);
+      },
+      error: (err: any) => {
+        this.errMsg = err.error.error || 'An error occurred while unbanning the user.';
+        console.error('Error unbanning user:', err);
+      },
+      complete: () => {
+        console.log('User unbanned successfully.');
       }
     })
   }

@@ -36,3 +36,21 @@
   .notif-actions .btn-group { width: 100%; }
   .notif-actions .btn-group .btn { flex: 1 1 0; }
 }
+
+.banned-item:hover {
+  background: rgba(220, 53, 69, 0.06);      /* subtle red hover */
+  border-color: rgba(220, 53, 69, 0.3);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-danger-subtle { background: #f8d7da; }
+.text-bg-danger { background: #dc3545; color: #fff; }
+

@@ -1,14 +1,18 @@
 @if (errMsg) {
   <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
 }
+<button type="button" class="btn px-1 py-1" (click)="sortUsers()">
+  <i class="bi bi-arrow-down-up"></i>
+</button>
+
 <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th style="text-align: center; width: 20%;" scope="col">_EDIT_</th>
+            <th scope="col" style="width:22%;">Role</th>
+            <th style="text-align: center;" scope="col">_ _</th>
         </tr>
     </thead>
     <tbody>
@@ -36,8 +40,8 @@
                         type="button"
                         [disabled]="user.valid === false"
                         data-bs-toggle="modal" 
-                        data-bs-target="#confirmAlertModal" 
-                        (click)="openAlertModal(user)">
+                        data-bs-target="#confirmBanModal" 
+                        (click)="openBanModal(user)">
                         <i class="bi bi-exclamation-triangle"
                           style="font-size:large"></i>
                       </button>
@@ -55,10 +59,34 @@
                   <span class="ms-2">{{ group.groupname }}</span>
                 </td>
                 <td>
+                  <button 
+                    class="ms-auto roles-badge"
+                    type="button" 
+                    [attr.group-role]="roleByGroupByUser[user.id][group.id]"
+                    (click)="toggleUpdateRole(group)">
                   {{roleByGroupByUser[user.id][group.id]}}
+                  </button>
+                  @if (showUpdateRole[group.id]) {
+                    <div class="update-role-pop mt-2 gap-2 d-flex align-items-center">
+                        <select 
+                          class="form-select flex-grow-1" 
+                          [(ngModel)]="newRole[user.id]" 
+                          name="newRole{{user.id}}">
+                            <option value="admin">Admin</option>
+                            <option value="super">Super</option>
+                        </select>
+                        <button 
+                          class="roles-badge--sm roles-badge--btn roles-badge--grey" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#confirmUpdateModal" 
+                          type="button" 
+                          (click)="openUpdateModal(user!, group)">
+                          Update
+                        </button>
+                    </div>
+                  }
                 </td>
                 <td class="text-center">
-  
                   @if((loggedUser?.role === 'admin' && roleByGroupByUser[user.id][group.id] === 'chatuser') || loggedUser?.role === 'super') {
                   <button 
                       class="btn btn-m text-danger p-0" 
@@ -77,12 +105,43 @@
     </tbody>
 </table>
 
-<!-- Ban user confirmation modal -->
-<div class="modal fade" id="confirmAlertModal" tabindex="-1" aria-labelledby="confirmAlertLabel" aria-hidden="true">
+<!-- Update user role confirmation modal -->
+<div class="modal fade" id="confirmUpdateModal" tabindex="-1" aria-labelledby="confirmUpdateLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
       <div class="modal-body py-3">
-        <p class="mb-0" id="confirmAlertLabel">Are you sure you ban
+        <p class="mb-0" id="confirmUpdateLabel">
+          Are you sure to update 
+            @if (selectedUser) {
+              <strong>User: {{ selectedUser.username }}</strong>?
+            }
+        </p>
+      </div>
+      <div class="modal-footer py-2">
+        <button 
+          type="button" 
+          class="btn btn-sm btn-outline-secondary" 
+          data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-sm btn-danger" 
+          (click)="selectedUser && selectedGroup && updateRole(selectedUser, selectedGroup, $event)" 
+          data-bs-dismiss="modal">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ban user confirmation modal -->
+<div class="modal fade" id="confirmBanModal" tabindex="-1" aria-labelledby="confirmBanLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-body py-3">
+        <p class="mb-0" id="confirmBanLabel">Are you sure you ban
           @if (selectedUser) {
               <strong>User: {{ selectedUser.username }}</strong>?
           }
@@ -107,7 +166,7 @@
   </div>
 </div>
 
-<!-- Delete user confirmation modal -->
+<!-- Remove user from group confirmation modal -->
 <div class="modal fade" id="confirmRemoveModal" tabindex="-1" aria-labelledby="confirmRemoveLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
@@ -131,7 +190,7 @@
             class="btn btn-sm btn-danger" 
             (click)="selectedUser && selectedGroup && confirmRemove(selectedUser, selectedGroup, $event)" 
             data-bs-dismiss="modal">
-            Delete
+            Remove
           </button>
         </div>
       </div>

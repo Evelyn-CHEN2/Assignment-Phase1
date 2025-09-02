@@ -31,10 +31,14 @@ export class UserService {
   } 
 
   removeUserFromGroup(userId: number, groupId: string): Observable<void> {
-    return this.http.delete<void>(`${this.server}/api/removeuserfromgroup`, { params: { userId, groupId }});
+    return this.http.delete<void>(`${this.server}/api/removeuserfromgroup$`, { params: { userId, groupId }});
   }
 
   banUser(id: number): Observable<void> {
     return this.http.put<void>(`${this.server}/api/banuserbyID/${id}`, {});
+  }
+
+  unBanUser(id: number): Observable<void> {
+    return this.http.put<void>(`${this.server}/api/unbanuserbyID/${id}`, {});
   }
 }

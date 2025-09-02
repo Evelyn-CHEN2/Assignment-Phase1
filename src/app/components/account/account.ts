@@ -22,7 +22,6 @@ export class Account implements OnInit {
   userGroups: Group[] = [];
   channel: Channel | null = null;
   selectedGroup: Group | null = null;
-  showUpdateRole: Record<string, boolean> = {}; 
   newRole: Record<string, string> = {}; // For selecting new role in each group
   roleByGroup: Record<string, string> = {}; 
   errMsg: string = '';
@@ -35,56 +34,27 @@ export class Account implements OnInit {
   declare bootstrap: any;
 
   ngOnInit(): void {
-    this.route.params.pipe(
-      switchMap(params => {
-        const viewer = this.authService.getCurrentUser();
-        // Get the user ID from route parameters or use the viewer's ID
-        const userId = params['id'] || (viewer ? viewer.id : null);
-        this.viewer = viewer;
-        return this.userService.getUserById(userId);
-      }),
-      // Fetch groups/channels for the user
-      switchMap(user => {
-        if (!user) {
-          console.warn('User not found or access denied');
-          return of(null); // SwithchMap expects an Observable, return of(null) to avoid breaking the stream
-        };
-        this.user = user;
-        return forkJoin({
-          groups: this.groupService.getGroups(),
-          channels: this.groupService.getChannels()
-        }).pipe(
-          map(({ groups, channels }) => {
-            // Fetch all groups with channels for super
-            const allGroups = groups.map(g => {
-              return {
-                ...g,
-                channels: channels.filter(c => c.groupid === g.id)
-              }
-            });
-            // Filter groups with channels that belong to the user, exclude super
-            const filteredGroups = groups.filter(g => user.groups.includes(g.id)).map(group => {
-              return {
-                ...group,
-                channels: channels.filter(c => c.groupid === group.id)
-              }
-            });
-            return { allGroups, filteredGroups };
-          }),
-          tap(({filteredGroups}) => {
-            // Display the role of the user in each group
-            this.roleByGroup = Object.fromEntries(
-              filteredGroups.map(g => {
-                if (g.admins.includes(user.id)) {
-                  return [g.id, user.role];
-                } else {
-                  return [g.id, 'chatuser'];
-                }
-              })
-            )
+    this.user = this.authService.getCurrentUser();
+    forkJoin({
+      groups: this.groupService.getGroups(),
+      channels: this.groupService.getChannels()
+    }).pipe(
+      map(({ groups, channels }) => {
+        // Fetch all groups with channels for super
+        const allGroups = groups.map(g => {
+          return {
+            ...g,
+            channels: channels.filter(c => c.groupid === g.id)
           }
-          )
-        );
+        });
+        // Filter groups with channels that belong to the user, exclude super
+        const filteredGroups = groups.filter(g => this.user?.groups.includes(g.id)).map(group => {
+          return {
+            ...group,
+            channels: channels.filter(c => c.groupid === group.id)
+          }
+        });
+        return { allGroups, filteredGroups };
       }),
     ).subscribe({
       next: (result) => {
@@ -93,6 +63,7 @@ export class Account implements OnInit {
           return;
         }
         const { allGroups, filteredGroups } = result;
+        console.log('Fetched groups:', allGroups);
         if(this.user?.role !== 'super') {
           this.userGroups = filteredGroups;
         } else {
@@ -108,34 +79,6 @@ export class Account implements OnInit {
         console.log('User and groups fetching complete.');
       }
     });
-  }
-
-  // <-- Operations for super -->
-  // Update user role
-  toggleUpdateRole(group: Group): void {
-    this.showUpdateRole[group.id] = !this.showUpdateRole[group.id];
-  }
-  
-  // Update user role
-  updateRole(user: User, group: Group) {
-    if (!user || !group) {
-      console.error('User or Group is not defined');
-      return;
-    }
-    const newRole = this.newRole[group.id];
-    this.userService.updateUserRole(newRole, user.id, group.id).subscribe({
-      next: () => {
-        // Update the UI display 
-        this.roleByGroup[group.id] = newRole;
-      },
-      error: (err: any) => {
-        console.error('Error updating user role:', err);
-        this.errMsg = err.error?.error || 'An error occurred while updating the user role.';
-      },
-      complete: () => { 
-        console.log('User role update complete.');
-      }
-    })
   }
 
 

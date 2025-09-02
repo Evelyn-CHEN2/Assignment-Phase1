@@ -13,8 +13,9 @@
 /* container */
 .chat-window{
     display: grid;
+    margin-top: 3vh;
     grid-template-rows: auto 1fr auto;
-    min-height: 100vh;             
+    min-height: 90vh;             
     max-height: 82vh;
     background:#fff;
     border:1px solid #e5e7eb;

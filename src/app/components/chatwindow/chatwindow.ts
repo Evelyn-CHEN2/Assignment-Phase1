@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Channel, User } from '../../interface';
 import { AuthService } from '../../services/auth.service';
@@ -6,7 +6,7 @@ import { GroupService } from '../../services/group.service';
 import { SlicePipe, UpperCasePipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
-import { map, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 import { SocketService } from '../../services/socket.service';
 
 @Component({
@@ -16,12 +16,12 @@ import { SocketService } from '../../services/socket.service';
   templateUrl: './chatwindow.html',
   styleUrl: './chatwindow.css',
 })
-export class Chatwindow implements OnInit{
+export class Chatwindow implements OnInit, OnDestroy {
   channel: Channel | null = null;
   channelId: string = '';
   currentUser: User | null = null;
   userById: Record<number, string> = {};
-  userNums: number = 0;
+  userNum: number = 0;
   message: string = '';
   errMsg: string = '';
 
@@ -32,6 +32,12 @@ export class Chatwindow implements OnInit{
   private router = inject(Router);
   private socketService = inject(SocketService);
   private socket: any; // Define the socket property
+
+  private handleUserNum = ({channelId, userNum} : { channelId: string; userNum: number }) =>{
+    if (channelId === this.channelId) {
+      this.userNum = userNum;
+    }
+  }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -89,7 +95,7 @@ export class Chatwindow implements OnInit{
     // Request current number of users in the channel
     this.socketService.onUserNum(({channelId, userNum}: {channelId: string, userNum: number}) => {
       if (channelId === this.channelId) {
-        this.userNums = userNum;
+        this.userNum = userNum;
       }
     });
   }
@@ -98,7 +104,7 @@ export class Chatwindow implements OnInit{
   ngOnDestroy(): void {
     if (!this.currentUser) return;
     const senderName = this.currentUser.username || 'A new user';
-    this.socket.off('userNums');
+    this.socketService.offUserNum(this.handleUserNum);
     this.socketService.leaveChannel(this.channelId, senderName)
   }
 

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GroupService } from '../../services/group.service';
 import { NotificationService } from '../../services/notification.service';
-import { Group, User, Notification } from '../../interface';
+import { Group, User } from '../../interface';
 import { Channel } from '../../interface';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
