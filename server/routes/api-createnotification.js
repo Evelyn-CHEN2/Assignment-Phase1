@@ -32,7 +32,6 @@ module.exports = {
                 req.body.groupId,
                 'pending',  // initial status is pending
                 0 // initial user ID to be 0 before approve
-
             );
 
             notifications.push(newNotification);

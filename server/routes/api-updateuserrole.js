@@ -48,23 +48,27 @@ module.exports = {
             // Update the user role
             users[userIndex].role = newRole;
 
-            // Check if the group exists
-            const groups = readGroups();
-            const groupIndex = groups.findIndex(group => group.id === groupId);
-            if (groupIndex === -1) {
-                return res.status(404).json({ error: 'Group to add admins not found' });
+            if (newRole === 'admin') {
+                // Check if the group exists
+                const groups = readGroups();
+                const groupIndex = groups.findIndex(group => group.id === groupId);
+                if (groupIndex === -1) {
+                    return res.status(404).json({ error: 'Group to add admins not found' });
+                }
+                // If the user is already an admin, do nothing
+                if (groups[groupIndex].admins.includes(Number(userId))) {
+                    return
+                }
+                // Update the group admins
+                groups[groupIndex].admins.push(Number(userId));
+                writeGroups(groups);
+            } else if (newRole === 'super') {
+                users[userIndex].groups = [];
             }
-            // If the user is already an admin, do nothing
-            if (groups[groupIndex].admins.includes(Number(userId))) {
-                return
-            }
-            // Update the group admins
-            groups[groupIndex].admins.push(Number(userId));
             
             // Write the updated user to file
             try {
                 writeUsers(users);
-                writeGroups(groups);
                 res.sendStatus(204)
             } 
             catch (error) {

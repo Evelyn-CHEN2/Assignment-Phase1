@@ -32,6 +32,7 @@ require('./routes/api-addgrouptouser.js').route(app);
 require('./routes/api-deleteuser.js').route(app);
 require('./routes/api-removeuserfromgroup.js').route(app);
 require('./routes/api-banuserByID.js').route(app);
+require('./routes/api-unbanuserByID.js').route(app);
 
 // Routes for groups management
 require('./routes/api-fetchallgroups.js').route(app);

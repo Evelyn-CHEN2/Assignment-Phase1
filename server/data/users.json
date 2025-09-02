@@ -5,13 +5,7 @@
     "email": "super@com",
     "pwd": "123",
     "role": "super",
-    "groups": [
-      "g2",
-      "g3",
-      "g1756080867629",
-      "g1756080958422",
-      "g1756081043742"
-    ],
+    "groups": [],
     "valid": true
   },
   {
@@ -20,13 +14,7 @@
     "email": "Tom@com",
     "pwd": "1234",
     "role": "admin",
-    "groups": [
-      "g2",
-      "g3",
-      "g1756080958422",
-      "g1756081043742",
-      "g1756080867629"
-    ],
+    "groups": [],
     "valid": true
   },
   {
@@ -52,7 +40,7 @@
     "groups": [
       "g2"
     ],
-    "valid": false
+    "valid": true
   },
   {
     "id": 7,
@@ -63,7 +51,7 @@
     "groups": [
       "g2"
     ],
-    "valid": true
+    "valid": false
   },
   {
     "id": 8,
@@ -71,7 +59,10 @@
     "email": "eve@com",
     "pwd": "1234",
     "role": "chatuser",
-    "groups": [],
-    "valid": true
+    "groups": [
+      "g2",
+      "g3"
+    ],
+    "valid": false
   }
 ]

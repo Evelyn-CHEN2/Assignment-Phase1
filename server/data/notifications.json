@@ -1,41 +1,13 @@
 [
   {
-    "id": "2025-09-02T00:41:35.604Z",
-    "applier": 9,
-    "groupToApply": "g1756081043742",
-    "status": "pending",
-    "approvedBy": 0
-  },
-  {
-    "id": "2025-09-02T00:42:29.070Z",
-    "applier": 9,
-    "groupToApply": "g1756080958422",
-    "status": "approved",
-    "approvedBy": 3
-  },
-  {
-    "id": "2025-09-02T03:43:44.718Z",
-    "applier": 2,
-    "groupToApply": "g1756080867629",
-    "status": "approved",
-    "approvedBy": 3
-  },
-  {
-    "id": "2025-09-02T06:01:26.686Z",
-    "applier": 8,
-    "groupToApply": "g3",
-    "status": "approved",
-    "approvedBy": 1
-  },
-  {
-    "id": "2025-09-02T06:07:45.110Z",
+    "id": "2025-09-02T06:12:39.544Z",
     "applier": 8,
     "groupToApply": "g2",
     "status": "approved",
     "approvedBy": 1
   },
   {
-    "id": "2025-09-02T06:07:47.008Z",
+    "id": "2025-09-02T06:12:43.809Z",
     "applier": 8,
     "groupToApply": "g3",
     "status": "approved",

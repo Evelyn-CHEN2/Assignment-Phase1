@@ -17,7 +17,7 @@ module.exports = {
             fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
         }
 
-        app.put('/api/banuserbyID/:id', (req, res) => {
+        app.put('/api/unbanuserbyID/:id', (req, res) => {
             if (!req.params) {
                 return res.status(400).json({ error: 'No data provided' });
             }
@@ -27,7 +27,7 @@ module.exports = {
             if (userIndex === -1) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            users[userIndex].valid = false;
+            users[userIndex].valid = true;
 
             try {
                 writeUsers(users);
