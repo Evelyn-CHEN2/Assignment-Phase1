@@ -16,21 +16,19 @@ module.exports = {
             fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
         };
 
-        app.delete('api/removeuserfromgroup', (req, res) => {
-            const userId = req.params.userId;
-            const groupId = req.body.groupId;
+        app.delete('/api/removeuserfromgroup', (req, res) => {
+            const userId = req.query.userId;
+            const groupId = req.query.groupId;
             if (!userId || !groupId) {
                 return res.status(400).json({ error: 'No user ID or group ID provided to delete' });
             }
-            
             let users = readUsers();
-            users = users.map(u => {
-                if (u.id === userId) {
-                    u.groups = u.groups.filter(g => g.id !== groupId);
-                    return u;
-                }
-            })
-
+            const userIndex = users.findIndex(u => u.id === Number(userId));
+            if (userIndex === -1) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            users[userIndex].groups = users[userIndex].groups.filter(gid => gid !== groupId);
+            
             try {
                 writeUsers(users);
                 res.sendStatus(204); // No response expected

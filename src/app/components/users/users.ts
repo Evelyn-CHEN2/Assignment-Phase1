@@ -144,15 +144,15 @@ export class Users {
     event.preventDefault();
     this.userService.removeUserFromGroup(user.id, group.id).subscribe({
       next: () => {
-        // Update UI display after removing the user
-        this.users = this.users.filter(u => u.id !== user.id);
+        // Update user groups after removing the user from the group
+        this.userGroupsByUser[user.id] = this.userGroupsByUser[user.id].filter(g => g.id !== group.id);
       },
       error: (err: any) => {
-        console.error('Error deleting user:', err);
-        this.errMsg = err.error.error || 'Error happended while deleting a user.';
+        console.error('Error removing user:', err);
+        this.errMsg = err.error.error || 'Error happended while removing a user.';
       },
       complete: () => { 
-        console.log('User deletion complete.');
+        console.log('User remove complete.');
       }
     })
   }
