@@ -8,9 +8,9 @@
     </div>
    
     <div class="header-actions">
-      <span class="roles-badge" [attr.data-role]="user?.role">
+      <!-- <span class="roles-badge" [attr.data-role]="user?.role">
         {{ user?.role }}
-      </span>
+      </span> -->
       <!-- This button is used for user to remove the account self -->
         <button
           class="roles-badge roles-badge--btn" type="button"
@@ -24,11 +24,11 @@
   <div class="account-section">
     <h3 class="section-title">Groups & Channels</h3>
     <ul class="group-list">
-      @for (group of userGroups; track group.id) {
+      @for (group of userGroups; track group._id) {
         <li class="group-item">
           <span class="group-chip">{{ group.groupname }}</span>
           <div class="channel-chips">
-            @for (channel of group.channels; track channel.id) {
+            @for (channel of group.channels; track channel._id) {
               <button 
                 class="chip chip--btn" type="button" 
                 (click)="joinChannel(channel)">
@@ -38,13 +38,15 @@
           </div>
           <button 
             class="btn p-0 ms-auto" style="color: #ef233c" 
-            type="button" [attr.data-role]="user?.role"
+            type="button" 
+            
             data-bs-toggle="modal" 
             data-bs-target="#confirmLeaveGroupModal"
             (click)="openLeaveGroupModal(group)">
             <i class="bi bi-box-arrow-right"></i>
           </button>
         </li>
+        <!-- [attr.data-role]="user?.role"  -->
       }
     </ul>
   </div>

@@ -17,8 +17,8 @@
     <!-- Messages -->
     <div class="chat-body" #scrollArea>
       <ul class="msg-list">
-        @for (m of channel?.messages; track $index) {
-          <li class="msg" [class.is-mine]="m.sender === currentUser?.id">
+        @for (m of chatMessages; track $index) {
+          <li class="msg" [class.is-mine]="m.sender === currentUser?._id">
             <button class="msg-avatar">
               {{ (userById[m.sender]) || 'U'}}
             </button>

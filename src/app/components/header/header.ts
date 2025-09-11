@@ -23,9 +23,7 @@ export class Header {
   constructor() {
     console.log('Current user observable:', this.user$);
   }
-  userRole$ = this.user$.pipe(
-    map(u => u ? u.role : [])
-  );
+  userRole$ = this.authService.refreshMembership();
 
   logout(event: any): void {
     event.preventDefault();

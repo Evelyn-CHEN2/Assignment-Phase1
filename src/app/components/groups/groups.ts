@@ -22,7 +22,7 @@ export class Groups implements OnInit {
   groups: Group[] = [];
   adminGroups: Group[] = [];
   formattedGroups: Group[] = [];  
-  userById: Record<number, string> = {};
+  userById: Record<string, string> = {};
   user: User | null = null;
   adminGroupsActive: boolean = false;
   showAdd: Record<string, boolean> = {};
@@ -52,20 +52,20 @@ export class Groups implements OnInit {
     }).pipe(
       map(({ groups, allchannels, allusers }) => {
         // Refresh user data (so user?.groups.includes(group.id) can work after user joins a new group)
-        const freshUser = allusers.find(u => u.id === currentUser?.id) ?? currentUser;
+        const freshUser = allusers.find(u => u._id === currentUser?._id) ?? currentUser;
         this.user = freshUser;
         const userById = Object.fromEntries(
-          allusers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
+          allusers.map(u => [u._id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         );
         // Fetch all groups with their channels
         const formattedGroups = groups.map(g => {
           return {
             ...g,
-            channels: allchannels.filter(c => c.groupid === g.id),
+            channels: allchannels.filter(c => c.groupId === g._id),
           }
         });
         // Groups administered by current user
-        const adminGroups = freshUser ? formattedGroups.filter(g => g.admins?.includes(freshUser.id)) : [];
+        const adminGroups = freshUser ? formattedGroups.filter(g => g._id.includes(freshUser._id)) : [];
         return { userById, formattedGroups, adminGroups };
       }),
     ).subscribe(({ userById, formattedGroups, adminGroups }) => {
@@ -99,20 +99,20 @@ export class Groups implements OnInit {
 
   // Toggle edit group form
   toggleEditGroup(group: Group): void {
-    this.showEdit[group.id] = !this.showEdit[group.id];
+    this.showEdit[group._id] = !this.showEdit[group._id];
   }
 
   // Edit a group
   editGroup(group: Group, event: any): void {
     event.preventDefault();
     this.errMsg = '';
-    const groupId = group.id;
-    const newGroupName = this.newGroupName[group.id];
+    const groupId = group._id;
+    const newGroupName = this.newGroupName[group._id];
     this.groupService.editGroup(groupId, newGroupName).subscribe({
       next: () => {
         // Update group name for UI display immediately
         group.groupname = newGroupName;
-        this.showEdit[group.id] = false;
+        this.showEdit[group._id] = false;
       },
       error: (error: any) => {
         console.error('Error editing group:', error);
@@ -133,12 +133,12 @@ export class Groups implements OnInit {
   // Delete a group
   deleteGroup(group: Group, event: any): void {
     event.preventDefault();
-    const groupId = group.id;
+    const groupId = group._id;
     this.groupService.deleteGroup(groupId).subscribe({
       next: () => {
         // Remove the deleted group from the groups array for UI display immediately
-        this.groups = this.groups.filter(g => g.id !== groupId); // For super
-        this.adminGroups = this.adminGroups.filter(g => g.id !== groupId) // For admin
+        this.groups = this.groups.filter(g => g._id !== groupId); // For super
+        this.adminGroups = this.adminGroups.filter(g => g._id !== groupId) // For admin
       },
       error: (err: any) => {
         console.error('Error deleting group:', err);
@@ -159,15 +159,15 @@ export class Groups implements OnInit {
   // Delete a channel from a group
   deleteChannel(channel: Channel, event: any): void {
     event.preventDefault();
-    const channelId = channel.id;
+    const channelId = channel._id;
     this.groupService.deleteChannel(channelId).subscribe({
       next: () => {
         // Remove the deleted channel from the group's channels
-        const group = this.groups.find(g => g.id === channel.groupid);
+        const group = this.groups.find(g => g._id === channel.groupId);
         if (group) {
-          group.channels = group.channels.filter(c => c.id !== channelId);
+          group.channels = group.channels.filter(c => c._id !== channelId);
         } else {
-          console.warn('Group not found for channel deletion:', channel.groupid);
+          console.warn('Group not found for channel deletion:', channel.groupId);
         }
       },
       error: (err: any) => {
@@ -182,23 +182,23 @@ export class Groups implements OnInit {
 
   //Add a new channel to a group
   toggleAddChannel(group: Group): void {
-    this.showAdd[group.id] = !this.showAdd[group.id];
+    this.showAdd[group._id] = !this.showAdd[group._id];
   }
 
   confirmAddChannel(group: Group, event: any): void {
     event.preventDefault();
-    const channelName = this.newChannelName[group.id];
+    const channelName = this.newChannelName[group._id];
     if (channelName === '') {
       this.errMsg = 'Channel name is required.';
       return;
     }
-    this.groupService.createChannel(group, channelName).subscribe({
+    this.groupService.createChannel(group._id, channelName).subscribe({
       next: (newChannel: Channel) => {
         if (newChannel) {
           // Add the new channel to the group's channels
           group.channels.push(newChannel);
           // Reset channel name input
-          this.newChannelName[group.id] = '';
+          this.newChannelName[group._id] = '';
         }
       },
       error: (err: any) => {
@@ -215,13 +215,13 @@ export class Groups implements OnInit {
   // Apply to join a group
   applyToJoinGroup(group: Group, event: any): void {
     event.preventDefault();
-    const groupId = group.id;
-    if (this.user?.id === undefined) {
+    const groupId = group._id;
+    if (this.user?._id === undefined) {
       this.errMsg = 'User ID is required to send a notification.';
       return;
     }
 
-    this.notificationService.createNotification(this.user.id, groupId).subscribe({
+    this.notificationService.createNotification(this.user._id, groupId).subscribe({
       next: () => {
         alert('Application sent. Please wait for admin approval.');
         this.applyPending[groupId] = true;

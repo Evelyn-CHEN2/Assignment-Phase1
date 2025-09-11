@@ -38,10 +38,10 @@ export class GroupForm {
     }
     // Only allow super or admin to create groups
     this.user = this.authService.getCurrentUser();
-    if (this.user?.role !== 'admin' && this.user?.role !== 'super') {
-      this.errMsg = 'You do not have permission to create groups!';
-      return;
-    }
+    // if (this.user?.role !== 'admin' && this.user?.role !== 'super') {
+    //   this.errMsg = 'You do not have permission to create groups!';
+    //   return;
+    // }
     const channelNames = this.channelnames.split(/[\r?\n,;]+/)
       .map(cname => cname.trim().replace(/^[,;]+|[,;]+$/g, ''))
       .filter(c => c.length > 0);
@@ -51,6 +51,10 @@ export class GroupForm {
       return;
     }
     // Call the group service to create the group
+    if (!this.user) {
+      this.errMsg = 'User information is missing. Please log in again.';
+      return;
+    }
     this.groupService.createGroup(this.groupname, this.description, channelNames, this.user).subscribe({
       next: () => {
         this.router.navigate(['/dashboard/groups']);

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../interface';
+import { BehaviorSubject, Observable, Subject, switchMap, of } from 'rxjs';
+import { User, Membership } from '../interface';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,22 @@ export class AuthService {
 
   register(username: string, email: string, pwd: string): Observable<User> {
     return this.http.post<User>(this.server + '/api/register', { username: username, email: email, pwd: pwd });
+  }
+
+  private membershipSubject$ = new Subject<void>();
+  membership$: Observable<Membership | null> = this.membershipSubject$.pipe(
+    switchMap(() => {
+      const user = this.currentUserSubject.value;
+      return user ? this.fetchMembership() : of(null);
+    })
+  );
+
+  fetchMembership(): Observable<Membership> {
+    return this.http.get<Membership>(this.server + '/api/fetchmembership')
+  }
+
+  refreshMembership(): void {
+    this.membershipSubject$.next();
   }
      
   setCurrentUser(newuser: User | null, remember = true): void {

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Channel, User } from '../../interface';
+import { Channel, chatMsg, User } from '../../interface';
 import { AuthService } from '../../services/auth.service';
 import { GroupService } from '../../services/group.service';
 import { SlicePipe, UpperCasePipe, DatePipe } from '@angular/common';
@@ -20,10 +20,11 @@ export class Chatwindow implements OnInit, OnDestroy {
   channel: Channel | null = null;
   channelId: string = '';
   currentUser: User | null = null;
-  userById: Record<number, string> = {};
+  userById: Record<string, string> = {};
   userNum: number = 0;
   message: string = '';
   errMsg: string = '';
+  chatMessages: chatMsg[] = []; 
 
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
@@ -50,7 +51,7 @@ export class Chatwindow implements OnInit, OnDestroy {
     // Fetch channel and users for displaying channel and user names on the header
     this.groupService.getChannels().pipe(
       map((channels: Channel[]) => {
-        return channels.find(c => c.id === this.channelId );
+        return channels.find(c => c._id === this.channelId );
       })
     ).subscribe(channel => {
       this.channel = channel ?? null;
@@ -61,7 +62,7 @@ export class Chatwindow implements OnInit, OnDestroy {
       };
       this.userService.getUsers().subscribe((users: User[]) => {
         this.userById = Object.fromEntries(
-          users.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
+          users.map(u => [u._id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         );
         this.errMsg = '';
       })
@@ -73,21 +74,25 @@ export class Chatwindow implements OnInit, OnDestroy {
     this.socketService.initSocket();
     this.socketService.joinChannel(this.channelId, senderName);
     this.socketService.reqUserNum(this.channelId);
-    this.socketService.onMessage((m: any) =>{
-      const message = {
-        sender: m.sender,
-        message: m.message,
-        timestamp: new Date(m.timestamp)
+    this.socketService.onMessage((data: any) =>{
+      const chatMsg = {
+        _id: data._id,
+        sender: data.sender,
+        message: data.message,
+        channelId: this.channelId,
+        timestamp: new Date(data.timestamp)
       };
-      (this.channel as Channel).messages.push(message);
+      this.chatMessages.push(chatMsg);
     })
 
     // Fetch notice and add it as messages 
     this.socketService.onNotices((n: any) => {
       if (!this.channel) return;
-      this.channel.messages.push({
-        sender: 0, // System
+      this.chatMessages.push({
+        _id: 'system-notice', // Default ID for system notices
+        sender: '', // System
         message: n,
+        channelId: this.channelId, // Use the current channel ID
         timestamp: new Date()
       })
     })
@@ -130,7 +135,7 @@ export class Chatwindow implements OnInit, OnDestroy {
     }
     console.log('Sending message:', this.message);
     const newMessage = this.message.trim();
-    const sender = this.currentUser.id;
+    const sender = this.currentUser._id;
     // Emit message via Socket.io
     this.socketService.sendMessage(this.channelId, sender, newMessage);
     this.message = '';

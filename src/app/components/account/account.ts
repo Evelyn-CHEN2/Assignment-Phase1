@@ -40,35 +40,23 @@ export class Account implements OnInit {
       channels: this.groupService.getChannels()
     }).pipe(
       map(({ groups, channels }) => {
-        // Fetch all groups with channels for super
-        const allGroups = groups.map(g => {
-          return {
-            ...g,
-            channels: channels.filter(c => c.groupid === g.id)
-          }
-        });
-        // Filter groups with channels that belong to the user, exclude super
-        const filteredGroups = groups.filter(g => this.user?.groups.includes(g.id)).map(group => {
+        // Filter groups with channels that belong to the user
+        const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id)).map(group => {
           return {
             ...group,
-            channels: channels.filter(c => c.groupid === group.id)
+            channels: channels.filter(c => c.groupId === group._id)
           }
         });
-        return { allGroups, filteredGroups };
+        return { filteredGroups };
       }),
     ).subscribe({
-      next: (result) => {
-        if (!result) {
+      next: (data) => {
+        if (!data) {
           this.errMsg = 'User not found or access denied';
           return;
         }
-        const { allGroups, filteredGroups } = result;
-        console.log('Fetched groups:', allGroups);
-        if(this.user?.role !== 'super') {
-          this.userGroups = filteredGroups;
-        } else {
-          this.userGroups = allGroups;
-        }
+        this.userGroups = data.filteredGroups;
+        console.log('user groups: ', this.userGroups)
         this.errMsg = '';
       },
       error: (err: any) => {
@@ -92,7 +80,7 @@ export class Account implements OnInit {
   // Delete user account, operated by logged user self
   confirmDeleteUser(user: User, event: any): void {
     event.preventDefault();
-    this.userService.deleteUser(user.id).subscribe({
+    this.userService.deleteUser(user._id).subscribe({
       next: () => {
         this.authService.setCurrentUser(null, false); // Clear current user
         this.router.navigate(['/login']);
@@ -116,9 +104,9 @@ export class Account implements OnInit {
   // Leave a group
   confirmLeaveGroup(group: Group, user: User, event: any): void {
     event.preventDefault();
-    this.groupService.deleteGroupFromUser(group.id, user.id).subscribe({
+    this.groupService.leaveGroup(group._id, user._id).subscribe({
       next: () => {
-        this.userGroups = this.userGroups.filter(g => g.id !== group.id);
+        this.userGroups = this.userGroups.filter(g => g._id !== group._id);
       }, 
       error: (err: any) => {
         console.error('Error leaving group:', err);
@@ -134,7 +122,7 @@ export class Account implements OnInit {
   joinChannel(channel: Channel): void {
     this.channel = channel;
     // Navigate to the chat window with the selected channel ID
-    this.router.navigate(['/chatwindow', channel.id])
+    this.router.navigate(['/chatwindow', channel._id])
   }
 }
 

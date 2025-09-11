@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { chatMsg } from '../interface';
 
 // namespace
 const SERVER_URL = 'http://localhost:3000/channelChat';
@@ -23,11 +24,11 @@ export class SocketService {
     this.socket?.emit('leaveChannel', {channelId, senderName}); // emit sends message to server
   } 
 
-  sendMessage(channelId: string, sender: number, message: string): void {
+  sendMessage(channelId: string, sender: string, message: string): void {
     this.socket?.emit('chatMsg', { channelId, sender, message });
   }
 
-  onMessage(handler: (payload: {channelId: string, sender: number, message: string, timestamp: Date}) => void): void {
+  onMessage(handler: (payload: chatMsg) => void): void {
     this.socket?.on('chatMsg', handler); // Handler holds payload sent back from server
   }
 

@@ -5,7 +5,7 @@ import { UserService } from '../../services/user.service';
 import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
 import { Group, User } from '../../interface'
-import { forkJoin, switchMap, map } from 'rxjs';
+import { switchMap, map } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -51,8 +51,8 @@ export class Users {
           map(users => {
             const allUsers = users;
             const adminUsers =  users.filter(u => 
-              u.role !== 'super' && // Filter out super
-              u.groups.some(ug => adminGroups.some(ag => ag.id === ug)) // Filter users who are in groups administered by current user
+            
+              u.groups.some(ug => adminGroups.some(ag => ag._id === ug)) // Filter users who are in groups administered by current user
             );
             return { allUsers, adminUsers, allGroups, adminGroups };
             })

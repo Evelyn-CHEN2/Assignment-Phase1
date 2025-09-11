@@ -33,19 +33,19 @@ export class GroupService {
     return this.http.delete<void>(`${this.server}/api/deletegroup/${id}`);
   }
 
-  deleteGroupFromUser(groupId: string, userId: number): Observable<void> {
-    return this.http.delete<void>(`${this.server}/api/deletegroupfromuser`, { params: { groupId, userId } });
+  leaveGroup(groupId: string, userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.server}/api/leavegroup`, { params: { groupId, userId } });
   }
 
-  createChannel(group: Group, channelName: string): Observable<Channel> {
-    return this.http.post<Channel>(this.server + '/api/createchannel', { group, channelName });
+  createChannel(groupId: string, channelName: string): Observable<Channel> {
+    return this.http.post<Channel>(this.server + '/api/createchannel', { groupId, channelName });
   }
 
   deleteChannel(id: string): Observable<void> {
     return this.http.delete<void>(`${this.server}/api/deletechannel/${id}`);
   }
 
-  addMsgToChannel(channelId: string, userId: number, chatMsg: string): Observable<Channel> {
+  addMsgToChannel(channelId: string, userId: string, chatMsg: string): Observable<Channel> {
     return this.http.post<Channel>(this.server + '/api/addmessage', { channelId, userId, chatMsg });
   }
 }

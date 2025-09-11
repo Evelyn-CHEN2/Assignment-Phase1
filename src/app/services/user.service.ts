@@ -14,31 +14,31 @@ export class UserService {
     return this.http.get<User[]>(this.server + '/api/fetchallusers')
   }
 
-  getUserById(id: number): Observable<User> {
+  getUserById(id: string): Observable<User> {
     return this.http.get<User>(`${this.server}/api/fetchuserbyID/${id}`);
   }
 
-  updateUserRole(newRole: string, userId: number, groupId: string): Observable<UpdatedUserRole> {
+  updateUserRole(newRole: string, userId: string, groupId: string): Observable<UpdatedUserRole> {
     return this.http.put<UpdatedUserRole>(`${this.server}/api/updateuser/${userId}`, { newRole, groupId });
   }
 
-  addGroupToUser(approverId: number, applierId: number, groupId: string, notificationId: string): Observable<void> {
+  addGroupToUser(approverId: string, applierId: string, groupId: string, notificationId: string): Observable<void> {
     return this.http.put<void>(`${this.server}/api/addgrouptouser`, { approverId, applierId, groupId, notificationId });
   }
 
-  deleteUser(id: number): Observable<void> {
+  deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.server}/api/deleteuser/${id}`);
   } 
 
-  removeUserFromGroup(userId: number, groupId: string): Observable<void> {
+  removeUserFromGroup(userId: string, groupId: string): Observable<void> {
     return this.http.delete<void>(`${this.server}/api/removeuserfromgroup$`, { params: { userId, groupId }});
   }
 
-  banUser(id: number): Observable<void> {
+  banUser(id: string): Observable<void> {
     return this.http.put<void>(`${this.server}/api/banuserbyID/${id}`, {});
   }
 
-  unBanUser(id: number): Observable<void> {
+  unBanUser(id: string): Observable<void> {
     return this.http.put<void>(`${this.server}/api/unbanuserbyID/${id}`, {});
   }
 }
