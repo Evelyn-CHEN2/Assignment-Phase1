@@ -3,12 +3,12 @@ const connectDB = require('../mongoDB');
 module.exports = {
     route: async(app) => {
         const db = await connectDB();
-        const userData = db.collection('users');
+        const membershipData = db.collection('membership');
 
-        app.get('/api/fetchallusers', async(req, res) => {
+        app.get('/api/fetchmembership', async(req, res) => {
             try {
-                const users = await userData.find().toArray();
-                res.send(users);
+                const membership = await membershipData.find().toArray();
+                res.send(membership);
             } 
             catch (error) {
                 console.error('Error reading users file: ', error);

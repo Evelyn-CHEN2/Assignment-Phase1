@@ -1,53 +1,24 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const channelsFile = path.join(__dirname, '../data/channels.json');
-        const groupsFile = path.join(__dirname, '../data/groups.json');
+    route: async(app) => {
+        const db = await connectDB();
+        const groupsData = db.collection('groups');
+        const channelsData = db.collection('channels');
 
-        // Function to read channels from file
-        const readChannels = () => {
-            const data = fs.readFileSync(channelsFile, 'utf8');
-            const channels = JSON.parse(data);
-            return Array.isArray(channels) ? channels : [];
-        }
-        // Write channels to file
-        const writeChannels = (channels) => {
-            fs.writeFileSync(channelsFile, JSON.stringify(channels, null, 2), 'utf8');
-        }
-
-        // Function to read groups from file
-        const readGroups = () => {
-            const data = fs.readFileSync(groupsFile, 'utf8');
-            const groups = JSON.parse(data);
-            return Array.isArray(groups) ? groups : [];
-        }
-        // Write groups to file
-        const writeGroups = (groups) => {
-            fs.writeFileSync(groupsFile, JSON.stringify(groups, null, 2), 'utf8');
-        }
-
-        app.delete('/api/deletechannel/:id', (req,res) => {
-            const id = req.params.id;
-            if (!id) {
+        app.delete('/api/deletechannel/:id', async(req,res) => {
+            const channelId = req.params.id;
+            if (!channelId) {
                 return res.status(400).json({ error: 'No channel ID provided to delete' });
             }
 
-            let channels = readChannels();
-            // Delete the channel with the given ID
-            channels = channels.filter(channel => channel.id !== id);
-
-            // Delete corresponding group.channels
-            let groups = readGroups();
-            groups = groups.map(g => {
-                g.channels = g.channels.filter(cId => cId !== id);
-                return g;
-            })
-
+            // Update channels and groups data
             try {
-                writeChannels(channels);
-                writeGroups(groups);
+                await channelsData.deleteOne({ _id: new ObjectId(channelId) });
+                await groupsData.updateOne(
+                    { channels: new ObjectId(channelId) },
+                    { $pull: { channels: new ObjectId(channelId) } }
+                )
                 res.sendStatus(204); // No response expected
             }
             catch (error) {

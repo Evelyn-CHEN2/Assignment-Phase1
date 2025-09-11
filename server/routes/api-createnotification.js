@@ -1,42 +1,24 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const Notification = require('../models/notification-class');
-        const notificationsFile = path.join(__dirname, '../data/notifications.json'); 
+    route: async(app) => {
+        const db = await connectDB();
+        const notificationData = db.collection('notifications');
 
-        // Function to read notifications from file
-        const readNotifications = () => {
-            const data = fs.readFileSync(notificationsFile, 'utf8');
-            if (!data) return [];
-            const notifications = JSON.parse(data);
-            return Array.isArray(notifications) ? notifications : [];
-        };
-
-        // Function to write notifications to file
-        const writeNotifications = (notifications) => {
-            fs.writeFileSync(notificationsFile, JSON.stringify(notifications, null, 2));
-        };
-
-        app.post('/api/createnotification', (req, res) => {
+        app.post('/api/createnotification', async(req, res) => {
             if (!req.body) {
                 return res.status(400).json({ error: 'No data provided' });
             }
-
-            let notifications = readNotifications();
-            // Create a new notification object
-            const newNotification = new Notification(
-                new Date().toISOString(),
-                req.body.userId,
-                req.body.groupId,
-                'pending',  // initial status is pending
-                0 // initial user ID to be 0 before approve
-            );
-
-            notifications.push(newNotification);
+            const { userId, groupId } = req.body;
+            // Create a new notification collection
             try {
-                writeNotifications(notifications);
+                await notificationData.insertOne({
+                    _id: new ObjectId(),
+                    applier: new Object(userId),
+                    groupToApply: new Object(groupId),
+                    status: 'pending',
+                    approvedBy: null
+                });
                 res.sendStatus(204);
             }
             catch (error) {

@@ -30,22 +30,21 @@ require('./routes/api-fetchuserByID.js').route(app);
 require('./routes/api-updateuserrole.js').route(app);
 require('./routes/api-addgrouptouser.js').route(app);
 require('./routes/api-deleteuser.js').route(app);
-require('./routes/api-removeuserfromgroup.js').route(app);
 require('./routes/api-banuserByID.js').route(app);
 require('./routes/api-unbanuserByID.js').route(app);
+require('./routes/api-fetchmembership.js').route(app);
 
 // Routes for groups management
 require('./routes/api-fetchallgroups.js').route(app);
 require('./routes/api-creategroup.js').route(app);
 require('./routes/api-editgroup.js').route(app);
 require('./routes/api-deletegroup.js').route(app);
-require('./routes/api-deletegroupfromuser.js').route(app);
+require('./routes/api-leavegroup.js').route(app);
 
 // Routes for channels management
 require('./routes/api-fetchallchannels.js').route(app);
 require('./routes/api-createchannel.js').route(app);
 require('./routes/api-deletechannel.js').route(app);
-require('./routes/api-addmessage.js').route(app);
 
 // Routes for notifications management
 require('./routes/api-createnotification.js').route(app);

@@ -1,30 +1,21 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const usersFile = path.join(__dirname, '../data/users.json');
+    route: async(app) => {
+        const db = await connectDB();
+        const userData = db.collection('users');
 
-        // Function to read users from file
-        const readUsers = () => {
-            const data = fs.readFileSync(usersFile, 'utf8');
-            const users = JSON.parse(data);
-            return Array.isArray(users) ? users : [];
-        };
-
-        app.get('/api/fetchuserbyID/:id', (req, res) => {
-            if (!req.params.id) {
+        app.get('/api/fetchuserbyID/:id', async(req, res) => {
+            const userId = req.params.id;
+            if (!userId) {
                 return res.status(400).json({ error: 'No user ID provided' });
             }
 
             try {
-                const users = readUsers();
-                const user = users.find(u => u.id === Number(req.params.id)); // req.params.id is a string
-
+                const user = await userData.findOne({ _id: new ObjectId(userId) });
                 if (!user) {
                     return res.status(404).json({ error: 'User not found' });
                 }
-
                 res.send(user);
             } catch (error) {
                 console.error('Error reading users file: ', error);

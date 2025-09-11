@@ -1,101 +1,71 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const groupsFile = path.join(__dirname, '../data/groups.json');
-        const channelsFile = path.join(__dirname, '../data/channels.json');
-        const Group = require('../models/group-class');
-        const Channel = require('../models/channel-class');
+    route: async(app) => {
+        const db = await connectDB();
+        const groupData = db.collection('groups');
+        const channelData = db.collection('channels');
+        const userData = db.collection('users');
+        const membershipData = db.collection('membership');
 
-        // Function to read groups from file
-        const readGroups = () => {
-            const data = fs.readFileSync(groupsFile, 'utf8');
-            const groups = JSON.parse(data);
-            return Array.isArray(groups) ? groups : [];
-        };
-
-        //Function to read channels from file
-        const readChannels = () => {
-            const data = fs.readFileSync(channelsFile, 'utf8');
-            const channels = JSON.parse(data);
-            return Array.isArray(channels) ? channels : [];
-        }
-
-        // Function to write channels to file
-        const writeChannels = (channels) => {
-            fs.writeFileSync(channelsFile, JSON.stringify(channels, null, 2), 'utf8');
-        }
-
-        // Write groups to file
-        const writeGroups = (groups) => {
-            fs.writeFileSync(groupsFile, JSON.stringify(groups, null, 2), 'utf8');
-        };
-
-        // Function to read users from file
-        const readUsers = () => {
-            const usersFile = path.join(__dirname, '../data/users.json');
-            const data = fs.readFileSync(usersFile, 'utf8');
-            const users = JSON.parse(data);
-            return Array.isArray(users) ? users : [];
-        };
-
-        // Write users to file
-        const writeUsers = (users) => {
-            const usersFile = path.join(__dirname, '../data/users.json');
-            fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
-        }
-
-        app.post('/api/creategroup', (req, res) => {
-          
+        app.post('/api/creategroup', async(req, res) => {
                 if (!req.body || !req.body.groupname || !req.body.description || !req.body.channelNames || !req.body.currentUser) {
                     return res.status(400).json({ error: 'Invalid request data' });
                 }
-                let groups = readGroups();
-                const groupname = req.body.groupname;
-                const description = req.body.description;
-                
-                // Check if group already exists
-                const existingGroup = groups.find(g => g.groupname === groupname.trim());
-                if (existingGroup) {
+                const { groupname, description, currentUser } = req.body;
+
+                let groups = await groupData.find().toArray();
+                // Check if group name already exists
+                const existingGroupName = groups.find(g => g.groupname.toLowerCase() === groupname.trim().toLowerCase());
+                if (existingGroupName) {
                     return res.status(400).json({ error: 'Group already exists' });
                 }
 
-                const newGroupid = 'g' + Date.now().toString()
-
                 // Create new channel objects
                 const channelnames = req.body.channelNames;
-                const newchannels = channelnames.map((channelname,idx) => {
-                    return new Channel(
-                        'c' + (Date.now() + idx),
-                        channelname,
-                        newGroupid,
-                        [],
-                    )
+                const newchannels = channelnames.map(channelname => {
+                    return {
+                        _id: new ObjectId(),
+                        channelname: channelname.trim(),
+                        chatMsg: [],
+                        groupId: null 
+                    }
                 })
-                let channels = readChannels();
-                channels = channels.concat(newchannels);
-                writeChannels(channels);
-
-                // Create new group object
-                const newgroup = new Group(
-                    newGroupid,
-                    groupname.trim(),
-                    description.trim(),
-                    newchannels.map(channel => channel.id),
-                    req.body.currentUser.id,
-                    [req.body.currentUser.id] // Add the creator as the first admin
-                )
-                groups.push(newgroup);
-
-                // Add new group to the user who created it
-                let users = readUsers();
-                const creator = users.find(u => u.id === req.body.currentUser.id);
-                creator.groups.push(newGroupid);
+                await channelData.insertMany(newchannels);
 
                 try {
-                    writeGroups(groups);
-                    writeUsers(users);
+                    const newgroup = await groupData.insertOne({
+                        _id: new ObjectId(),
+                        groupname: groupname.trim(),
+                        description: description.trim(),
+                        channels: newchannels.map(c => c._id),
+                        createdBy: new ObjectId(currentUser._id)
+                    });
+                    // Add new groupId to channels
+                    await channelData.updateMany(
+                        { _id: { $in: newchannels.map(c => c._id) }},
+                        {$set: { groupId: newgroup.insertedId } }
+                    );
+                    // Add new groupId to user's groups
+                    await userData.updateOne(
+                        { _id: new ObjectId(currentUser._id) },
+                        { $push: { groups: newgroup.insertedId } }
+                    );
+                    // Update membership collection
+                    await membershipData.find({ admin: new ObjectId(currentUser._id) });
+                    if (membership) {
+                        await membershipData.updateOne(
+                            { admin: new ObjectId(currentUser._id) },
+                            { $push: { groups: newgroup.insertedId } }
+                        );
+                    } else {
+                        await membershipData.insertOne({
+                            _id: new ObjectId(),
+                            role: 'admin',
+                            admin: new ObjectId(currentUser._id),
+                            groups: [newgroup.insertedId]
+                        });
+                    }
                     res.send(newgroup);
                 }
                 catch (error) {

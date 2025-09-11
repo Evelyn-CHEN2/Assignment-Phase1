@@ -1,11 +1,10 @@
 class Group {
-    constructor(id, groupname, description, channels, createdBy, admins) {
-        this.id = id;
+    constructor(_id, groupname, description, channels, createdBy) {
+        this._id = _id;
         this.groupname = groupname;
         this.description = description || '';
         this.channels = channels || [];
-        this.createdBy = createdBy; // Store user id, user name might change
-        this.admins = admins || []; // Store user ids of admins
+        this.createdBy = createdBy; // Store user id
     }
 }
 

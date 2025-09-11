@@ -1,40 +1,20 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const notificationFile = path.join(__dirname, '../data/notifications.json');
+    route: async(app) => {
+        const db = await connectDB();
+        const notificationsData = db.collection('notifications');
 
-        // Function to read notifications from file
-        const readNotifications = () => {
-            const data = fs.readFileSync(notificationFile, 'utf8');
-            const notifications = JSON.parse(data);
-            return Array.isArray(notifications) ? notifications : [];
-        }
-
-        // Write notifications to file
-        const writeNotifications = (notifications) => {
-            fs.writeFileSync(notificationFile, JSON.stringify(notifications, null, 2), 'utf8');
-        }
-
-        app.delete('/api/deletenotification/:id', (req, res) => {
+        app.delete('/api/deletenotification/:id', async(req, res) => {
             if (!req.params) {
                 return res.status(400).json({ error: 'Invalid request data' });
             }
+            const id = req.params.id;
 
-            // Find the notification by ID
-            let notifications = readNotifications();
-            const notificationIndex = notifications.findIndex(n => n.id === req.params.id);
-            if (notificationIndex === -1) {
-                return res.status(404).json({ error: 'Notification not found' });
-            }
-
-            // Remove the notification from the array
-            notifications.splice(notificationIndex, 1);
-
+            // Delete the notification with the specified ID
             try {
-                writeNotifications(notifications);
-                res.sendStatus(204);  // If return 200, the UI didn't get updated immediately!!
+                await notificationsData.deleteOne({ _id: new ObjectId(id) });
+                res.sendStatus(204);
             } catch (error) {
                 return res.status(500).json({ error: 'Failed to delete notification' });
             }

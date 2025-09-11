@@ -1,18 +1,13 @@
-const fs = require('fs')
-const path = require('path')
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const channelsFile = path.join(__dirname, '../data/channels.json');
-        // Function to read channels from file
-        const readChannels = () => {
-            const data = fs.readFileSync(channelsFile, 'utf8');
-            const channels = JSON.parse(data);
-            return Array.isArray(channels) ? channels : [];
-        }
-        app.get('/api/allchannels', (req, res) => {
+    route: async(app) => {
+        const db = await connectDB();
+        const channelData = db.collection('channels');
+
+        app.get('/api/allchannels', async(req, res) => {
             try {
-                const channels = readChannels();
+                const channels = await channelData.find().toArray();
                 res.send(channels);
             } 
             catch (error) {

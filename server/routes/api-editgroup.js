@@ -1,44 +1,27 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) =>  {
-        const groupsFile = path.join(__dirname, '../data/groups.json');
+    route: async(app) =>  {
+        const db = await connectDB();
+        const groupData = db.collection('groups');
 
-        // Function to read groups from file
-        const readGroups = () => {
-            const data = fs.readFileSync(groupsFile, 'utf8');
-            const groups = JSON.parse(data);
-            return Array.isArray(groups) ? groups : [];
-        }
-
-        // Function to write groups to file
-        const writeGroups = (groups) => {
-            fs.writeFileSync(groupsFile, JSON.stringify(groups, null, 2), 'utf8');
-        }
-
-        app.put('/api/editgroup/:groupId', (req, res) => {
-            console.log('Received request to edit group:', req.body);
+        app.put('/api/editgroup/:groupId', async(req, res) => {
             if (!req.body || !req.params)  {
                 return res.status(400).json({ error: 'Invalid request body or parameters.' });
             }
-
             const groupId = req.params.groupId;
             const newGroupName = req.body.newGroupName; 
-            console.log('Editing group ID:', groupId, 'with new name:', newGroupName); 
-
-            // Find the group by ID
-            let groups = readGroups();
-            const groupIndex = groups.findIndex(g => g.id === groupId);
-            if (groupIndex === -1) {
-                return res.status(404).json({ error: 'Group not found.' });
+            // Check if new group name exists
+            const existingGroup = await groupData.findOne({ groupname: newGroupName });
+            if (existingGroup) {
+                return res.status(400).json({ error: 'Group name already exists.' });
             }
-            
-            // Update the group name
-            groups[groupIndex].groupname = newGroupName;
-
+            // Update the group with the specified ID
             try {
-                writeGroups(groups);
+                await groupData.findOneAndUpdate(
+                    { _id: new ObjectId(groupId) },
+                    { $set: { groupname: newGroupName } }
+                );
                 res.sendStatus(204);
             }
             catch (error) {

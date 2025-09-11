@@ -1,20 +1,13 @@
-const fs = require('fs')
-const path = require('path')
+const connectDB = require('../mongoDB')
 
 module.exports = {
-    route: (app) => {
-        const groupsFile = path.join(__dirname, '../data/groups.json');
-        
-        //Function to read groups from file
-        const readGroups = () => {
-            const data = fs.readFileSync(groupsFile, 'utf8');
-            const groups = JSON.parse(data);
-            return Array.isArray(groups) ? groups : [];
-        }
+    route: async(app) => {
+        const db = await connectDB();
+        const groupData = db.collection('groups');
 
-        app.get('/api/allgroups', (req, res) => {
+        app.get('/api/allgroups', async(req, res) => {
             try {
-                const groups = readGroups();
+                const groups = await groupData.find().toArray();
                 res.send(groups)
             } 
             catch (error) {

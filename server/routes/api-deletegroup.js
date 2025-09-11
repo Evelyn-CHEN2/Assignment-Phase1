@@ -1,11 +1,12 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const groupsFile = path.join(__dirname, '../data/groups.json');
-        const channelsFile = path.join(__dirname, '../data/channels.json');
-
+    route: async(app) => {
+        const db = await connectDB();
+        const groupData = db.collection('groups');
+        const channelData = db.collection('channels');
+        const userData = db.collection('users');
+        const membershipData = db.collection('membership');
         // Function to read groups from file
         const readGroups = () => {
             const data = fs.readFileSync(groupsFile, 'utf8');
@@ -13,68 +14,26 @@ module.exports = {
             return Array.isArray(groups) ? groups : [];
         };
 
-        // Function to write groups to file
-        const writeGroups = (groups) => {
-            fs.writeFileSync(groupsFile, JSON.stringify(groups, null, 2), 'utf8');
-        }
-
-        // Function to read channels from file
-        const readChannels = () => {
-            const data = fs.readFileSync(channelsFile, 'utf8');
-            const channels = JSON.parse(data);
-            return Array.isArray(channels) ? channels : [];
-        }
-
-        // Function to write channels to file
-        const writeChannels = (channels) => {
-            fs.writeFileSync(channelsFile, JSON.stringify(channels, null, 2), 'utf8');
-        }
-
-        // Function to read users from file
-        const readUsers = () => {
-            const usersFile = path.join(__dirname, '../data/users.json');
-            const data = fs.readFileSync(usersFile, 'utf8');
-            const users = JSON.parse(data);
-            return Array.isArray(users) ? users : [];
-        };
-
-        // Function to write users to file
-        const writeUsers = (users) => {
-            const usersFile = path.join(__dirname, '../data/users.json');
-            fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
-        }
-
-        app.delete('/api/deletegroup/:id', (req, res) => {
-            if (!req.params.id) {
+        app.delete('/api/deletegroup/:id', async(req, res) => {
+            const groupId = req.params.id;
+            if (!groupId) {
                 return res.status(400).json({ error: 'No group ID provided' });
             }
 
-            let groups = readGroups();
-            
-            // Check if the group exists
-            const groupIndex = groups.findIndex(group => group.id === req.params.id);
-            if (groupIndex === -1) {
-                return res.status(404).json({ error: 'Group not found' });
-            }
-
-            // Remove the group from the array
-            groups.splice(groupIndex, 1);
-
-            // Remove channels associated with the group
-            let channels = readChannels();
-            channels = channels.filter(c => c.groupid != req.params.id);
-            writeChannels(channels);
-
-            // Remove the group from all users' groups array
-            let users = readUsers();
-            users.map(user => {
-                user.groups = user.groups.filter(gid => gid !== req.params.id);
-            });
-
+            // Remove the group with the specified ID, 
+            // and also remove associated channels
+            // and remove groups from related users and memberships
             try {
-                writeGroups(groups);
-                writeUsers(users);
-                // Send a 204 No Content response, not ideal to do res.send(groups) since deleteGroup is not expecting a response
+                await groupData.deleteOne({ _id: new ObjectId(groupId) });
+                await channelData.deleteMany({ groupId: new ObjectId(groupId) });
+                await userData.updateMany(
+                    { groups: new ObjectId(groupId) },
+                    { $pull: { groups: new ObjectId(groupId) }}
+                );
+                await membershipData.updateMany(
+                    { groups: new ObjectId(groupId) },
+                    { $pull: { groups: new ObjectId(groupId) }}
+                );
                 res.sendStatus(204)
             } catch (error) {
                 console.error('Error writing groups file:', error);

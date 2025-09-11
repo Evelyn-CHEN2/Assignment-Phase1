@@ -1,20 +1,12 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const notificationsFile = path.join(__dirname, '../data/notifications.json');
+    route: async(app) => {
+        const db = await connectDB();
+        const notificationsData = db.collection('notifications');
 
-        // Function to read notifications from file
-        const readNotifications = () => {
-            const data = fs.readFileSync(notificationsFile, 'utf8');
-            if (!data) return [];
-            const notifications = JSON.parse(data);
-            return Array.isArray(notifications) ? notifications : [];
-        }
-
-        app.get('/api/fetchnotifications', (req, res) => {
-            const notifications = readNotifications();
+        app.get('/api/fetchnotifications', async(req, res) => {
+            const notifications = await notificationsData.find().toArray();
             res.send(notifications);
         })
     }

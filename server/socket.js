@@ -1,6 +1,16 @@
+const connectDB = require('./mongoDB');
+
 module.exports = {
-    connect: (io) => {
+    connect: async(io) => {
         const channelChat = io.of('/channelChat');
+
+        // Fetch collection
+        const db = await connectDB()
+        const chatMsgs = db.collection('chatMsgs');
+        await chatMsgs.createIndex({
+            channelId: 1,
+            timestamp: 1
+        })
 
         channelChat.on('connection', (socket) => {
             console.log('[socket] connected: ', socket.id);
@@ -28,8 +38,25 @@ module.exports = {
             });
       
             // Broadcast message to specific channel room
-            socket.on('chatMsg', ({channelId, sender, message}) => {
-                channelChat.to(channelId).emit('chatMsg', {channelId, sender, message, timestamp: Date.now()});
+            socket.on('chatMsg', async({channelId, sender, message}) => {
+                try {
+                    const chatMsg = {
+                        channelId: new ObjectId(channelId),
+                        sender: new ObjectId(sender),
+                        message: String(message),
+                        timestamp: new Date()
+                    }
+                    const { insertedId } = await chatMsgs.insertOne(chatMsg)
+                    channelChat.to(channelId).emit('chatMsg', {
+                        _id: insertedId.toString(),
+                        channelId, 
+                        sender, 
+                        message, 
+                        timestamp: Date.now()
+                    });
+                } catch (err) {
+                    console.error('chatMsg insert failed:', err);
+                }
             })
 
             // Event to count users in a channel room

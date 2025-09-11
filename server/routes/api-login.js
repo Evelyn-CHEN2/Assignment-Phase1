@@ -1,54 +1,45 @@
-const fs = require('fs');
-const path = require('path');
+const connectDB = require('../mongoDB');
 
 module.exports = {
-    route: (app) => {
-        const User = require('../models/user-class');
-        const usersFile = path.join(__dirname, '../data/users.json'); 
+    route: async(app) => {
+        const db = await connectDB();
+        const usersData = db.collection('users');
 
-        // Function to read users from file
-        const readUsers = () => {
-            const data = fs.readFileSync(usersFile, 'utf8');
-            const users = JSON.parse(data);
-            return Array.isArray(users) ? users : [];
-        };
-
-        app.post('/api/login', (req, res) => {
+        app.post('/api/login', async(req, res) => {
+        
+            if (!req.body) {
+                return res.status(400).json({ error: 'No data provided' });
+            }
+            const { username, pwd } = req.body;
+            
             try {
-                if (!req.body) {
-                    return res.status(400).json({ error: 'No data provided' });
-                }
-                let users = readUsers();
-                let loggedUser = null;
-                for (const u of users) {  
-                    if (u.username === req.body.username && u.pwd === req.body.pwd) {
-                        loggedUser = u;
-                        break;
-                    }
-                }
-    
+                const loggedUser = await usersData.findOne({ username: username, pwd: pwd });
                 if (!loggedUser) {
                     return res.status(401).json({ error: 'Invalid username or password' });
                 }
-
                 valid = loggedUser.valid;
-    
-                const safeUser = new User(
-                    loggedUser.id,
-                    loggedUser.username,
-                    loggedUser.email,
-                    '',
-                    loggedUser.role,
-                    loggedUser.groups ,
-                    valid
-                )
+                const safeUser = {
+                    _id: loggedUser._id,  // loggedUser._id is an ObjectId
+                    username: loggedUser.username,
+                    email: loggedUser.email,
+                    groups: loggedUser.groups,
+                    valid: loggedUser.valid,
+                    avatar: loggedUser.avatar
+                };
                 res.send(safeUser)
+                // !!!try sendStatus(200), the frontend is not using safeUser??????
             }
             catch (error) {
-                console.error('Error reading login user file:', error);
-                res.status(500).json({ error: 'Failed to login user' });
+                console.error('Error reading users file: ', error);
+                res.status(500).json({ error: 'Failed to retrieve user.' });
             }
+
             
+
+            
+        
+        
+        
         })
     }
 }
