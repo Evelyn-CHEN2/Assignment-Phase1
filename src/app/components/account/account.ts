@@ -41,11 +41,14 @@ export class Account implements OnInit {
       channels: this.groupService.getChannels()
     }).pipe(
       map(({ groups, channels }) => {
+        console.log('All groups and channels fetched:', groups, channels);
+
         // Filter groups with channels that belong to the user
         const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id));
         const filteredChannels = channels.filter(c => filteredGroups.some(g => g._id === c.groupId));
+        console.log('Filtered groups and channels:', filteredGroups, filteredChannels);
         return { filteredGroups, filteredChannels };
-      }),
+      })
     ).subscribe({
       next: (data) => {
         if (!data) {
@@ -54,6 +57,7 @@ export class Account implements OnInit {
         }
         this.userGroups = data.filteredGroups;
         this.groupChannels = data.filteredChannels;
+        console.log('User groups and channels fetched:', this.userGroups, this.groupChannels);
         this.errMsg = '';
       },
       error: (err: any) => {

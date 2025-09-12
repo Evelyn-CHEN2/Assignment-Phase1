@@ -16,7 +16,7 @@ export class Dashboard implements OnInit {
   private authService = inject(AuthService);
 
   ngOnInit(): void {
-    this.authService.refreshMembership();
+ 
     const currentUser = this.authService.getCurrentUser();
     this.authService.fetchMembership(currentUser?._id || '').subscribe(m => 
       this.userRole = m.role || 'chatuser')

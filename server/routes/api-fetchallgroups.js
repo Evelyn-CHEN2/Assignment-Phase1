@@ -8,7 +8,7 @@ module.exports = {
         app.get('/api/allgroups', async(req, res) => {
             try {
                 const groups = await groupData.find().toArray();
-                res.send(groups)
+                res.send(groups);
             } 
             catch (error) {
                 console.error('Error reading groups file: ', error);

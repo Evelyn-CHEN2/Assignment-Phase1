@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
-export class Header {
+export class Header implements OnInit {
   username: string = '';
   remember: boolean = false;
 
@@ -20,9 +20,14 @@ export class Header {
   private router = inject(Router);
 
   user$ = this.authService.currentUser$;
+
   userRole$ = this.authService.membership$.pipe( 
     map(m => m?.role ? m.role : 'chatuser'));
 
+  ngOnInit(): void {
+    this.user$.subscribe(u => console.log('user value:', u));
+    this.userRole$.subscribe(r => console.log('role value:', r));
+  }
   logout(event: any): void {
     event.preventDefault();
     this.authService.logout();

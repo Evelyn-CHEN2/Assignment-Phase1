@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, switchMap, of } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap, of } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { User, Membership } from '../interface';
 
 @Injectable({
@@ -22,21 +23,15 @@ export class AuthService {
     return this.http.post<User>(this.server + '/api/register', { username: username, email: email, pwd: pwd });
   }
 
-  private membershipSubject = new Subject<void>();
-  membership$: Observable<Membership | null> = this.membershipSubject.pipe(
-    switchMap(() => {
-      const user = this.currentUserSubject.value;
-      return user ? this.fetchMembership(user._id) : of(null);
-    })
-  );
-
   fetchMembership(userId: string): Observable<Membership> {
     return this.http.get<Membership>(this.server + '/api/fetchmembership', { params: { userId } });
   }
 
-  refreshMembership(): void {
-    this.membershipSubject.next(); 
-  }
+  membership$: Observable<Membership | null> = this.currentUser$.pipe(
+    switchMap(user => 
+      user ? this.fetchMembership(user._id) : of(null)
+    )
+  )
      
   setCurrentUser(newuser: User | null, remember = true): void {
     const key = 'currentUser';
