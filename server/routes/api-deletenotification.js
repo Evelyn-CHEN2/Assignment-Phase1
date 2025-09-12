@@ -1,4 +1,5 @@
 const connectDB = require('../mongoDB');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app) => {
@@ -9,7 +10,7 @@ module.exports = {
             if (!req.params) {
                 return res.status(400).json({ error: 'Invalid request data' });
             }
-            const id = req.params.id;
+            const id = String(req.params.id);
 
             // Delete the notification with the specified ID
             try {

@@ -1,4 +1,5 @@
 const connectDB = require('../mongoDB');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app) => {
@@ -9,15 +10,18 @@ module.exports = {
             if (!req.body) {
                 return res.status(400).json({ error: 'No data provided' });
             }
-            const { userId, groupId } = req.body;
+            const userId = String(req.body.userId);
+            const groupId = String(req.body.groupId);
+            
             // Create a new notification collection
             try {
                 await notificationData.insertOne({
                     _id: new ObjectId(),
-                    applier: new Object(userId),
-                    groupToApply: new Object(groupId),
+                    applier: new ObjectId(userId),
+                    groupToApply: new ObjectId(groupId),
                     status: 'pending',
-                    approvedBy: null
+                    approvedBy: null,
+                    timestamp: new Date()   
                 });
                 res.sendStatus(204);
             }
@@ -25,8 +29,6 @@ module.exports = {
                 console.error('Error creating notifications:', error);
                 res.status(500).json({ error: 'Failed to save notification' });
             }
-        })
-
-        
+        })  
     }
 }

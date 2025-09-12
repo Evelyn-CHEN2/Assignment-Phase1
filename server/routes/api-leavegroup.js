@@ -1,4 +1,5 @@
 const connectDB = require('../mongoDB');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app) => {
@@ -9,10 +10,11 @@ module.exports = {
             if (!req.query|| !req.query.groupId || !req.query.userId) {
                 return res.status(400).json({ error: 'Invalid request data' });
             }
-            const { groupId, userId } = req.query;
+            const userId = String(req.query.userId);
+            const groupId = String(req.query.groupId);
             // Find the user by ID
             let users = await userData.find().toArray();
-            const user = users.find(u => u.id === Number(req.query.userId));
+            const user = users.find(u => String(u._id) === userId);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
@@ -20,7 +22,7 @@ module.exports = {
             try {
                 await userData.findOneAndUpdate(
                     { _id: new ObjectId(userId) },
-                    { $pull: { groups: groupId } }
+                    { $pull: { groups: new ObjectId(groupId) } }
                 );
                 res.sendStatus(204);
             } catch (error) {
