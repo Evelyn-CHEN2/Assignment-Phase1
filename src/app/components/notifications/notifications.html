@@ -2,7 +2,7 @@
   @if (errMsg) {
     <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
   }
-  @for (notification of notifications; track notification.id) {
+  @for (notification of notifications; track notification._id) {
     <li class="notif-card card shadow-sm mb-3">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start gap-3">
@@ -20,7 +20,7 @@
             <div class="notif-meta text-secondary">
               <span class="meta">
                 <i class="bi bi-clock me-1"></i>
-                Applied at: {{ notification.id | date: 'short' :'Australia/Brisbane' }}
+                Applied at: {{ notification._id | date: 'short' :'Australia/Brisbane' }}
               </span>
               <span class="dot mx-2">•</span>
               <span class="meta">
@@ -118,7 +118,7 @@
 <hr>
 
 <!-- Display banned users -->
-@if (loggedUser?.role === 'super') {
+@if (userRole === 'super') {
   <div class="banned-list card p-3">
     <div class="d-flex align-items-center mb-2">
       <i class="bi bi-person-fill-lock me-2 text-danger"></i>
@@ -130,7 +130,7 @@
 
     @if (bannedUsers.length) {
       <ul class="list-unstyled mb-0">
-        @for (bannedUser of bannedUsers; track bannedUser.id) {
+        @for (bannedUser of bannedUsers; track bannedUser._id) {
           <li class="banned-item d-flex align-items-center gap-3 p-2 mb-2 border rounded-3">
             <div class="avatar bg-danger-subtle text-danger fw-semibold">
               {{ bannedUser.username | slice:0:1 | uppercase }}

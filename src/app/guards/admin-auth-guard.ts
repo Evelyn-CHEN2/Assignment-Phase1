@@ -1,16 +1,17 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { Membership } from '../interface';
+import { map } from 'rxjs/operators';
 
-export const adminAuthGuard: CanActivateFn = (route, state) => {
+export const adminAuthGuard: CanActivateFn = async (route, state) => {
   const auth = inject(AuthService);
   const router = inject(Router);
-  const me = auth.getCurrentUser();
+  const loggedUser = auth.getCurrentUser();
 
-  const targetUserId = route.paramMap.get('id');
-  if (targetUserId && targetUserId === String(me?.id)) return true;
-
-  const isAdmin = me?.role === 'admin' || me?.role === 'super';
+  const isAdmin = auth.fetchMembership(loggedUser?._id || '').pipe(
+    map ( (m: Membership | null) => m?.role === 'super' || m?.role === 'admin')
+  )
   if (isAdmin) {
     return true;
   }

@@ -9,10 +9,10 @@ module.exports = {
         const membershipData = db.collection('membership');
 
         app.post('/api/creategroup', async(req, res) => {
-                if (!req.body || !req.body.groupname || !req.body.description || !req.body.channelNames || !req.body.currentUser) {
+                if (!req.body || !req.body.groupname || !req.body.description || !req.body.channelNames || !req.body.userId) {
                     return res.status(400).json({ error: 'Invalid request data' });
                 }
-                const { groupname, description, currentUser } = req.body;
+                const { groupname, description, userId } = req.body;
 
                 let groups = await groupData.find().toArray();
                 // Check if group name already exists
@@ -48,21 +48,21 @@ module.exports = {
                     );
                     // Add new groupId to user's groups
                     await userData.updateOne(
-                        { _id: new ObjectId(currentUser._id) },
+                        { _id: new ObjectId(userId) },
                         { $push: { groups: newgroup.insertedId } }
                     );
                     // Update membership collection
-                    await membershipData.find({ admin: new ObjectId(currentUser._id) });
+                    await membershipData.find({ admin: new ObjectId(userId) });
                     if (membership) {
                         await membershipData.updateOne(
-                            { admin: new ObjectId(currentUser._id) },
+                            { admin: new ObjectId(userId) },
                             { $push: { groups: newgroup.insertedId } }
                         );
                     } else {
                         await membershipData.insertOne({
                             _id: new ObjectId(),
                             role: 'admin',
-                            admin: new ObjectId(currentUser._id),
+                            admin: new ObjectId(userId),
                             groups: [newgroup.insertedId]
                         });
                     }

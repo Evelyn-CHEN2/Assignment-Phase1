@@ -5,7 +5,7 @@ import { UserService } from '../../services/user.service';
 import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
 import { Group, User } from '../../interface'
-import { switchMap, map } from 'rxjs';
+import { forkJoin, switchMap, map } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -17,12 +17,15 @@ import { switchMap, map } from 'rxjs';
 export class Users {
   users: User[] = [];
   loggedUser: User | null = null;
-  userGroupsByUser: Record<number, Group[]> = {}; 
-  roleByGroupByUser: Record<number, Record<string, string>> = {};
-  showUserGroups: Record<number, boolean> = {};
+  // userGroupsByUser: Record<number, Group[]> = {}; 
+  userGroups: Group[] = [];
+  // roleByGroupByUser: Record<number, Record<string, string>> = {};
+  roleByGroup: Record<string, string> = {};
+  showUserGroups: Record<string, boolean> = {};
   showUpdateRole: Record<string,boolean> = {}; 
-  showDelete: Record<number, boolean> = {};
-  newRole: Record<number,string> = {};
+  showDelete: Record<string, boolean> = {};
+  newRole: Record<string,string> = {};
+  userRole: string = '';
   selectedUser: User | null = null; 
   selectedGroup: Group | null = null;
   errMsg: string = '';
@@ -37,71 +40,56 @@ export class Users {
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
     this.loggedUser = currentUser;
-     this.groupService.getGroups().pipe(
-      map(groups => {
-        // Fetch groups that the current user administers
-        const adminGroups = currentUser ? groups.filter(g => g.admins?.includes(currentUser.id)) : [];
-        // Fetch all groups if current user is super
+    forkJoin({
+      groups: this.groupService.getGroups(),
+      membership: this.authService.fetchMembership(currentUser?._id || '')
+    }).pipe(
+      map(({ groups, membership }) => {
+        // Fetch groups that current user administers
+        const adminGroups = currentUser ? groups.filter(g => membership?.groups.includes(g._id)) : [];
+        // Fetch all groups for super
         const allGroups = groups;
-        return { adminGroups, allGroups };
+        return { adminGroups, allGroups, membership };
 
       }),
-      switchMap(({ adminGroups, allGroups }) => {
+      switchMap(({ adminGroups, allGroups, membership }) => {
         return this.userService.getUsers().pipe(
           map(users => {
             const allUsers = users;
-            const adminUsers =  users.filter(u => 
-            
+            const adminUsers = users.filter(u => 
               u.groups.some(ug => adminGroups.some(ag => ag._id === ug)) // Filter users who are in groups administered by current user
             );
-            return { allUsers, adminUsers, allGroups, adminGroups };
+            return { allUsers, adminUsers, allGroups, adminGroups, membership };
             })
           )
       }
       )
-    ).subscribe(({ allUsers, adminUsers, allGroups, adminGroups }) => {
-      if (currentUser?.role === 'super') {
-        this.users = allUsers.filter(u => u.id !== currentUser.id)
-        this.userGroupsByUser = Object.fromEntries(
-          this.users.map(u => {
-            const groups = allGroups.filter(g => u.groups.includes(g.id));
-            return [u.id, groups];
-          })
-        )
-        // Fetch user role for each user in each group
-        this.roleByGroupByUser = Object.fromEntries(
-          Object.entries(this.userGroupsByUser).map(([userId, groups]) => {
-            const userRoleByGroups = Object.fromEntries(
-              groups.map(g => {
-                const userRole = g.admins.includes(Number(userId)) ? 'admin' : 'chatuser';
-                return [g.id, userRole];
-              })
-            );
-            return [Number(userId), userRoleByGroups];
-          })
-        );
-      } else if (currentUser?.role === 'admin') {
-        this.users = adminUsers.filter(u => u.id !== currentUser.id); // Exclude admin self
-        this.userGroupsByUser = Object.fromEntries(
-          this.users.map(u => {
-            const groups = adminGroups.filter(g => u.groups.includes(g.id));
-            return [u.id, groups];
-          })
-        );
-        // Fetch user role for each user in each group
-        this.roleByGroupByUser = Object.fromEntries(
-          Object.entries(this.userGroupsByUser).map(([userId, groups]) => {
-            const userRoleByGroups = Object.fromEntries(
-              groups.map(g => {
-                const userRole = g.admins.includes(Number(userId)) ? 'admin' : 'chatuser';
-                return [g.id, userRole];
-              })
-            );
-            return [Number(userId), userRoleByGroups];
-          })
-        );
+    ).subscribe(({ allUsers, adminUsers, allGroups, adminGroups, membership }) => {
+      if (membership?.role === 'super') {
+        this.users = allUsers.filter(u => u._id !== this.loggedUser?._id); // Exclude super self
+        // this.userGroupsByUser = Object.fromEntries(
+        //   this.users.map(u => { 
+        //     const groups = allGroups.filter(g => u.groups.includes(g._id));
+        //     return [u._id, groups];
+        //   })
+        // )
+        this.userGroups = allGroups.filter(g => {
+          this.users.some(u => u.groups.includes(g._id));
+        });
+      } else if (membership?.role === 'admin') {
+        this.users = adminUsers.filter(u => u._id !== this.loggedUser?._id); // Exclude admin self
+        this.userGroups = adminGroups.filter(g => {
+          this.users.some(u => u.groups.includes(g._id));
+        });
       }
-
+       // Fetch user role for each user in each group
+      this.roleByGroup = Object.fromEntries(
+        this.userGroups.map(ug => {
+          const userRole = membership.groups.includes(ug._id) ? 'admin' : 'chatuser';
+          return [ug._id, userRole];
+        })
+      );
+      this.userRole = membership?.role || 'chatuser';
       this.errMsg = '';
     })
   }
@@ -117,7 +105,7 @@ export class Users {
 
   // Tggle user groups display
   toggleUserGroups(user : User): void {
-    this.showUserGroups[user.id] = !this.showUserGroups[user.id];
+    this.showUserGroups[user._id] = !this.showUserGroups[user._id];
   }
 
   // Toggle ban confirmation modal
@@ -129,7 +117,7 @@ export class Users {
   // Ban user and report to super
   confirmBan(user: User, event: any): void {
     event.preventDefault();
-    this.userService.banUser(user.id).subscribe({
+    this.userService.banUser(user._id).subscribe({
       next: () => {
         user.valid = false;
       },
@@ -153,10 +141,10 @@ export class Users {
   // Remove user form the group
   confirmRemove(user: User, group: Group, event: any): void {
     event.preventDefault();
-    this.userService.removeUserFromGroup(user.id, group.id).subscribe({
+    this.userService.removeUserFromGroup(user._id, group._id).subscribe({
       next: () => {
         // Update user groups after removing the user from the group
-        this.userGroupsByUser[user.id] = this.userGroupsByUser[user.id].filter(g => g.id !== group.id);
+        this.userGroups = this.userGroups.filter(g => g._id !== group._id);
       },
       error: (err: any) => {
         console.error('Error removing user:', err);
@@ -170,7 +158,7 @@ export class Users {
 
    // Update user role
    toggleUpdateRole(group: Group): void {
-    this.showUpdateRole[group.id] = !this.showUpdateRole[group.id];
+    this.showUpdateRole[group._id] = !this.showUpdateRole[group._id];
   }
 
   // Toggle update confirmation modal
@@ -187,11 +175,11 @@ export class Users {
       console.error('User or Group is not defined');
       return;
     }
-    const newRole = this.newRole[user.id];
-    this.userService.updateUserRole(newRole, user.id, group.id).subscribe({
+    const newRole = this.newRole[user._id];
+    this.userService.updateUserRole(newRole, user._id, group._id).subscribe({
       next: () => {
-        // Update the UI display 
-        this.roleByGroupByUser[user.id][group.id] = newRole;
+        // Update the UI 
+        this.roleByGroup[group._id] = newRole;
       },
       error: (err: any) => {
         console.error('Error updating user role:', err);

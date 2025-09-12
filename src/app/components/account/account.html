@@ -28,7 +28,7 @@
         <li class="group-item">
           <span class="group-chip">{{ group.groupname }}</span>
           <div class="channel-chips">
-            @for (channel of group.channels; track channel._id) {
+            @for (channel of groupChannels; track channel._id) {
               <button 
                 class="chip chip--btn" type="button" 
                 (click)="joinChannel(channel)">

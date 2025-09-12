@@ -11,6 +11,9 @@ import { AuthService } from '../../services/auth.service';
 import { NgClass } from '@angular/common';
 import { SlicePipe } from '@angular/common';
 
+// Reformatted groups with channels, not channel IDs
+type GroupReformatted = Omit<Group, 'channels'> & { channels: Channel[] }; 
+
 @Component({
   selector: 'app-groups',
   standalone: true,
@@ -19,9 +22,9 @@ import { SlicePipe } from '@angular/common';
   styleUrl: './groups.css'
 })
 export class Groups implements OnInit {
-  groups: Group[] = [];
-  adminGroups: Group[] = [];
-  formattedGroups: Group[] = [];  
+  groups: GroupReformatted[] = [];  
+  adminGroups: GroupReformatted[] = [];
+  formattedGroups: GroupReformatted[] = []; 
   userById: Record<string, string> = {};
   user: User | null = null;
   adminGroupsActive: boolean = false;
@@ -29,7 +32,7 @@ export class Groups implements OnInit {
   showEdit: Record<string, boolean> = {};
   newGroupName: Record<string, string> = {};
   newChannelName: Record<string, string> = {};
-  selectedGroup: Group | null = null;
+  selectedGroup: GroupReformatted | null = null;
   selectedChannel: Channel | null = null;
   errMsg: string = '';
   applyPending: Record<string, boolean> = {};
@@ -48,9 +51,10 @@ export class Groups implements OnInit {
     forkJoin({
       groups: this.groupService.getGroups(),
       allchannels: this.groupService.getChannels(),
-      allusers: this.userService.getUsers()
+      allusers: this.userService.getUsers(),
+      membership: this.authService.fetchMembership(currentUser?._id || ''),
     }).pipe(
-      map(({ groups, allchannels, allusers }) => {
+      map(({ groups, allchannels, allusers, membership }) => {
         // Refresh user data (so user?.groups.includes(group.id) can work after user joins a new group)
         const freshUser = allusers.find(u => u._id === currentUser?._id) ?? currentUser;
         this.user = freshUser;
@@ -61,12 +65,12 @@ export class Groups implements OnInit {
         const formattedGroups = groups.map(g => {
           return {
             ...g,
-            channels: allchannels.filter(c => c.groupId === g._id),
+            channels: allchannels.filter(c => c.groupId === g._id)
           }
         });
         // Groups administered by current user
-        const adminGroups = freshUser ? formattedGroups.filter(g => g._id.includes(freshUser._id)) : [];
-        return { userById, formattedGroups, adminGroups };
+        const adminGroups = freshUser ? formattedGroups.filter(g => membership.groups.includes(g._id)) : [];
+        return { userById, formattedGroups, adminGroups };
       }),
     ).subscribe(({ userById, formattedGroups, adminGroups }) => {
       this.userById = userById;
@@ -98,12 +102,12 @@ export class Groups implements OnInit {
   }
 
   // Toggle edit group form
-  toggleEditGroup(group: Group): void {
+  toggleEditGroup(group: GroupReformatted): void {
     this.showEdit[group._id] = !this.showEdit[group._id];
   }
 
   // Edit a group
-  editGroup(group: Group, event: any): void {
+  editGroup(group: GroupReformatted, event: any): void {
     event.preventDefault();
     this.errMsg = '';
     const groupId = group._id;
@@ -125,13 +129,13 @@ export class Groups implements OnInit {
   }
 
   // Toggle delete confirmation modal
-  openDeleteGroupModal(group: Group): void {
+  openDeleteGroupModal(group: GroupReformatted): void {
     this.selectedGroup = group;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteGroupModal')!).show();
   }
 
   // Delete a group
-  deleteGroup(group: Group, event: any): void {
+  deleteGroup(group: GroupReformatted, event: any): void {
     event.preventDefault();
     const groupId = group._id;
     this.groupService.deleteGroup(groupId).subscribe({
@@ -181,11 +185,11 @@ export class Groups implements OnInit {
   }
 
   //Add a new channel to a group
-  toggleAddChannel(group: Group): void {
+  toggleAddChannel(group: GroupReformatted): void {
     this.showAdd[group._id] = !this.showAdd[group._id];
   }
 
-  confirmAddChannel(group: Group, event: any): void {
+  confirmAddChannel(group: GroupReformatted, event: any): void {
     event.preventDefault();
     const channelName = this.newChannelName[group._id];
     if (channelName === '') {
@@ -213,7 +217,7 @@ export class Groups implements OnInit {
 
   // <-- Actions for chatusers -->
   // Apply to join a group
-  applyToJoinGroup(group: Group, event: any): void {
+  applyToJoinGroup(group: GroupReformatted, event: any): void {
     event.preventDefault();
     const groupId = group._id;
     if (this.user?._id === undefined) {

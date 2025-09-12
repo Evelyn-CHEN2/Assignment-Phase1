@@ -20,6 +20,7 @@ export class Account implements OnInit {
   user: User | null = null;
   viewer: User | null = null;
   userGroups: Group[] = [];
+  groupChannels: Channel[] = [];
   channel: Channel | null = null;
   selectedGroup: Group | null = null;
   newRole: Record<string, string> = {}; // For selecting new role in each group
@@ -41,13 +42,9 @@ export class Account implements OnInit {
     }).pipe(
       map(({ groups, channels }) => {
         // Filter groups with channels that belong to the user
-        const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id)).map(group => {
-          return {
-            ...group,
-            channels: channels.filter(c => c.groupId === group._id)
-          }
-        });
-        return { filteredGroups };
+        const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id));
+        const filteredChannels = channels.filter(c => filteredGroups.some(g => g._id === c.groupId));
+        return { filteredGroups, filteredChannels };
       }),
     ).subscribe({
       next: (data) => {
@@ -56,7 +53,7 @@ export class Account implements OnInit {
           return;
         }
         this.userGroups = data.filteredGroups;
-        console.log('user groups: ', this.userGroups)
+        this.groupChannels = data.filteredChannels;
         this.errMsg = '';
       },
       error: (err: any) => {

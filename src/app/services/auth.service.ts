@@ -22,20 +22,20 @@ export class AuthService {
     return this.http.post<User>(this.server + '/api/register', { username: username, email: email, pwd: pwd });
   }
 
-  private membershipSubject$ = new Subject<void>();
-  membership$: Observable<Membership | null> = this.membershipSubject$.pipe(
+  private membershipSubject = new Subject<void>();
+  membership$: Observable<Membership | null> = this.membershipSubject.pipe(
     switchMap(() => {
       const user = this.currentUserSubject.value;
-      return user ? this.fetchMembership() : of(null);
+      return user ? this.fetchMembership(user._id) : of(null);
     })
   );
 
-  fetchMembership(): Observable<Membership> {
-    return this.http.get<Membership>(this.server + '/api/fetchmembership')
+  fetchMembership(userId: string): Observable<Membership> {
+    return this.http.get<Membership>(this.server + '/api/fetchmembership', { params: { userId } });
   }
 
   refreshMembership(): void {
-    this.membershipSubject$.next();
+    this.membershipSubject.next(); 
   }
      
   setCurrentUser(newuser: User | null, remember = true): void {

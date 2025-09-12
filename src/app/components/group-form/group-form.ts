@@ -2,8 +2,9 @@ import { Component, inject } from '@angular/core';
 import { FormsModule, NgForm} from '@angular/forms';
 import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
-import { User } from '../../interface';
+import { Membership, User } from '../../interface';
 import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-group-form',
@@ -19,6 +20,7 @@ export class GroupForm {
   description: string = '';
   channelnames: string = '';
   errMsg: string = '';
+  isAdmin: boolean | null = null;
 
   private groupService = inject(GroupService);
   private authService = inject(AuthService);
@@ -38,10 +40,18 @@ export class GroupForm {
     }
     // Only allow super or admin to create groups
     this.user = this.authService.getCurrentUser();
-    // if (this.user?.role !== 'admin' && this.user?.role !== 'super') {
-    //   this.errMsg = 'You do not have permission to create groups!';
-    //   return;
-    // }
+
+    if (this.user) {
+      this.authService.fetchMembership(this.user._id).subscribe(m => this.isAdmin = m.admin === this.user?._id);
+    } else {
+      this.errMsg = 'User information is missing. Please log in again.';
+      return;
+    }
+
+    if (this.isAdmin === false) {
+      this.errMsg = 'You do not have permission to create groups!';
+      return; 
+    }
     const channelNames = this.channelnames.split(/[\r?\n,;]+/)
       .map(cname => cname.trim().replace(/^[,;]+|[,;]+$/g, ''))
       .filter(c => c.length > 0);
@@ -55,7 +65,8 @@ export class GroupForm {
       this.errMsg = 'User information is missing. Please log in again.';
       return;
     }
-    this.groupService.createGroup(this.groupname, this.description, channelNames, this.user).subscribe({
+    const userId = this.user._id;
+    this.groupService.createGroup(this.groupname, this.description, channelNames, userId).subscribe({
       next: () => {
         this.router.navigate(['/dashboard/groups']);
         this.onReset(f);

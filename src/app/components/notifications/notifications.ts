@@ -18,8 +18,9 @@ export class Notifications implements OnInit {
   notifications: Notification[] = [];
   bannedUsers: User[] = [];
   loggedUser: User | null = null;
+  userRole: string = '';
   errMsg: string = '';
-  userById: Record<number, string> = {};
+  userById: Record<string, string> = {};
   groupById: Record<string, string> = {};
   selectedNotification: Notification | null = null;
   bannedUser: User | null = null;
@@ -43,31 +44,34 @@ export class Notifications implements OnInit {
       switchMap((notifications: Notification[]) => {
         return forkJoin({
           users: this.userService.getUsers(),
-          groups: this.groupService.getGroups()
+          groups: this.groupService.getGroups(),
+          membership: this.authService.fetchMembership(currentUser?._id || ''),
         }).pipe(
-          map(({ users, groups }) => {
+          map(({ users, groups, membership }) => {
             const allUsers = users;
             const userById = Object.fromEntries(
-              allUsers.map(u => [u.id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
+              allUsers.map(u => [u._id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
             )
             const groupById = Object.fromEntries(
-              groups.map(g => [g.id, g.groupname])
+              groups.map(g => [g._id, g.groupname])
             )
             // Filter notifications for groups administered by current user(admin)
-            const adminNotifications = notifications.filter(n => {
-              const groupApplying = groups.find(g => g.id === n.groupToApply);
-              return groupApplying?.admins.includes(currentUser.id);
+            const adminNotifications = notifications.filter(n => { 
+              const groupApplying = groups.find(g => g._id === n.groupToApply);
+              if (!groupApplying) return false;
+              return membership?.admin === this.loggedUser?._id && membership?.groups.includes(groupApplying?._id);
             });
-
-            return { notifications, adminNotifications, userById, groupById, allUsers };
+            return { notifications, adminNotifications, userById, groupById, allUsers, membership };
           })
         )
       })
-    ).subscribe(({ notifications, adminNotifications, userById, groupById, allUsers }) => {
-      if (currentUser?.role === 'super') {
+    ).subscribe(({ notifications, adminNotifications, userById, groupById, allUsers, membership }) => {
+      if (membership?.role === 'super') {
         this.notifications = notifications;
-      } else if (currentUser?.role === 'admin') {
+        this.userRole = 'super';
+      } else if (membership?.role === 'admin') {
         this.notifications = adminNotifications;
+        this.userRole = 'admin';
       }
       this.userById = userById;
       this.groupById = groupById;
@@ -88,14 +92,14 @@ export class Notifications implements OnInit {
     const currentUser = this.authService.getCurrentUser(); // The user who approves the application
     if (!currentUser) return;
 
-    const approverId = currentUser.id;
+    const approverId = currentUser._id;
     const applierId = notification.applier; // Applier stores user ID
     const groupId = notification.groupToApply; // GroupToApply stores group ID
-    this.userService.addGroupToUser(approverId, applierId, groupId, notification.id).subscribe({
+    this.userService.addGroupToUser(approverId, applierId, groupId, notification._id).subscribe({
       next: () => {
         // Update approved notification status to 'approved'
         this.notifications = this.notifications.map(n => 
-          n.id === notification.id ? {
+          n._id === notification._id ? {
             ...n, 
             status: 'approved',
             approvedBy: approverId
@@ -121,10 +125,10 @@ export class Notifications implements OnInit {
   // Delete a notification
   delete(notification: Notification, event: any): void {
     event.preventDefault();
-    this.notificationService.deleteNotification(notification.id).subscribe({
+    this.notificationService.deleteNotification(notification._id).subscribe({
       next: () => {
         // Remove the deleted notification from the notifications array
-        this.notifications = this.notifications.filter(n => n.id !== notification.id);
+        this.notifications = this.notifications.filter(n => n._id !== notification._id);
       },
       error: (err) => {
         this.errMsg = err.error.error || 'An error occurred while deleting the notification.';
@@ -146,10 +150,10 @@ export class Notifications implements OnInit {
   unBan(user: User, event: any): void {
     event.preventDefault();
     if (!user) return;
-    this.userService.unBanUser(user.id).subscribe({
+    this.userService.unBanUser(user._id).subscribe({
       next: () => {
         // Remove the unbanned user from the bannedUsers array
-        this.bannedUsers = this.bannedUsers.filter(u => u.id !== user.id);
+        this.bannedUsers = this.bannedUsers.filter(u => u._id !== user._id);
       },
       error: (err: any) => {
         this.errMsg = err.error.error || 'An error occurred while unbanning the user.';

@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -20,10 +20,8 @@ export class Header {
   private router = inject(Router);
 
   user$ = this.authService.currentUser$;
-  constructor() {
-    console.log('Current user observable:', this.user$);
-  }
-  userRole$ = this.authService.refreshMembership();
+  userRole$ = this.authService.membership$.pipe( 
+    map(m => m?.role ? m.role : 'chatuser'));
 
   logout(event: any): void {
     event.preventDefault();
