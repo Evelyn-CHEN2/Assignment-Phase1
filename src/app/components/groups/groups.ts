@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GroupService } from '../../services/group.service';
 import { NotificationService } from '../../services/notification.service';
-import { Group, User } from '../../interface';
+import { Group, Membership, User } from '../../interface';
 import { Channel } from '../../interface';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -27,6 +27,8 @@ export class Groups implements OnInit {
   formattedGroups: GroupReformatted[] = []; 
   userById: Record<string, string> = {};
   user: User | null = null;
+  userRole: string = '';  
+  membership: Membership | null = null;
   adminGroupsActive: boolean = false;
   showAdd: Record<string, boolean> = {};
   showEdit: Record<string, boolean> = {};
@@ -68,15 +70,18 @@ export class Groups implements OnInit {
             channels: allchannels.filter(c => c.groupId === g._id)
           }
         });
+        this.userRole = membership?.role || 'chatuser';
         // Groups administered by current user
-        const adminGroups = freshUser ? formattedGroups.filter(g => membership.groups.includes(g._id)) : [];
-        return { userById, formattedGroups, adminGroups };
+        const adminGroups = freshUser ? formattedGroups.filter(g => membership?.groups?.includes(g._id)) : [];
+        return { userById, formattedGroups, adminGroups, membership };
       }),
-    ).subscribe(({ userById, formattedGroups, adminGroups }) => {
+    ).subscribe(({ userById, formattedGroups, adminGroups, membership }) => {
       this.userById = userById;
       this.groups = formattedGroups;
       this.adminGroups = adminGroups;
-      this.formattedGroups = formattedGroups; // Keep a copy for button 'admin groups' to switch back to all groups
+      // Keep a copy for button 'admin groups' to switch back to all groups
+      this.formattedGroups = formattedGroups; 
+      this.membership = membership;
       this.errMsg = ''
     });
   }

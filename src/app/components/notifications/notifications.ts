@@ -36,48 +36,36 @@ export class Notifications implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) return;
     this.loggedUser = currentUser;
-    this.notificationService.fetchNotifications().pipe(
-      map((notifications: Notification[]) => {
-        console.log('All notifications fetched:', notifications);
-        return notifications
-      }),
-      switchMap((notifications: Notification[]) => {
-        return forkJoin({
-          users: this.userService.getUsers(),
-          groups: this.groupService.getGroups(),
-          membership: this.authService.fetchMembership(currentUser?._id || ''),
-        }).pipe(
-          map(({ users, groups, membership }) => {
-            const allUsers = users;
-            const userById = Object.fromEntries(
-              allUsers.map(u => [u._id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
-            )
-            const groupById = Object.fromEntries(
-              groups.map(g => [g._id, g.groupname])
-            )
-            // Filter notifications for groups administered by current user(admin)
-            const adminNotifications = notifications.filter(n => { 
-              const groupApplying = groups.find(g => g._id === n.groupToApply);
-              if (!groupApplying) return false;
-              return membership?.admin === this.loggedUser?._id && membership?.groups.includes(groupApplying?._id);
-            });
-            return { notifications, adminNotifications, userById, groupById, allUsers, membership };
-          })
+
+    forkJoin({
+      users: this.userService.getUsers(),
+      groups: this.groupService.getGroups(),
+      notifications: this.notificationService.fetchNotifications(),
+      membership: this.authService.fetchMembership(currentUser?._id || ''),
+    }).pipe(
+      map(({ users, groups, membership, notifications }) => {
+        const userById = Object.fromEntries(
+          users.map(u => [String(u._id), u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         )
+        const groupById = Object.fromEntries(
+          groups.map(g => [String(g._id), g.groupname])
+        )
+        this.userRole = membership?.role || '';
+        // Filter notifications for groups administered by current user(admin)
+        const adminNotifications = notifications.filter(n => { 
+          const groupApplying = groups.find(g => g._id === n.groupToApply);
+          if (!groupApplying) return false;
+          return membership?.admin === this.loggedUser?._id && membership?.groups?.includes(groupApplying?._id);
+        });
+        return { notifications, adminNotifications, userById, groupById, users };
       })
-    ).subscribe(({ notifications, adminNotifications, userById, groupById, allUsers, membership }) => {
-      if (membership?.role === 'super') {
-        this.notifications = notifications;
-        this.userRole = 'super';
-      } else if (membership?.role === 'admin') {
-        this.notifications = adminNotifications;
-        this.userRole = 'admin';
-      }
-      this.userById = userById;
-      this.groupById = groupById;
-      this.bannedUsers = allUsers.filter(u => u.valid === false);
-      this.errMsg = '';
-    })
+    ).subscribe(({ notifications, adminNotifications, userById, groupById, users }) => {
+        this.notifications = this.userRole === 'super' ? notifications : adminNotifications;
+        this.userById = userById;
+        this.groupById = groupById;
+        this.bannedUsers = users.filter(u => u.valid === false);
+        this.errMsg = '';
+      }); 
   }
   
   // Toggle approve application modal
@@ -91,7 +79,6 @@ export class Notifications implements OnInit {
     event.preventDefault();
     const currentUser = this.authService.getCurrentUser(); // The user who approves the application
     if (!currentUser) return;
-
     const approverId = currentUser._id;
     const applierId = notification.applier; // Applier stores user ID
     const groupId = notification.groupToApply; // GroupToApply stores group ID

@@ -10,6 +10,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { filter, forkJoin, zipAll } from 'rxjs';
 import { map, switchMap, of, tap } from 'rxjs';
 
+// Reformatted groups with channels, not channel IDs
+type GroupReformatted = Omit<Group, 'channels'> & { channels: Channel[] }; 
+
 @Component({
   selector: 'app-account',
   imports: [FormsModule, CommonModule, NgSelectModule],
@@ -18,11 +21,10 @@ import { map, switchMap, of, tap } from 'rxjs';
 })
 export class Account implements OnInit {
   user: User | null = null;
-  viewer: User | null = null;
-  userGroups: Group[] = [];
-  groupChannels: Channel[] = [];
+  formattedGroups: GroupReformatted[] = [];
+  userRole: string = '';
   channel: Channel | null = null;
-  selectedGroup: Group | null = null;
+  selectedGroup: GroupReformatted | null = null;
   newRole: Record<string, string> = {}; // For selecting new role in each group
   roleByGroup: Record<string, string> = {}; 
   errMsg: string = '';
@@ -35,19 +37,26 @@ export class Account implements OnInit {
   declare bootstrap: any;
 
   ngOnInit(): void {
-    this.user = this.authService.getCurrentUser();
+    const currentUser = this.authService.getCurrentUser();
     forkJoin({
       groups: this.groupService.getGroups(),
-      channels: this.groupService.getChannels()
+      channels: this.groupService.getChannels(),
+      allUsers: this.userService.getUsers(),
+      membership: this.authService.fetchMembership(currentUser?._id || ''),
     }).pipe(
-      map(({ groups, channels }) => {
-        console.log('All groups and channels fetched:', groups, channels);
-
+      map(({ groups, channels, allUsers, membership }) => {
+        // Refresh the user data
+        this.user = allUsers.find(u => u._id === currentUser?._id) ?? currentUser;
+        this.userRole = membership?.role || 'chatuser';
         // Filter groups with channels that belong to the user
         const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id));
-        const filteredChannels = channels.filter(c => filteredGroups.some(g => g._id === c.groupId));
-        console.log('Filtered groups and channels:', filteredGroups, filteredChannels);
-        return { filteredGroups, filteredChannels };
+        const formattedGroups = filteredGroups.map(g => {
+          return {
+            ...g,
+            channels: channels.filter(c => c.groupId === g._id)
+          }
+        });
+        return { formattedGroups};
       })
     ).subscribe({
       next: (data) => {
@@ -55,9 +64,7 @@ export class Account implements OnInit {
           this.errMsg = 'User not found or access denied';
           return;
         }
-        this.userGroups = data.filteredGroups;
-        this.groupChannels = data.filteredChannels;
-        console.log('User groups and channels fetched:', this.userGroups, this.groupChannels);
+        this.formattedGroups = data.formattedGroups;
         this.errMsg = '';
       },
       error: (err: any) => {
@@ -97,17 +104,17 @@ export class Account implements OnInit {
   }
 
   // Toggle to leave group
-  openLeaveGroupModal(group: Group): void {
+  openLeaveGroupModal(group: GroupReformatted): void {
     this.selectedGroup = group;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmLeaveGroupModal')!).show();
   }
 
   // Leave a group
-  confirmLeaveGroup(group: Group, user: User, event: any): void {
+  confirmLeaveGroup(group: GroupReformatted, user: User, event: any): void {
     event.preventDefault();
     this.groupService.leaveGroup(group._id, user._id).subscribe({
       next: () => {
-        this.userGroups = this.userGroups.filter(g => g._id !== group._id);
+        this.formattedGroups = this.formattedGroups.filter(g => g._id !== group._id);
       }, 
       error: (err: any) => {
         console.error('Error leaving group:', err);

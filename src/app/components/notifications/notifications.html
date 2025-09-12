@@ -20,7 +20,7 @@
             <div class="notif-meta text-secondary">
               <span class="meta">
                 <i class="bi bi-clock me-1"></i>
-                Applied at: {{ notification._id | date: 'short' :'Australia/Brisbane' }}
+                Applied at: {{ notification.timestamp | date: 'short' :'Australia/Brisbane' }}
               </span>
               <span class="dot mx-2">•</span>
               <span class="meta">

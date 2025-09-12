@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, switchMap, of } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
 import { User, Membership } from '../interface';
 
 @Injectable({

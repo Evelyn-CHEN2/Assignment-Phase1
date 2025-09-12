@@ -44,6 +44,7 @@ export interface Notification {
     groupToApply: string; // Store group.id
     status: string; // 'pending', 'approved'
     approvedBy: string; // Store user.id(super/admin)
+    timestamp: Date;
 }
 
 export interface UpdatedUserRole {

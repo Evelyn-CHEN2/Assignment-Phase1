@@ -1,4 +1,4 @@
-@if (user) {
+@if (userRole === 'admin') {
   <button 
     type="button" class="back-btn" 
     (click)="showAllGroups()" 
@@ -27,7 +27,7 @@
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">{{group.groupname}}</h5>
               <div style="gap: 10px; display: flex;">
-                @if (user?._id === group.createdBy) {
+                @if (userRole === 'super' || membership?.groups?.includes(group._id)) {
                   <button 
                     class="btn p-0" style="color: green;" 
                     type="button" (click)="toggleEditGroup(group)">
@@ -90,7 +90,7 @@
                     <li class="d-flex justify-content-between align-items-center border-bottom py-1 small text-muted">
                       {{channel.channelname}}
                       <!-- Button for super to delete channel -->
-                      @if (user) {
+                      @if (userRole === 'super' || membership?.groups?.includes(group._id)) {
                         <button 
                           class="btn btn-link text-danger p-0" type="button"
                           data-bs-toggle="modal" 
@@ -105,7 +105,7 @@
 
             <!--super/admin to add channel -->
             <div class="d-flex justify-content-end m-2">
-              @if (user) {
+              @if (userRole === 'super' || membership?.groups?.includes(group._id)) {
                 <button 
                   type="button" class="add-btn" 
                   (click)="toggleAddChannel(group)">

@@ -16,9 +16,14 @@ export class Dashboard implements OnInit {
   private authService = inject(AuthService);
 
   ngOnInit(): void {
- 
     const currentUser = this.authService.getCurrentUser();
-    this.authService.fetchMembership(currentUser?._id || '').subscribe(m => 
-      this.userRole = m.role || 'chatuser')
+    this.authService.fetchMembership(currentUser?._id || '').subscribe(m => {
+      if (m && m.role) {
+        this.userRole = m.role;
+      } else {
+        this.userRole = 'chatuser';
+      }
+    })
+    console.log('Dashboard initialized for user role:', this.userRole);
   }
 }
