@@ -18,7 +18,7 @@
     <tbody>
         @for (user of users; track $index) {
         <tr>
-            <td>{{user._id}}</td>
+            <td>{{user._id | slice: -2}}</td>
             <td>
               <button 
                   class="btn btn-m p-0" style="color:#023e8a;" type="button" 

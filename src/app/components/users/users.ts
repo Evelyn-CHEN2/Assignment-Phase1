@@ -6,11 +6,12 @@ import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
 import { Group, User } from '../../interface'
 import { forkJoin, switchMap, map } from 'rxjs';
+import { SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SlicePipe],
   templateUrl: './users.html',
   styleUrl: './users.css'
 })
