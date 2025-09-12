@@ -18,10 +18,9 @@ import { SlicePipe } from '@angular/common';
 export class Users {
   users: User[] = [];
   loggedUser: User | null = null;
-  // userGroupsByUser: Record<number, Group[]> = {}; 
-  userGroups: Group[] = [];
-  // roleByGroupByUser: Record<number, Record<string, string>> = {};
-  roleByGroup: Record<string, string> = {};
+  userGroupsByUser: Record<string, Group[]> = {}; 
+  roleByGroupByUser: Record<string, Record<string, string>> = {};
+  roleByGroup: string = '';
   showUserGroups: Record<string, boolean> = {};
   showUpdateRole: Record<string,boolean> = {}; 
   showDelete: Record<string, boolean> = {};
@@ -43,53 +42,57 @@ export class Users {
     this.loggedUser = currentUser;
     forkJoin({
       groups: this.groupService.getGroups(),
+      users: this.userService.getUsers(),
       membership: this.authService.fetchMembership(currentUser?._id || '')
     }).pipe(
-      map(({ groups, membership }) => {
+      map(({ groups, membership, users }) => {
         // Fetch groups that current user administers
         const adminGroups = currentUser ? groups.filter(g => membership?.groups.includes(g._id)) : [];
+        // Filter users that belong to the admin groups
+        const adminUsers = users.filter(u => 
+          u.groups.some(ug => adminGroups.some(ag => ag._id === ug))
+        );
         // Fetch all groups for super
-        const allGroups = groups;
-        return { adminGroups, allGroups, membership };
-
-      }),
-      switchMap(({ adminGroups, allGroups, membership }) => {
-        return this.userService.getUsers().pipe(
-          map(users => {
-            const allUsers = users;
-            const adminUsers = users.filter(u => 
-              u.groups.some(ug => adminGroups.some(ag => ag._id === ug)) // Filter users who are in groups administered by current user
-            );
-            return { allUsers, adminUsers, allGroups, adminGroups, membership };
-            })
-          )
-      }
-      )
-    ).subscribe(({ allUsers, adminUsers, allGroups, adminGroups, membership }) => {
+        return { adminGroups, groups, membership, adminUsers, users };
+      })
+    ).subscribe(({ users, adminUsers, groups, adminGroups, membership }) => {
       if (membership?.role === 'super') {
-        this.users = allUsers.filter(u => u._id !== this.loggedUser?._id); // Exclude super self
-        // this.userGroupsByUser = Object.fromEntries(
-        //   this.users.map(u => { 
-        //     const groups = allGroups.filter(g => u.groups.includes(g._id));
-        //     return [u._id, groups];
-        //   })
-        // )
-        this.userGroups = allGroups.filter(g => {
-          this.users.some(u => u.groups.includes(g._id));
-        });
+        this.users = users.filter(u => u._id !== this.loggedUser?._id); // Exclude super self
+        this.userGroupsByUser = Object.fromEntries(
+          this.users.map(u => { 
+            const userGroups = groups.filter(g => u.groups.includes(g._id));
+            return [u._id, userGroups];
+          })
+        )
       } else if (membership?.role === 'admin') {
         this.users = adminUsers.filter(u => u._id !== this.loggedUser?._id); // Exclude admin self
-        this.userGroups = adminGroups.filter(g => {
-          this.users.some(u => u.groups.includes(g._id));
-        });
+        this.userGroupsByUser = Object.fromEntries(
+          this.users.map(u => { 
+            const userGroups = groups.filter(g => u.groups.includes(g._id));
+            return [u._id, userGroups];
+          })
+        )
       }
        // Fetch user role for each user in each group
-      this.roleByGroup = Object.fromEntries(
-        this.userGroups.map(ug => {
-          const userRole = membership.groups.includes(ug._id) ? 'admin' : 'chatuser';
-          return [ug._id, userRole];
-        })
-      );
+
+        Object.entries(this.userGroupsByUser).map(([userId, userGroups]) => {
+          // For each user, fetch their role in each group
+          this.authService.fetchMembership(userId).subscribe(m => {
+            const role = m?.role ?? 'chatuser'; 
+            const userRoleByGroups = Object.fromEntries(userGroups.map(g => {
+              if (m?.role === 'super') {
+                const groupRole = 'super';
+                return [g._id, groupRole];
+              } else {
+                const groupRole = m?.groups.includes(g._id) ? role : 'chatuser';
+                return [g._id, groupRole];
+              }
+            }))
+            this.roleByGroupByUser[userId] = userRoleByGroups; 
+          })  
+      })
+  
+      
       this.userRole = membership?.role || 'chatuser';
       this.errMsg = '';
     })
@@ -145,7 +148,9 @@ export class Users {
     this.userService.removeUserFromGroup(user._id, group._id).subscribe({
       next: () => {
         // Update user groups after removing the user from the group
-        this.userGroups = this.userGroups.filter(g => g._id !== group._id);
+        if (user) {
+          this.userGroupsByUser[user._id] = this.userGroupsByUser[user._id].filter(g => g._id !== group._id);
+        }
       },
       error: (err: any) => {
         console.error('Error removing user:', err);
@@ -180,7 +185,7 @@ export class Users {
     this.userService.updateUserRole(newRole, user._id, group._id).subscribe({
       next: () => {
         // Update the UI 
-        this.roleByGroup[group._id] = newRole;
+        this.roleByGroupByUser[user._id][group._id] = newRole;
       },
       error: (err: any) => {
         console.error('Error updating user role:', err);
@@ -192,3 +197,5 @@ export class Users {
     })
   }
 }
+
+

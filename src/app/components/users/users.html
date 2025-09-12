@@ -11,7 +11,7 @@
             <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
-            <th scope="col" style="width:22%;">Role</th>
+            <th scope="col" style="width:28%;">Role</th>
             <th style="text-align: center;" scope="col">_ _</th>
         </tr>
     </thead>
@@ -30,7 +30,7 @@
                   
               </button>
             </td>
-            <td style="font-size: small;">{{user.email}}</td>
+            <td style="font-size: medium;">{{user.email}}</td>
             <td class="text-capitalize"> </td>
             <td class="position-relative text-center align-top">
                 <div class="d-inline-flex gap-4">
@@ -51,20 +51,20 @@
         </tr>
         <!-- Display user groups after clicking user name -->
         @if (showUserGroups[user._id]) {
-          @for(group of userGroups; track group._id) {
+          @for(group of userGroupsByUser[user._id]; track group._id) {
               <tr class="table-active">
                 <td></td>
                 <td colspan="2">
                   <i class="bi bi-folder2-open" style="color: #023e8a;"></i>
-                  <span class="ms-2">{{ group.groupname }}</span>
+                  <span class="ms-2" style="font-size: small;">{{ group.groupname }}</span>
                 </td>
                 <td>
                   <button 
                     class="ms-auto roles-badge"
                     type="button" 
-                    [attr.group-role]="roleByGroup[group._id]"
+                    [attr.group-role]="roleByGroupByUser[user._id][group._id]"
                     (click)="toggleUpdateRole(group)">
-                  {{roleByGroup[group._id]}}
+                  {{roleByGroupByUser[user._id][group._id]}}
                   </button>
                   @if (showUpdateRole[group._id]) {
                     <div class="update-role-pop mt-2 gap-2 d-flex align-items-center">
@@ -87,7 +87,7 @@
                   }
                 </td>
                 <td class="text-center">
-                  @if((userRole === 'admin' && roleByGroup[group._id] === 'chatuser') || userRole === 'super') {
+                  @if((userRole === 'admin' && roleByGroupByUser[user._id][group._id] === 'chatuser') || userRole === 'super') {
                   <button 
                       class="btn btn-m text-danger p-0" 
                       data-bs-toggle="modal" 

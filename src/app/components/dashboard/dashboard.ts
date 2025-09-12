@@ -24,6 +24,5 @@ export class Dashboard implements OnInit {
         this.userRole = 'chatuser';
       }
     })
-    console.log('Dashboard initialized for user role:', this.userRole);
   }
 }
