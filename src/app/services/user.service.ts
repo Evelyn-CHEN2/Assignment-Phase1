@@ -31,7 +31,7 @@ export class UserService {
   } 
 
   removeUserFromGroup(userId: string, groupId: string): Observable<void> {
-    return this.http.delete<void>(`${this.server}/api/removeuserfromgroup$`, { params: { userId, groupId }});
+    return this.http.delete<void>(`${this.server}/api/removeuserfromgroup`, { params: { userId, groupId }});
   }
 
   banUser(id: string): Observable<void> {

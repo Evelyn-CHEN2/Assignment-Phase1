@@ -1,4 +1,5 @@
 const connectDB = require('../mongoDB');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app) => {
@@ -7,7 +8,7 @@ module.exports = {
         const channelsData = db.collection('channels');
 
         app.delete('/api/deletechannel/:id', async(req,res) => {
-            const channelId = req.params.id;
+            const channelId = String(req.params.id);
             if (!channelId) {
                 return res.status(400).json({ error: 'No channel ID provided to delete' });
             }

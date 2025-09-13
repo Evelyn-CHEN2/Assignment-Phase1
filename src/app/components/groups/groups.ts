@@ -88,6 +88,7 @@ export class Groups implements OnInit {
 
   // Sort groups by names
   sortGroups(): void{
+    this.errMsg = '';
     this.groups.sort((a,b) => a.groupname.localeCompare(b.groupname));
     if (!this.sortAsc) {
       this.groups.reverse();
@@ -98,16 +99,19 @@ export class Groups implements OnInit {
   // <-- Actions for super and admin -->
   // Switch to disable buttons to show groups/adminGroups
   showAdminGroups(): void {
+    this.errMsg = '';
     this.adminGroupsActive = true;
     this.groups = this.adminGroups; // Refresh page to display admin groups
   }
   showAllGroups(): void {
+    this.errMsg = '';
     this.adminGroupsActive = false;
     this.groups = this.formattedGroups; // Refresh page to display all groups
   }
 
   // Toggle edit group form
   toggleEditGroup(group: GroupReformatted): void {
+    this.errMsg = '';
     this.showEdit[group._id] = !this.showEdit[group._id];
   }
 
@@ -135,6 +139,7 @@ export class Groups implements OnInit {
 
   // Toggle delete confirmation modal
   openDeleteGroupModal(group: GroupReformatted): void {
+    this.errMsg = '';
     this.selectedGroup = group;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteGroupModal')!).show();
   }
@@ -161,6 +166,7 @@ export class Groups implements OnInit {
 
   // Toggle channel deletion confirmation modal
   openDeleteChannelModal(channel: Channel): void {
+    this.errMsg = '';
     this.selectedChannel = channel;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteChannelModal')!).show();
   }
@@ -191,6 +197,8 @@ export class Groups implements OnInit {
 
   //Add a new channel to a group
   toggleAddChannel(group: GroupReformatted): void {
+    this.errMsg = '';
+    this.newChannelName[group._id] = '';
     this.showAdd[group._id] = !this.showAdd[group._id];
   }
 
@@ -203,12 +211,10 @@ export class Groups implements OnInit {
     }
     this.groupService.createChannel(group._id, channelName).subscribe({
       next: (newChannel: Channel) => {
-        if (newChannel) {
           // Add the new channel to the group's channels
           group.channels.push(newChannel);
           // Reset channel name input
           this.newChannelName[group._id] = '';
-        }
       },
       error: (err: any) => {
         console.error('Error creating channel:', err);
@@ -223,6 +229,7 @@ export class Groups implements OnInit {
   // <-- Actions for chatusers -->
   // Apply to join a group
   applyToJoinGroup(group: GroupReformatted, event: any): void {
+    this.errMsg = '';
     event.preventDefault();
     const groupId = group._id;
     if (this.user?._id === undefined) {

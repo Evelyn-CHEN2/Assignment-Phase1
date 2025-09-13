@@ -20,7 +20,7 @@ module.exports = {
 
             // Create new user document
             try {
-                const newUser = {
+                const newData= {
                     username: username.trim(),
                     email: email.trim(),
                     pwd: pwd,
@@ -29,8 +29,8 @@ module.exports = {
                     avatar: null,
                     isSuper: false
                 };
-                const newUserInsert = await usersData.insertOne(newUser);
-                // Send back formatted user data to fontend, remove pwd
+                const newUserInsert = await usersData.insertOne(newData);
+                // Send formatted user data back to fontend for UI update, remove pwd
                 const safeUser = { ...newUser, _id: newUserInsert.insertedId };
                 delete safeUser.pwd;
                 res.send(safeUser);
