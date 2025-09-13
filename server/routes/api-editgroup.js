@@ -1,4 +1,5 @@
 const connectDB = require('../mongoDB');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app) =>  {
@@ -9,7 +10,7 @@ module.exports = {
             if (!req.body || !req.params)  {
                 return res.status(400).json({ error: 'Invalid request body or parameters.' });
             }
-            const groupId = req.params.groupId;
+            const groupId = String(req.params.groupId);
             const newGroupName = req.body.newGroupName; 
             // Check if new group name exists
             const existingGroup = await groupData.findOne({ groupname: newGroupName });
