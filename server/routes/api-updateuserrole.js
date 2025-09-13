@@ -1,4 +1,5 @@
 const connectDB = require('../mongoDB');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app) => {
@@ -6,8 +7,9 @@ module.exports = {
         const membershipData = db.collection('membership');
 
         app.put('/api/updateuser/:userId', async(req, res) => {
-            const userId = req.params.userId;
-            const { groupId, newRole } = req.body;
+            const userId = String(req.params.userId);
+            const groupId = String(req.body.groupId);
+            const newRole = req.body.newRole;
             if (!userId || !groupId || !newRole) {
                 return res.status(400).json({ error: 'Missing id or new role to update user role' });
             }
@@ -17,7 +19,7 @@ module.exports = {
                 if (newRole === 'super') {
                     await membershipData.updateOne(
                         { role: newRole },
-                        { $set: { admin: new ObjectId(userId) } }
+                        { $push: { admin: new ObjectId(userId) } }
                     );
                 } else if (newRole === 'admin') {
                     await membershipData.updateOne(
