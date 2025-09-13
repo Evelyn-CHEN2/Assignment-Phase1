@@ -21,10 +21,11 @@ export class Users {
   userGroupsByUser: Record<string, Group[]> = {}; 
   roleByGroupByUser: Record<string, Record<string, string>> = {};
   roleByGroup: string = '';
+  membership: Membership | null = null;
   showUserGroups: Record<string, boolean> = {};
-  showUpdateRole: Record<string,boolean> = {}; 
+  showUpdateRole: Record<string, boolean> = {}; 
   showDelete: Record<string, boolean> = {};
-  newRole: Record<string,string> = {};
+  newRole: Record<string, string> = {};
   userRole: string = '';
   selectedUser: User | null = null; 
   selectedGroup: Group | null = null;
@@ -183,8 +184,8 @@ export class Users {
   }
 
    // Update user role
-   toggleUpdateRole(group: Group): void {
-    this.showUpdateRole[group._id] = !this.showUpdateRole[group._id];
+   toggleUpdateRole(user: User, group: Group): void {
+    this.showUpdateRole[(`${user._id}: ${group._id}`)] = !this.showUpdateRole[(`${user._id}: ${group._id}`)];
   }
 
   // Toggle update confirmation modal
@@ -201,7 +202,7 @@ export class Users {
       console.error('User or Group is not defined');
       return;
     }
-    const newRole = this.newRole[user._id];
+    const newRole = this.newRole[(`${user._id}: ${group._id}`)];
     this.userService.updateUserRole(newRole, user._id, group._id).subscribe({
       next: () => {
         // Update the UI 

@@ -16,7 +16,7 @@
         </tr>
     </thead>
     <tbody>
-        @for (user of users; track $index) {
+        @for (user of users; track user._id) {
         <tr>
             <td>{{user._id | slice: -2}}</td>
             <td>
@@ -76,14 +76,14 @@
                     class="ms-auto roles-badge"
                     type="button" 
                     [attr.group-role]="roleByGroupByUser[user._id][group._id]"
-                    (click)="toggleUpdateRole(group)">
+                    (click)="toggleUpdateRole(user, group)">
                   {{roleByGroupByUser[user._id][group._id]}}
                   </button>
-                  @if (showUpdateRole[group._id]) {
+                  @if (showUpdateRole[(`${user._id}: ${group._id}`)]) {
                     <div class="update-role-pop mt-2 gap-2 d-flex align-items-center">
                         <select 
                           class="form-select flex-grow-1" 
-                          [(ngModel)]="newRole[user._id]" 
+                          [(ngModel)]="newRole[(`${user._id}: ${group._id}`)]" 
                           name="newRole{{user._id}}">
                             <option value="admin">Admin</option>
                             <option value="super">Super</option>
