@@ -1,5 +1,4 @@
 const connectDB = require('../mongoDB');
-const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app) => {

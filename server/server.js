@@ -29,6 +29,7 @@ require('./routes/api-fetchallusers.js').route(app);
 require('./routes/api-fetchuserByID.js').route(app);
 require('./routes/api-updateuserrole.js').route(app);
 require('./routes/api-addgrouptouser.js').route(app);
+require('./routes/api-removeuserfromgroup.js').route(app);
 require('./routes/api-deleteuser.js').route(app);
 require('./routes/api-banuserByID.js').route(app);
 require('./routes/api-unbanuserByID.js').route(app);
