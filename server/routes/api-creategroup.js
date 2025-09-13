@@ -1,20 +1,22 @@
 const connectDB = require('../mongoDB');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app) => {
         const db = await connectDB();
-        const groupData = db.collection('groups');
-        const channelData = db.collection('channels');
-        const userData = db.collection('users');
+        const groupsData = db.collection('groups');
+        const channelsData = db.collection('channels');
+        const usersData = db.collection('users');
         const membershipData = db.collection('membership');
 
         app.post('/api/creategroup', async(req, res) => {
                 if (!req.body || !req.body.groupname || !req.body.description || !req.body.channelNames || !req.body.userId) {
                     return res.status(400).json({ error: 'Invalid request data' });
                 }
-                const { groupname, description, userId } = req.body;
+                const { groupname, description } = req.body;
+                const userId = String(req.body.userId);
 
-                let groups = await groupData.find().toArray();
+                let groups = await groupsData.find().toArray();
                 // Check if group name already exists
                 const existingGroupName = groups.find(g => g.groupname.toLowerCase() === groupname.trim().toLowerCase());
                 if (existingGroupName) {
@@ -31,28 +33,28 @@ module.exports = {
                         groupId: null 
                     }
                 })
-                await channelData.insertMany(newchannels);
+                await channelsData.insertMany(newchannels);
 
                 try {
-                    const newgroup = await groupData.insertOne({
+                    const newgroup = await groupsData.insertOne({
                         _id: new ObjectId(),
                         groupname: groupname.trim(),
                         description: description.trim(),
                         channels: newchannels.map(c => c._id),
-                        createdBy: new ObjectId(currentUser._id)
+                        createdBy: new ObjectId(userId)
                     });
                     // Add new groupId to channels
-                    await channelData.updateMany(
+                    await channelsData.updateMany(
                         { _id: { $in: newchannels.map(c => c._id) }},
                         {$set: { groupId: newgroup.insertedId } }
                     );
                     // Add new groupId to user's groups
-                    await userData.updateOne(
+                    await usersData.updateOne(
                         { _id: new ObjectId(userId) },
                         { $push: { groups: newgroup.insertedId } }
                     );
                     // Update membership collection
-                    await membershipData.find({ admin: new ObjectId(userId) });
+                    const membership = await membershipData.find({ admin: new ObjectId(userId) });
                     if (membership) {
                         await membershipData.updateOne(
                             { admin: new ObjectId(userId) },

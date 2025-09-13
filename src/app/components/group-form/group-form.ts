@@ -34,6 +34,7 @@ export class GroupForm {
  
   // Create a new group
   createGroup(f: NgForm): void {
+    this.errMsg = '';
     this.submitted = true;
     if (f.invalid) {
       return;
