@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
-import { Group, User } from '../../interface'
-import { forkJoin, switchMap, map } from 'rxjs';
+import { Group, Membership, User } from '../../interface'
+import { forkJoin, map } from 'rxjs';
 import { SlicePipe } from '@angular/common';
 
 @Component({
@@ -53,9 +53,9 @@ export class Users {
           u.groups.some(ug => adminGroups.some(ag => ag._id === ug))
         );
         // Fetch all groups for super
-        return { adminGroups, groups, membership, adminUsers, users };
+        return { groups, membership, adminUsers, users };
       })
-    ).subscribe(({ users, adminUsers, groups, adminGroups, membership }) => {
+    ).subscribe(({ users, adminUsers, groups, membership }) => {
       if (membership?.role === 'super') {
         this.users = users.filter(u => u._id !== this.loggedUser?._id); // Exclude super self
         this.userGroupsByUser = Object.fromEntries(
@@ -65,34 +65,31 @@ export class Users {
           })
         )
       } else if (membership?.role === 'admin') {
-        this.users = adminUsers.filter(u => u._id !== this.loggedUser?._id); // Exclude admin self
+        this.users = adminUsers.filter(u => u._id !== this.loggedUser?._id && u.isSuper === false); // Exclude admin self and supers
         this.userGroupsByUser = Object.fromEntries(
           this.users.map(u => { 
-            const userGroups = groups.filter(g => u.groups.includes(g._id));
+            const userGroups = groups.filter(g => u.groups.includes(g._id) && membership.groups.includes(g._id));
             return [u._id, userGroups];
           })
         )
       }
-       // Fetch user role for each user in each group
-
-        Object.entries(this.userGroupsByUser).map(([userId, userGroups]) => {
-          // For each user, fetch their role in each group
-          this.authService.fetchMembership(userId).subscribe(m => {
-            const role = m?.role ?? 'chatuser'; 
-            const userRoleByGroups = Object.fromEntries(userGroups.map(g => {
-              if (m?.role === 'super') {
-                const groupRole = 'super';
-                return [g._id, groupRole];
-              } else {
-                const groupRole = m?.groups.includes(g._id) ? role : 'chatuser';
-                return [g._id, groupRole];
-              }
-            }))
-            this.roleByGroupByUser[userId] = userRoleByGroups; 
-          })  
+      // Fetch user role for each user in each group
+      Object.entries(this.userGroupsByUser).map(([userId, userGroups]) => {
+        // For each user, fetch their role in each group
+        this.authService.fetchMembership(userId).subscribe(m => {
+          const role = m?.role ?? 'chatuser'; 
+          const userRoleByGroups = Object.fromEntries(userGroups.map(g => {
+            if (m?.role === 'super') {
+              const groupRole = 'super';
+              return [g._id, groupRole];
+            } else {
+              const groupRole = m?.groups.includes(g._id) ? role : 'chatuser';
+              return [g._id, groupRole];
+            }
+          }))
+          this.roleByGroupByUser[userId] = userRoleByGroups; 
+        })  
       })
-  
-      
       this.userRole = membership?.role || 'chatuser';
       this.errMsg = '';
     })
@@ -135,7 +132,7 @@ export class Users {
     })
   }
 
-  // Toggle delete confirmation modal
+  // Toggle remove user from group confirmation modal
   openRemoveModal(user: User, group: Group): void {
     this.selectedUser = user;
     this.selectedGroup = group;
@@ -158,6 +155,29 @@ export class Users {
       },
       complete: () => { 
         console.log('User remove complete.');
+      }
+    })
+  }
+
+  // Toggle delete dummy user confirmation modal
+  openDeleteUserModal(user: User): void {
+    this.selectedUser = user;
+    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteUserModal')!).show();
+  }
+  // Delete a dummy user for super
+  confirmDeleteUser(user: User, event: any): void {
+    event.preventDefault();
+    this.userService.deleteUser(user._id).subscribe({
+      next: () => {
+        // Remove user from the list after deletion
+        this.users = this.users.filter(u => u._id !== user._id);
+      },
+      error: (err: any) => {
+        console.error('Error deleting dummy user:', err);
+        this.errMsg = err.error.error || 'Error happened while deleting a dummy user.';
+      },
+      complete: () => {
+        console.log('User deletion complete.');
       }
     })
   }

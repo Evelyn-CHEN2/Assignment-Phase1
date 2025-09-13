@@ -6,6 +6,7 @@ export interface User {
     groups: string[];  // Store group ids
     valid: boolean;
     avatar: string;
+    isSuper: boolean; // Default is false
 }
 
 export interface Group {

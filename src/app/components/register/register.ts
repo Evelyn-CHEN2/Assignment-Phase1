@@ -4,7 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';  
-import { Group } from '../../interface';
+import { Group, User } from '../../interface';
 import { GroupService } from '../../services/group.service';
  
 
@@ -48,12 +48,10 @@ export class Register implements OnInit {
       return;
     }
     this.authService.register(this.username, this.email, this.pwd).subscribe({
-      next: (user: any) => {
-        if (user.valid === true) {
-          // Store registered user data to localStorage
-          this.authService.setCurrentUser(user); 
-          this.router.navigate(['/account']);
-        }
+      next: (user: User) => {
+        // Store registered user data to localStorage
+        this.authService.setCurrentUser(user); 
+        this.router.navigate(['/account']);
       },
       error: (err: any) => {
         console.error('Registration error:', err);

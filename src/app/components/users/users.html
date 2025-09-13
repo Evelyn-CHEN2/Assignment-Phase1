@@ -12,7 +12,7 @@
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col" style="width:28%;">Role</th>
-            <th style="text-align: center;" scope="col">_ _</th>
+            <th style="text-align: center;" scope="col">_Edit</th>
         </tr>
     </thead>
     <tbody>
@@ -34,6 +34,7 @@
             <td class="text-capitalize"> </td>
             <td class="position-relative text-center align-top">
                 <div class="d-inline-flex gap-4">
+                  <!-- Ban user for admin -->
                     @if (userRole === 'admin') {
                       <button 
                         class="btn btn-m p-0" style="color: #40916c; border: none;" 
@@ -43,6 +44,18 @@
                         data-bs-target="#confirmBanModal" 
                         (click)="openBanModal(user)">
                         <i class="bi bi-exclamation-triangle"
+                          style="font-size:large"></i>
+                      </button>
+                      <!-- Delete dummy user by super -->
+                    } @else if (userRole === 'super' && user.groups.length === 0) {
+                      <button 
+                        class="btn btn-m p-0" style="color: red; border: none;" 
+                        type="button"
+                        [disabled]="user.valid === false"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#confirmDeleteUserModal" 
+                        (click)="openDeleteUserModal(user)">
+                        <i class="bi bi-file-earmark-minus"
                           style="font-size:large"></i>
                       </button>
                     }
@@ -87,7 +100,10 @@
                   }
                 </td>
                 <td class="text-center">
-                  @if((userRole === 'admin' && roleByGroupByUser[user._id][group._id] === 'chatuser') || userRole === 'super') {
+                  <!-- 'membership?.groups?.includes(group._id)' ensures admin can only remove user in his administered groups -->
+                  @if((userRole === 'admin' 
+                      && roleByGroupByUser[user._id][group._id] === 'chatuser')
+                      || userRole === 'super') {
                   <button 
                       class="btn btn-m text-danger p-0" 
                       data-bs-toggle="modal" 
@@ -195,4 +211,34 @@
         </div>
       </div>
     </div>
+</div>
+
+<!-- Delete dummy user confirmation modal -->
+<div class="modal fade" id="confirmDeleteUserModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-body py-3">
+        <p class="mb-0" id="confirmDeleteLabel">Are you sure to delete
+          @if (selectedUser) {
+              <strong>User: {{ selectedUser.username }}</strong>?
+          }
+        </p>
+      </div>
+      <div class="modal-footer py-2">
+        <button 
+          type="button" 
+          class="btn btn-sm btn-outline-secondary" 
+          data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-sm btn-danger" 
+          (click)="selectedUser && confirmDeleteUser(selectedUser, $event)" 
+          data-bs-dismiss="modal">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

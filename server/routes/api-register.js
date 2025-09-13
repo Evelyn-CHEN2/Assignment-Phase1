@@ -21,16 +21,20 @@ module.exports = {
 
             // Create new user document
             try {
-                const newUser = await usersData.insertOne({
-                    _id: new ObjectId(),
+                const newUser = {
                     username: username.trim(),
                     email: email.trim(),
                     pwd: pwd,
                     groups: [],
                     valid: true,
-                    avatar: null
-                })
-                res.send(newUser);
+                    avatar: null,
+                    isSuper: false
+                };
+                const newUserInsert = await usersData.insertOne(newUser);
+                // Send back formatted user data to fontend, remove pwd
+                const safeUser = { ...newUser, _id: newUserInsert.insertedId };
+                delete safeUser.pwd;
+                res.send(safeUser);
             } 
             catch (error) {
                 console.error('Error writing user data:', error);

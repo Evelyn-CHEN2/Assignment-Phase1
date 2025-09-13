@@ -17,7 +17,6 @@ module.exports = {
                 if (!loggedUser) {
                     return res.status(401).json({ error: 'Invalid username or password' });
                 }
-                valid = loggedUser.valid;
                 const safeUser = {
                     _id: loggedUser._id,  // loggedUser._id is an ObjectId
                     username: loggedUser.username,
@@ -27,7 +26,6 @@ module.exports = {
                     avatar: loggedUser.avatar
                 };
                 res.send(safeUser)
-                // !!!try sendStatus(200), the frontend is not using safeUser??????
             }
             catch (error) {
                 console.error('Error reading users file: ', error);
