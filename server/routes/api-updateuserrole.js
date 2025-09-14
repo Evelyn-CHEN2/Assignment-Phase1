@@ -24,7 +24,10 @@ module.exports = {
                 } else if (newRole === 'admin') {
                     await membershipData.updateOne(
                         { admin: new ObjectId(userId) },
-                        { $addToSet: { groups: new ObjectId(groupId) } },
+                        { 
+                            $addToSet: { groups: new ObjectId(groupId) },
+                            $set: {role: newRole}
+                        },
                         { upsert: true }
                     );
                 }
