@@ -194,6 +194,10 @@ export class Users {
     this.selectedGroup = group;
     this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmUpdateModal')!).show();
   }
+
+  private closeUpdateModel(user: User, group: Group): void {
+    this.showUpdateRole[(`${user._id}: ${group._id}`)] = false;
+  }
   
   // Update user role
   updateRole(user: User, group: Group, event: any): void {
@@ -207,6 +211,7 @@ export class Users {
       next: () => {
         // Update the UI 
         this.roleByGroupByUser[user._id][group._id] = newRole;
+        this.closeUpdateModel(user, group);
       },
       error: (err: any) => {
         console.error('Error updating user role:', err);

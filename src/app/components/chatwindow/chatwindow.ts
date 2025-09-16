@@ -55,7 +55,6 @@ export class Chatwindow implements OnInit, OnDestroy {
       })
     ).subscribe(channel => {
       this.channel = channel ?? null;
-      console.log('Loaded channel:', channel);
       if (!this.channel) {
         console.error(`Channel ${this.channelId} not found.`);
         return;
@@ -133,7 +132,6 @@ export class Chatwindow implements OnInit, OnDestroy {
       this.errMsg = 'Channel not found.';
       return;
     }
-    console.log('Sending message:', this.message);
     const newMessage = this.message.trim();
     const sender = this.currentUser._id;
     // Emit message via Socket.io
