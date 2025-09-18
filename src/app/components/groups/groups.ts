@@ -30,6 +30,7 @@ export class Groups implements OnInit {
   userRole: string = '';  
   membership: Membership | null = null;
   adminGroupsActive: boolean = false;
+  editGroup: GroupReformatted | null = null;
   showAdd: Record<string, boolean> = {};
   showEdit: Record<string, boolean> = {};
   newGroupName: Record<string, string> = {};
@@ -109,22 +110,26 @@ export class Groups implements OnInit {
   }
 
   // Toggle edit group form
-  toggleEditGroup(group: GroupReformatted): void {
+  toggleEditGroup(group: GroupReformatted, event: any): void {
     this.errMsg = '';
-    this.showEdit[group._id] = !this.showEdit[group._id];
+    event.preventDefault();
+    this.editGroup = { ...group };
   }
 
   // Edit a group
-  editGroup(group: GroupReformatted, event: any): void {
+  saveEdit(event: any): void {
     event.preventDefault();
     this.errMsg = '';
-    const groupId = group._id;
-    const newGroupName = this.newGroupName[group._id];
+    if (!this.editGroup) return;
+    const groupId = this.editGroup._id;
+    const newGroupName = this.editGroup.groupname
     this.groupService.editGroup(groupId, newGroupName).subscribe({
       next: () => {
         // Update group name for UI display immediately
-        group.groupname = newGroupName;
-        this.showEdit[group._id] = false;
+        const selected = this.groups.find(g=> g._id === groupId)
+        if(selected) {
+          selected.groupname = newGroupName
+        }
       },
       error: (error: any) => {
         console.error('Error editing group:', error);

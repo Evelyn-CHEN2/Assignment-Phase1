@@ -3,7 +3,6 @@ const PORT = 3000;
 const cors = require('cors'); 
 const connectDB = require('./mongoDB.js');
 
-
 (async () => {
     const app = express();
     app.use(cors());
