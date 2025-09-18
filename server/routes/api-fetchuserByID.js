@@ -1,8 +1,5 @@
-const connectDB = require('../mongoDB');
-
 module.exports = {
-    route: async(app) => {
-        const db = await connectDB();
+    route: async(app, db) => {
         const userData = db.collection('users');
 
         app.get('/api/fetchuserbyID/:id', async(req, res) => {

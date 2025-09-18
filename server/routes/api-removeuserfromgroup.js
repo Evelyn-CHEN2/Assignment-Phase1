@@ -1,9 +1,7 @@
-const connectDB = require('../mongoDB');
 const { ObjectId } = require('mongodb');
 
 module.exports = {
-    route: async(app) => {
-        const db = await connectDB();
+    route: async(app, db) => {
         const usersData = db.collection('users');
 
         app.delete('/api/removeuserfromgroup', async(req, res) => {

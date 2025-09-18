@@ -1,8 +1,5 @@
-const connectDB = require('../mongoDB');
-
 module.exports = {
-    route: async(app) => {
-        const db = await connectDB();
+    route: async(app, db) => {
         const usersData = db.collection('users');
 
         app.post('/api/register', async(req, res) => {

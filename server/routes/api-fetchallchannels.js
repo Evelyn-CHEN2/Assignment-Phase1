@@ -1,8 +1,5 @@
-const connectDB = require('../mongoDB');
-
 module.exports = {
-    route: async(app) => {
-        const db = await connectDB();
+    route: async(app, db) => {
         const channelData = db.collection('channels');
 
         app.get('/api/allchannels', async(req, res) => {

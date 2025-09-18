@@ -1,8 +1,5 @@
-const connectDB = require('../mongoDB');
-
 module.exports = {
-    route: async(app) => {
-        const db = await connectDB();
+    route: async(app, db) => {
         const notificationsData = db.collection('notifications');
 
         app.get('/api/fetchnotifications', async(req, res) => {

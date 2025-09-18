@@ -1,9 +1,7 @@
-const connectDB = require('../mongoDB');
 const { ObjectId } = require('mongodb');
 
 module.exports = {
-    route: async(app) => {
-        const db = await connectDB();
+    route: async(app, db) => {
         const notificationsData = db.collection('notifications');
 
         app.delete('/api/deletenotification/:id', async(req, res) => {
