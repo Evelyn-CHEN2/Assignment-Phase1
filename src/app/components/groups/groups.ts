@@ -45,7 +45,6 @@ export class Groups implements OnInit {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private notificationService = inject(NotificationService);
-  declare bootstrap: any;
 
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
@@ -141,7 +140,6 @@ export class Groups implements OnInit {
   openDeleteGroupModal(group: GroupReformatted): void {
     this.errMsg = '';
     this.selectedGroup = group;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteGroupModal')!).show();
   }
 
   // Delete a group
@@ -168,7 +166,6 @@ export class Groups implements OnInit {
   openDeleteChannelModal(channel: Channel): void {
     this.errMsg = '';
     this.selectedChannel = channel;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteChannelModal')!).show();
   }
 
   // Delete a channel from a group

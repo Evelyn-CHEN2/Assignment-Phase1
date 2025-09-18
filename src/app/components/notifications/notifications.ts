@@ -29,7 +29,6 @@ export class Notifications implements OnInit {
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private groupService = inject(GroupService);
-  declare bootstrap: any;
 
   ngOnInit(): void {
     // Fetch all group applications for groups created by current super/admin
@@ -71,7 +70,6 @@ export class Notifications implements OnInit {
   // Toggle approve application modal
   openApproveModal(notification: Notification): void {
     this.selectedNotification = notification;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('approveApplicationModal')!).show();
   }
 
   // Approve group application
@@ -106,7 +104,6 @@ export class Notifications implements OnInit {
   // Toggle delete application modal
   openDeleteModal(notification: Notification): void {
     this.selectedNotification = notification;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteApplicationModal')!).show();
   }
 
   // Delete a notification
@@ -130,7 +127,6 @@ export class Notifications implements OnInit {
   // Toggle unban modal
   openUnbanModal(user: User): void {
     this.bannedUser = user;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmUnbanModal')!).show();
   }
 
   // Unban a user

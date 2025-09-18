@@ -34,7 +34,6 @@ export class Account implements OnInit {
   private groupService = inject(GroupService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  declare bootstrap: any;
 
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
@@ -82,7 +81,6 @@ export class Account implements OnInit {
   // Toggle delete confirmation modal
   openDeleteModal(user: User): void {
     this.user = user;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteModal')!).show();
   }
 
   // Delete user account, operated by logged user self
@@ -106,7 +104,6 @@ export class Account implements OnInit {
   // Toggle to leave group
   openLeaveGroupModal(group: GroupReformatted): void {
     this.selectedGroup = group;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmLeaveGroupModal')!).show();
   }
 
   // Leave a group

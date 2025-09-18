@@ -36,7 +36,6 @@ export class Users {
   private authService = inject(AuthService);
   private groupService = inject(GroupService);
   private router = inject(Router);
-  declare bootstrap: any
 
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
@@ -113,7 +112,6 @@ export class Users {
   // Toggle ban confirmation modal
   openBanModal(user: User): void {
     this.selectedUser = user;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmBanModal')!).show();
   }
 
   // Ban user and report to super
@@ -137,7 +135,6 @@ export class Users {
   openRemoveModal(user: User, group: Group): void {
     this.selectedUser = user;
     this.selectedGroup = group;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmRemoveModal')!).show();
   }
 
   // Remove user form the group
@@ -163,7 +160,6 @@ export class Users {
   // Toggle delete dummy user confirmation modal
   openDeleteUserModal(user: User): void {
     this.selectedUser = user;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmDeleteUserModal')!).show();
   }
   // Delete a dummy user for super
   confirmDeleteUser(user: User, event: any): void {
@@ -192,7 +188,6 @@ export class Users {
   openUpdateModal(user: User, group: Group): void {
     this.selectedUser = user;
     this.selectedGroup = group;
-    this.bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmUpdateModal')!).show();
   }
 
   private closeUpdateModel(user: User, group: Group): void {
