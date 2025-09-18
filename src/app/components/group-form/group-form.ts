@@ -2,9 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FormsModule, NgForm} from '@angular/forms';
 import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
-import { Membership, User } from '../../interface';
+import { User } from '../../interface';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-group-form',

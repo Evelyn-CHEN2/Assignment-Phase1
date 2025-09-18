@@ -6,9 +6,9 @@ import { AuthService } from '../../services/auth.service';
 import { Group, Channel, User } from '../../interface';
 import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { filter, forkJoin, zipAll } from 'rxjs';
-import { map, switchMap, of, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs';
 
 // Reformatted groups with channels, not channel IDs
 type GroupReformatted = Omit<Group, 'channels'> & { channels: Channel[] }; 
@@ -32,7 +32,6 @@ export class Account implements OnInit {
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private groupService = inject(GroupService);
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
 
   ngOnInit(): void {

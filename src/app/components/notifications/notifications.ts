@@ -5,7 +5,7 @@ import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { GroupService } from '../../services/group.service';
-import { forkJoin, map, switchMap } from 'rxjs';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-notifications',
