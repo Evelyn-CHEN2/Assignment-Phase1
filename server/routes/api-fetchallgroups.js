@@ -1,10 +1,10 @@
 module.exports = {
     route: async(app, db) => {
-        const groupData = db.collection('groups');
+        const groupsData = db.collection('groups');
 
-        app.get('/api/allgroups', async(req, res) => {
+        app.get('/api/allgroups', async(_req, res) => {
             try {
-                const groups = await groupData.find().toArray();
+                const groups = await groupsData.find().toArray();
                 res.send(groups);
             } 
             catch (error) {

@@ -9,15 +9,17 @@ module.exports = {
                 return res.status(400).json({ error: 'No data provided' });
             }
             const userId = String(req.params.id);
-            const channleId = String(req.body.channelId);
+            const channelId = String(req.body.channelId);
 
             // Create a new banReport collection
             try {
-                const newBanReport = await banReportsData.insertOne({
-                    _id: new ObjectId(),
-                    userId: new ObjectId(userId),
-                    channleId: new ObjectId(channleId)
-                });
+                const newBanReport = await banReportsData.updateOne(
+                    { userId: new ObjectId(userId) },
+                    {
+                        $addToSet: { channelIds: new ObjectId(channelId) }
+                    },
+                    { upsert: true }
+            );
                 res.send(newBanReport);
             }
             catch (error) {

@@ -26,9 +26,9 @@ module.exports = {
                     avatar: null,
                     isSuper: false
                 };
-                const newUserInsert = await usersData.insertOne(newData);
+                const { insertedId } = await usersData.insertOne(newData);
                 // Send formatted user data back to fontend for UI update, remove pwd
-                const safeUser = { ...newData, _id: newUserInsert.insertedId };
+                const safeUser = { ...newData, _id: insertedId };
                 delete safeUser.pwd;
                 res.send(safeUser);
             } 

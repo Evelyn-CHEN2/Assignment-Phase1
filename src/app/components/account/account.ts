@@ -28,6 +28,7 @@ export class Account implements OnInit {
   newRole: Record<string, string> = {}; // For selecting new role in each group
   roleByGroup: Record<string, string> = {}; 
   errMsg: string = '';
+  isBanned: boolean = false;
   
   private authService = inject(AuthService);
   private userService = inject(UserService);

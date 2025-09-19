@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Notification } from '../interface';
+import { BanReport, Notification } from '../interface';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,10 @@ export class NotificationService {
 
   deleteNotification(id: string): Observable<void> {
     return this.http.delete<void>(`${this.server}/api/deletenotification/${id}`);
+  }
+
+  fetchBanReports(): Observable<BanReport[]>{
+    return this.http.get<BanReport[]>(this.server + '/api/fetchallreports')
   }
 
 }

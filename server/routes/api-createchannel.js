@@ -25,9 +25,9 @@ module.exports = {
                     chatMsg: [],
                     groupId: new ObjectId(groupId)
                 };
-                const newChannelInsert = await channelsData.insertOne(newData);
+                const { insertedId } = await channelsData.insertOne(newData);
                 // Send formatted channel data back to fontend for UI update
-                const newChannel = { ...newData, _id: newChannelInsert.insertedId };
+                const newChannel = { ...newData, _id: insertedId };
 
                 await groupsData.updateOne(
                     { _id: new ObjectId(groupId) },

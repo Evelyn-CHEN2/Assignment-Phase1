@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Notification, User } from '../../interface';
+import { Notification, User, BanReport } from '../../interface';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
@@ -16,14 +16,16 @@ import { forkJoin, map } from 'rxjs';
 })
 export class Notifications implements OnInit {
   notifications: Notification[] = [];
-  bannedUsers: User[] = [];
   loggedUser: User | null = null;
   userRole: string = '';
   errMsg: string = '';
   userById: Record<string, string> = {};
   groupById: Record<string, string> = {};
+  channelById: Record<string, string> = {};
   selectedNotification: Notification | null = null;
-  bannedUser: User | null = null;
+  banReports: BanReport[] = [];
+  userId: string = '';
+  channelId: string = '';
 
   private notificationService = inject(NotificationService);
   private authService = inject(AuthService);
@@ -39,15 +41,20 @@ export class Notifications implements OnInit {
     forkJoin({
       users: this.userService.getUsers(),
       groups: this.groupService.getGroups(),
+      channels: this.groupService.getChannels(),
       notifications: this.notificationService.fetchNotifications(),
+      banReports: this.notificationService.fetchBanReports(),
       membership: this.authService.fetchMembership(currentUser?._id || ''),
     }).pipe(
-      map(({ users, groups, membership, notifications }) => {
+      map(({ users, groups, channels, membership, notifications, banReports }) => {
         const userById = Object.fromEntries(
           users.map(u => [String(u._id), u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         )
         const groupById = Object.fromEntries(
           groups.map(g => [String(g._id), g.groupname])
+        )
+        const channelById = Object.fromEntries(
+          channels.map(c => [String(c._id), c.channelname])
         )
         this.userRole = membership?.role || '';
         // Filter notifications for groups administered by current user(admin)
@@ -56,13 +63,14 @@ export class Notifications implements OnInit {
           if (!groupApplying) return false;
           return membership?.admin === this.loggedUser?._id && membership?.groups?.includes(groupApplying?._id);
         });
-        return { notifications, adminNotifications, userById, groupById, users };
+        return { notifications, adminNotifications, userById, groupById, channelById, banReports };
       })
-    ).subscribe(({ notifications, adminNotifications, userById, groupById, users }) => {
+    ).subscribe(({ notifications, adminNotifications, userById, groupById, channelById, banReports }) => {
         this.notifications = this.userRole === 'super' ? notifications : adminNotifications;
         this.userById = userById;
         this.groupById = groupById;
-        this.bannedUsers = users.filter(u => u.valid === false);
+        this.channelById = channelById;
+        this.banReports = banReports;
         this.errMsg = '';
       }); 
   }
@@ -125,18 +133,24 @@ export class Notifications implements OnInit {
   }
 
   // Toggle unban modal
-  openUnbanModal(user: User): void {
-    this.bannedUser = user;
+  openUnbanModal(userId: string, channelId: string): void {
+    this.userId = userId;
+    this.channelId = channelId;
   }
 
   // Unban a user
-  unBan(user: User, event: any): void {
+  unBan(userId: string, channelId: string, event: any): void {
     event.preventDefault();
-    if (!user) return;
-    this.userService.unBanUser(user._id).subscribe({
+    if (!userId || !channelId) return;
+    this.userService.unBanUser(userId, channelId).subscribe({
       next: () => {
         // Remove the unbanned user from the bannedUsers array
-        this.bannedUsers = this.bannedUsers.filter(u => u._id !== user._id);
+        this.banReports = this.banReports.map(r => {
+            return {
+              ...r,
+              channelIds: r.channelIds.filter(cId => cId !== channelId)
+            }
+          })
       },
       error: (err: any) => {
         this.errMsg = err.error.error || 'An error occurred while unbanning the user.';

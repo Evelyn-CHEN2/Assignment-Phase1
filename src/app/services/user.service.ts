@@ -38,7 +38,7 @@ export class UserService {
     return this.http.post<void>(`${this.server}/api/banuserbyID/${id}`, {channelId});
   }
 
-  unBanUser(id: string): Observable<void> {
-    return this.http.put<void>(`${this.server}/api/unbanuserbyID/${id}`, {});
+  unBanUser(userId: string, channelId: string): Observable<void> {
+    return this.http.put<void>(`${this.server}/api/unbanuserbyID/${userId}`, {channelId});
   }
 }

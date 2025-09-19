@@ -52,12 +52,13 @@ const sockets = require('./socket.js');
         require('./routes/api-fetchallchannels.js').route(app, db);
         require('./routes/api-createchannel.js').route(app, db);
         require('./routes/api-deletechannel.js').route(app, db);
-        require('./routes/api-fetchchatmessages.js').route(app, db)
+        require('./routes/api-fetchchatmessages.js').route(app, db);
 
         // Routes for notifications management
         require('./routes/api-createnotification.js').route(app, db);
         require('./routes/api-fetchnotifications.js').route(app, db);
         require('./routes/api-deletenotification.js').route(app, db);
+        require('./routes/api-fetchallreports.js').route(app, db);
     }
     catch (err) {
         console.error('Failed to start server:', err);

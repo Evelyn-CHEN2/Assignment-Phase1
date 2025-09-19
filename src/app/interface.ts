@@ -52,3 +52,9 @@ export interface UpdatedUserRole {
     user: User;
     group: Group;
 }
+
+export interface BanReport {
+    _id: string;
+    userId: string;
+    channelIds: string[];
+}
