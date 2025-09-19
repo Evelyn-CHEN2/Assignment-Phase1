@@ -1,5 +1,4 @@
 <div class="chat-window">
-    <!-- Basic information of channel -->
     <div class="chat-header">
       <div class="chan-info">
         <button type="button" class="back-btn" (click)="goBack()">
@@ -14,7 +13,7 @@
       <p class="chan-sub">Online: {{userNum}}</p>
     </div>
   
-    <!-- Messages -->
+    <!-- Messages display window-->
     <div class="chat-body" #scrollArea>
       <ul class="msg-list">
         @for (m of chatMessages; track $index) {

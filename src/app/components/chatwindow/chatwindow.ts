@@ -6,6 +6,7 @@ import { GroupService } from '../../services/group.service';
 import { SlicePipe, UpperCasePipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { ChatmessageService } from '../../services/chatmessage.service';
 import { map } from 'rxjs';
 import { SocketService } from '../../services/socket.service';
 
@@ -30,6 +31,7 @@ export class Chatwindow implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private groupService = inject(GroupService);
   private userService = inject(UserService);
+  private chatMsgService = inject(ChatmessageService)
   private router = inject(Router);
   private socketService = inject(SocketService);
   private socket: any; // Define the socket property
@@ -43,11 +45,13 @@ export class Chatwindow implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     if (!this.currentUser) return;
-    this.channelId = this.route.snapshot.params['id'];
-    if (!this.channelId) {
+    const id = this.route.snapshot.params['id'];
+    if (!id) {
       console.error('Channel ID is missing in the route parameters.');
       return;
     }
+    this.channelId = id;
+    console.log('channel id: ', this.channelId)
     // Fetch channel and users for displaying channel and user names on the header
     this.groupService.getChannels().pipe(
       map((channels: Channel[]) => {
@@ -66,6 +70,7 @@ export class Chatwindow implements OnInit, OnDestroy {
         this.errMsg = '';
       })
     });
+    this.chatMsgService.fetchMsgsByChannelId(this.channelId).subscribe(chatMsgs => this.chatMessages = chatMsgs)
 
     // Socket.io integration
     const senderName = this.currentUser.username || 'A new user';
@@ -91,7 +96,7 @@ export class Chatwindow implements OnInit, OnDestroy {
         _id: 'system-notice', // Default ID for system notices
         sender: '', // System
         message: n,
-        channelId: this.channelId, // Use the current channel ID
+        channelId: this.channelId,
         timestamp: new Date()
       })
     })
@@ -120,7 +125,7 @@ export class Chatwindow implements OnInit, OnDestroy {
   // Send a new message
   sendMessage(event: any): void{
     event.preventDefault();
-    this.message = '';
+    this.errMsg = '';
     if (!this.message.trim()) {
       this.errMsg = 'Message cannot be empty.';
       return;
@@ -135,7 +140,9 @@ export class Chatwindow implements OnInit, OnDestroy {
     }
     const newMessage = this.message.trim();
     const sender = this.currentUser._id;
+    console.log('data to be sent to server: ', this.message)
     // Emit message via Socket.io
     this.socketService.sendMessage(this.channelId, sender, newMessage);
+    this.message = '';
   }
 }

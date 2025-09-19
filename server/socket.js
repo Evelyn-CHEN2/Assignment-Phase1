@@ -6,7 +6,6 @@ module.exports = {
 
         // Fetch collection
         const chatMsgs = db.collection('chatMsgs');
-        console.log('chat message: ', chatMsgs)
         await chatMsgs.createIndex({
             channelId: 1,
             timestamp: 1

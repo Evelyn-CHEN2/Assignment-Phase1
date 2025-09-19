@@ -6,7 +6,7 @@ module.exports = {
 
         app.get('/api/fetchmembership', async(req, res) => {
             // Fetch the user's membership details
-            const userId = req.query.userId;
+            const userId = String(req.query.userId);
 
             try {
                 const membership = await membershipData.findOne(
