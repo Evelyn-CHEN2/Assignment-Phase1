@@ -26,12 +26,18 @@
           <div class="card-body">
             <div class ="d-flex justify-content-between">
               <h5 class="card-title mb-1">
-                <a href="#"
-                   (click)="toggleEditGroup(group, $event)"
-                   data-bs-toggle="modal"
-                   data-bs-target="#editGroupModal">
-                   {{group.groupname}}
-                  </a>
+                @if (userRole === 'super' || userRole === 'admin') {
+                  <a href="#"
+                  class="text-reset text-decoration-none"
+                  style="cursor: pointer"
+                  (click)="toggleEditGroup(group, $event)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editGroupModal">
+                  {{group.groupname}}
+               </a>
+                } @else {
+                  {{group.groupname}}
+                }
               </h5>
               <div style="gap: 10px; display: flex;">
                 @if (userRole === 'super' || membership?.groups?.includes(group._id)) {
@@ -63,26 +69,6 @@
               
             </div>
             <p class="card-text mb-2">{{group.description}}</p>
-            <!-- button for admin to edit group  -->
-            <!-- @if (showEdit[group._id]){
-              <div class="add-pop mt-2">
-                <input class="form-control me-2" style="font-size: 13px" type="text" placeholder="New group name" 
-                [(ngModel)]="newGroupName[group._id]" name="newGroupName{{group._id}}" />
-                <button 
-                  class="btn btn-sm btn-outline-secondary" 
-                  style="font-size:x-small; background-color:#b7e4c7; color: black;" 
-                  type="button" 
-                  (click)="editGroup(group, $event)">
-                  Confirm
-                </button>
-                <button 
-                  class="btn btn-sm ms-2" 
-                  style="font-size:x-small;" type="button" 
-                  (click)="toggleEditGroup(group)">
-                  Cancel
-                </button>
-              </div>
-            } -->
             <p class="text-secondary small mb-2 text-end">
               Created by: {{group.createdBy ? userById[group.createdBy] : 'unknown'}}
             </p>
