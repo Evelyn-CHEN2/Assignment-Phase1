@@ -24,10 +24,6 @@
                   class="btn btn-m p-0" style="color:#023e8a;" type="button" 
                   (click)="toggleUserGroups(user)">
                   {{user.username}}
-                  @if (user.valid === false) {
-                    <i class="bi bi-ban" style="color: #ef233c; font-size: small;"></i>
-                  }
-                  
               </button>
             </td>
             <td style="font-size: medium;">{{user.email}}</td>

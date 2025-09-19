@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { Group, Channel, User } from '../../interface';
 import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
+import { NotificationService } from '../../services/notification.service';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs';
@@ -29,10 +30,12 @@ export class Account implements OnInit {
   roleByGroup: Record<string, string> = {}; 
   errMsg: string = '';
   isBanned: boolean = false;
+  bannedChannels: string[] = [];
   
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private groupService = inject(GroupService);
+  private notificationService = inject(NotificationService);
   private router = inject(Router);
 
   ngOnInit(): void {
@@ -42,20 +45,25 @@ export class Account implements OnInit {
       channels: this.groupService.getChannels(),
       allUsers: this.userService.getUsers(),
       membership: this.authService.fetchMembership(currentUser?._id || ''),
+      banReports: this.notificationService.fetchBanReports()
     }).pipe(
-      map(({ groups, channels, allUsers, membership }) => {
+      map(({ groups, channels, allUsers, membership, banReports }) => {
         // Refresh the user data
         this.user = allUsers.find(u => u._id === currentUser?._id) ?? currentUser;
         this.userRole = membership?.role || 'chatuser';
+        // Build an array of banned channels
+        const bannedChannels = banReports.flatMap(r => r.channelIds);
         // Filter groups with channels that belong to the user
         const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id));
         const formattedGroups = filteredGroups.map(g => {
           return {
             ...g,
-            channels: channels.filter(c => c.groupId === g._id)
+            channels: channels
+              .filter(c => c.groupId === g._id)
           }
         });
-        return { formattedGroups};
+          
+        return { formattedGroups, bannedChannels};
       })
     ).subscribe({
       next: (data) => {
@@ -64,6 +72,7 @@ export class Account implements OnInit {
           return;
         }
         this.formattedGroups = data.formattedGroups;
+        this.bannedChannels = data.bannedChannels;
         this.errMsg = '';
       },
       error: (err: any) => {
