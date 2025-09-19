@@ -1,40 +1,27 @@
-const fs = require('fs');
-const path = require('path');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
-    route: (app) => {
-        const usersFile = path.join(__dirname, '../data/users.json');
+    route: async(app, db) => {
+        const banReportsData = await db.collection('banReports')
 
-        // Function to read users from file
-        const readUsers = () => {
-            const data = fs.readFileSync(usersFile, 'utf8');
-            const users = JSON.parse(data);
-            return Array.isArray(users) ? users : [];
-        };
-
-        // Function to write users to file
-        const writeUsers = (users) => {
-            fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
-        }
-
-        app.put('/api/banuserbyID/:id', (req, res) => {
-            if (!req.params) {
+        app.post('/api/banuserbyID/:id', async(req, res) => {
+            if (!req.params || !req.body) {
                 return res.status(400).json({ error: 'No data provided' });
             }
+            const userId = String(req.params.id);
+            const channleId = String(req.body.channelId);
 
-            let users = readUsers();
-            const userIndex = users.findIndex(u => u.id === Number(req.params.id));
-            if (userIndex === -1) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-            users[userIndex].valid = false;
-
+            // Create a new banReport collection
             try {
-                writeUsers(users);
-                res.sendStatus(204);
+                const newBanReport = await banReportsData.insertOne({
+                    _id: new ObjectId(),
+                    userId: new ObjectId(userId),
+                    channleId: new ObjectId(channleId)
+                });
+                res.send(newBanReport);
             }
             catch (error) {
-                console.error('Error writing users file after banning: ', error);
+                console.error('Error writing ban report after banning: ', error);
                 res.status(500).json({ error: 'Failed to ban user.' });
             }
         })

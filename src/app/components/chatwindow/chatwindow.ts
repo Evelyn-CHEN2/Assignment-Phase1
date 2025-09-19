@@ -26,6 +26,7 @@ export class Chatwindow implements OnInit, OnDestroy {
   message: string = '';
   errMsg: string = '';
   chatMessages: chatMsg[] = []; 
+  selectedUser: string = ''; // User id who is selected to ban 
 
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
@@ -36,7 +37,7 @@ export class Chatwindow implements OnInit, OnDestroy {
   private socketService = inject(SocketService);
   private socket: any; // Define the socket property
 
-  private handleUserNum = ({channelId, userNum} : { channelId: string; userNum: number }) =>{
+  private handleUserNum = ({channelId, userNum} : {channelId: string; userNum: number}) =>{
     if (channelId === this.channelId) {
       this.userNum = userNum;
     }
@@ -145,4 +146,41 @@ export class Chatwindow implements OnInit, OnDestroy {
     this.socketService.sendMessage(this.channelId, sender, newMessage);
     this.message = '';
   }
+
+    // Toggle ban confirmation modal
+  openBanModal(userId: string): void {
+    this.selectedUser = userId;
+  }
+  
+  // Ban user and report to super
+  confirmBan(userId: string, channelId: string, event: any): void {
+    event.preventDefault();
+    // this.userService.getUserById(userId).subscribe({
+    //   next: (user) => {
+    //     if (!user) {
+    //       this.errMsg = 'User not found.';
+    //       return;
+    //     }
+        this.userService.banUser(userId, channelId).subscribe({
+          next: () => {
+            console.log('User banned successfully.')
+          },
+          error: (err: any) => {
+            console.error('Error banning user:', err);
+            this.errMsg = err.error.error || 'Error happened while banning a user.';
+          },
+          complete: () => { 
+            console.log('User ban complete.');
+          }   
+        });
+      }
+      // error: (err: any) => {
+      //   console.error('Error fetch user while banning user:', err);
+      //   this.errMsg = err.error.error;
+      // },
+      // complete: () => { 
+      //   console.log('User fetch while ban complete.');
+      // }
+    // })
+  
 }

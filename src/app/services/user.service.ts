@@ -34,8 +34,8 @@ export class UserService {
     return this.http.delete<void>(`${this.server}/api/removeuserfromgroup`, { params: { userId, groupId }});
   }
 
-  banUser(id: string): Observable<void> {
-    return this.http.put<void>(`${this.server}/api/banuserbyID/${id}`, {});
+  banUser(id: string, channelId: string): Observable<void> {
+    return this.http.post<void>(`${this.server}/api/banuserbyID/${id}`, {channelId});
   }
 
   unBanUser(id: string): Observable<void> {

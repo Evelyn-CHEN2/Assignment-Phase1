@@ -12,7 +12,6 @@ module.exports = {
                     .sort({timestamp: 1})
                     .limit(50)
                     .toArray();
-                console.log('all chat messages: ', chatMsgs)
                 res.send(chatMsgs);
             }
             catch (error) {

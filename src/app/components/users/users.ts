@@ -109,28 +109,6 @@ export class Users {
     this.showUserGroups[user._id] = !this.showUserGroups[user._id];
   }
 
-  // Toggle ban confirmation modal
-  openBanModal(user: User): void {
-    this.selectedUser = user;
-  }
-
-  // Ban user and report to super
-  confirmBan(user: User, event: any): void {
-    event.preventDefault();
-    this.userService.banUser(user._id).subscribe({
-      next: () => {
-        user.valid = false;
-      },
-      error: (err: any) => {
-        console.error('Error banning user:', err);
-        this.errMsg = err.error.error || 'Error happened while banning a user.';
-      },
-      complete: () => { 
-        console.log('User ban complete.');
-      }
-    })
-  }
-
   // Toggle remove user from group confirmation modal
   openRemoveModal(user: User, group: Group): void {
     this.selectedUser = user;
