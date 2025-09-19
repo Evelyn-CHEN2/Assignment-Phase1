@@ -96,7 +96,7 @@ export class Chatwindow implements OnInit, OnDestroy {
       })
     })
 
-    // Request current number of users in the channel
+    // Request real-time current number of users in the channel
     this.socketService.onUserNum(({channelId, userNum}: {channelId: string, userNum: number}) => {
       if (channelId === this.channelId) {
         this.userNum = userNum;
@@ -120,6 +120,7 @@ export class Chatwindow implements OnInit, OnDestroy {
   // Send a new message
   sendMessage(event: any): void{
     event.preventDefault();
+    this.message = '';
     if (!this.message.trim()) {
       this.errMsg = 'Message cannot be empty.';
       return;
@@ -136,6 +137,5 @@ export class Chatwindow implements OnInit, OnDestroy {
     const sender = this.currentUser._id;
     // Emit message via Socket.io
     this.socketService.sendMessage(this.channelId, sender, newMessage);
-    this.message = '';
   }
 }

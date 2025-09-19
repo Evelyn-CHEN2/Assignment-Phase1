@@ -1,12 +1,12 @@
-const connectDB = require('./mongoDB');
+const { ObjectId } = require('mongodb');
 
 module.exports = {
-    connect: async(io) => {
+    connect: async(io, db) => {
         const channelChat = io.of('/channelChat');
 
         // Fetch collection
-        const db = await connectDB()
         const chatMsgs = db.collection('chatMsgs');
+        console.log('chat message: ', chatMsgs)
         await chatMsgs.createIndex({
             channelId: 1,
             timestamp: 1
@@ -41,8 +41,8 @@ module.exports = {
             socket.on('chatMsg', async({channelId, sender, message}) => {
                 try {
                     const chatMsg = {
-                        channelId: new ObjectId(channelId),
-                        sender: new ObjectId(sender),
+                        channelId: new ObjectId(String(channelId)),
+                        sender: new ObjectId(String(sender)),
                         message: String(message),
                         timestamp: new Date()
                     }
@@ -59,7 +59,7 @@ module.exports = {
                 }
             })
 
-            // Event to count users in a channel room
+            // Event to ensure the number of users get updated immediately
             socket.on('reqUserNum', (channelId) => {
                 const room = channelChat.adapter.rooms.get(channelId);
                 const size = room ? room.size : 0;

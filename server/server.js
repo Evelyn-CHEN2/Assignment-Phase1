@@ -1,28 +1,31 @@
 const express = require('express');
+const app = express();
+const cors = require('cors');
+app.use(express.json());
+app.use(cors());
+
 const PORT = 3000;
-const cors = require('cors'); 
+const server = require('http').createServer(app); 
+
 const connectDB = require('./mongoDB.js');
 
+const options = {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+}
+const io = require('socket.io')(server, options);
+const sockets = require('./socket.js');
+
 (async () => {
-    const app = express();
-    app.use(cors());
-    app.use(express.json());
     try {
-        const server = require('http').createServer(app);
-        const options = {
-            cors: {
-                origin: "*",
-                methods: ["GET", "POST"]
-            }
-        }
-        const io = require('socket.io')(server, options);
-        const sockets = require('./socket.js');
-        sockets.connect(io, PORT);
+        const db = await connectDB();
+        sockets.connect(io, db);
         server.listen(PORT, () => {
             console.log(`HTTP + Socket.IO listening on http://localhost:${PORT}`);
         });
 
-        const db = await connectDB();
         // Routes to handle user authentication
         require('./routes/api-login.js').route(app, db);
         require('./routes/api-register.js').route(app, db);
