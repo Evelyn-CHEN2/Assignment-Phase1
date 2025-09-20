@@ -31,6 +31,9 @@ export class Account implements OnInit {
   errMsg: string = '';
   isBanned: boolean = false;
   bannedChannels: string[] = [];
+  avatarSrc = '';
+  isUploading = false;
+  selectedUser: User | null = null; // Stores user object
   
   private authService = inject(AuthService);
   private userService = inject(UserService);
@@ -137,6 +140,20 @@ export class Account implements OnInit {
     this.channel = channel;
     // Navigate to the chat window with the selected channel ID
     this.router.navigate(['/chatwindow', channel._id])
+  }
+
+  // Change user avatat
+  openProfileModal(user: User, event: any): void {
+    event.preventDefault();
+    this.selectedUser = { ...user };
+  }
+
+  saveEdit() {
+
+  }
+
+  changeAvatar(event: any) {
+    
   }
 }
 

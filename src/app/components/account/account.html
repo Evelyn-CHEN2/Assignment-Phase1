@@ -8,6 +8,13 @@
     </div>
    
     <div class="header-actions">
+      <button 
+        type="button" 
+        class="roles-badge roles-badge--btn"
+        data-bs-toggle="modal" data-bs-target="#changeProfileModal"
+        (click)="openProfileModal(user!, $event)">
+        <i class="bi bi-person-lines-fill"></i>
+      </button>
       <span class="roles-badge" [attr.data-role]="userRole">
         {{ userRole }}
       </span>
@@ -115,4 +122,51 @@
 @if (errMsg) {
   <p class="text-danger mb-0" style="font-size: small;">*{{ errMsg }}</p>
 }
+       
+<!-- Change user profile modal -->
+<div class="modal fade" id="changeProfileModal" tabindex="-1" aria-labelledby="changeProfileLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    @if(selectedUser) {
+      <form class="modal-content" (ngSubmit)="saveEdit()">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                  <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                      <label class="form-label">Name</label>
+                      <input type="text" class="form-control"
+                          [(ngModel)]="selectedUser.username" name="username" required>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label">Email</label>
+                      <input type="text" class="form-control"
+                          [(ngModel)]="selectedUser.email" name="email" required>
+                    </div>
+                  </div>
+                </div>
         
+                <div class="mb-3">
+                  <input #fileInput type="file" accept="image/*" (change)="changeAvatar($event)">
+                  <img [src]="avatarSrc || '/assets/avatar.png'" class="avatar">
+                  <button type="button" (click)="fileInput.click()"  [disabled]="isUploading">
+                    {{isUploading ? 'Uploading...' : 'Change avatar'}}
+                  </button>
+                </div>
+            </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+            Save
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>
+
+  
