@@ -40,6 +40,7 @@ const sockets = require('./socket.js');
         require('./routes/api-banuserByID.js').route(app, db);
         require('./routes/api-unbanuserByID.js').route(app, db);
         require('./routes/api-fetchmembership.js').route(app, db);
+        require('./routes/api-uploadavatar.js').route(app, db);
 
         // Routes for groups management
         require('./routes/api-fetchallgroups.js').route(app, db);

@@ -41,4 +41,10 @@ export class UserService {
   unBanUser(userId: string, channelId: string): Observable<void> {
     return this.http.put<void>(`${this.server}/api/unbanuserbyID/${userId}`, {channelId});
   }
+
+  uploadAvatar(userId: string, file: File): Observable<{avatar: string}> {
+    const fd = new FormData();
+    fd.append('avatar', file)
+    return this.http.post<{avatar: string}>(`${this.server}/api/uploadavatar/${userId}/avatar`, fd)
+  }
 }

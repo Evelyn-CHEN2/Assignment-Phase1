@@ -34,6 +34,7 @@ export class Account implements OnInit {
   bannedUsers: string[] = [];
   avatarSrc = '';
   isUploading = false;
+  avatarFile: File | null = null;
   selectedUser: User | null = null; // Stores user object
   
   private authService = inject(AuthService);
@@ -90,7 +91,6 @@ export class Account implements OnInit {
       }
     });
   }
-
 
   // Operations for user self
   // Toggle delete confirmation modal
@@ -151,13 +151,39 @@ export class Account implements OnInit {
     this.selectedUser = { ...user };
   }
 
-  saveEdit() {
-
-  }
-
   changeAvatar(event: any) {
-    
+    event.preventDefault();
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.avatarFile = file;
+
+    const reader = new FileReader();
+    reader.onload = () => this.avatarSrc = reader.result as string;
+    reader.readAsDataURL(file);
   }
+
+  saveEdit() {
+    if (!this.selectedUser?._id || !this.avatarFile) return;
+    this.isUploading = true;
+    const userId = this.selectedUser._id;
+    this.userService.uploadAvatar(userId, this.avatarFile).subscribe({
+      next: ({avatar}) => {
+        if (this.user) {
+          this.user.avatar = avatar;
+        }
+        this.avatarSrc = avatar;
+        this.isUploading = false;
+      },
+      error: (err) => {
+        console.error('Uploading failed: ', err);
+        this.isUploading = false;
+      },
+      complete: () => {
+        console.log('Avatar uploaded sucessfully!')
+      }
+    })
+  }
+
 }
 
 
