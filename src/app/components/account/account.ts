@@ -31,6 +31,7 @@ export class Account implements OnInit {
   errMsg: string = '';
   isBanned: boolean = false;
   bannedChannels: string[] = [];
+  bannedUsers: string[] = [];
   avatarSrc = '';
   isUploading = false;
   selectedUser: User | null = null; // Stores user object
@@ -56,6 +57,7 @@ export class Account implements OnInit {
         this.userRole = membership?.role || 'chatuser';
         // Build an array of banned channels
         const bannedChannels = banReports.flatMap(r => r.channelIds);
+        const bannedUsers = banReports.map(r => r.userId);
         // Filter groups with channels that belong to the user
         const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id));
         const formattedGroups = filteredGroups.map(g => {
@@ -66,7 +68,7 @@ export class Account implements OnInit {
           }
         });
           
-        return { formattedGroups, bannedChannels};
+        return { formattedGroups, bannedChannels, bannedUsers};
       })
     ).subscribe({
       next: (data) => {
@@ -76,6 +78,7 @@ export class Account implements OnInit {
         }
         this.formattedGroups = data.formattedGroups;
         this.bannedChannels = data.bannedChannels;
+        this.bannedUsers = data.bannedUsers;
         this.errMsg = '';
       },
       error: (err: any) => {
