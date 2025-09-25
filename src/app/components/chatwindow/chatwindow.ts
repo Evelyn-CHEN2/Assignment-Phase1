@@ -52,7 +52,6 @@ export class Chatwindow implements OnInit, OnDestroy {
       return;
     }
     this.channelId = id;
-    console.log('channel id: ', this.channelId)
     // Fetch channel and users for displaying channel and user names on the header
     this.groupService.getChannels().pipe(
       map((channels: Channel[]) => {
@@ -141,7 +140,6 @@ export class Chatwindow implements OnInit, OnDestroy {
     }
     const newMessage = this.message.trim();
     const sender = this.currentUser._id;
-    console.log('data to be sent to server: ', this.message)
     // Emit message via Socket.io
     this.socketService.sendMessage(this.channelId, sender, newMessage);
     this.message = '';
@@ -155,32 +153,17 @@ export class Chatwindow implements OnInit, OnDestroy {
   // Ban user and report to super
   confirmBan(userId: string, channelId: string, event: any): void {
     event.preventDefault();
-    // this.userService.getUserById(userId).subscribe({
-    //   next: (user) => {
-    //     if (!user) {
-    //       this.errMsg = 'User not found.';
-    //       return;
-    //     }
-        this.userService.banUser(userId, channelId).subscribe({
-          next: () => {
-            console.log('User banned successfully.')
-          },
-          error: (err: any) => {
-            console.error('Error banning user:', err);
-            this.errMsg = err.error.error || 'Error happened while banning a user.';
-          },
-          complete: () => { 
-            console.log('User ban complete.');
-          }   
-        });
-      }
-      // error: (err: any) => {
-      //   console.error('Error fetch user while banning user:', err);
-      //   this.errMsg = err.error.error;
-      // },
-      // complete: () => { 
-      //   console.log('User fetch while ban complete.');
-      // }
-    // })
-  
+    this.userService.banUser(userId, channelId).subscribe({
+      next: () => {
+        console.log('User banned successfully.')
+      },
+      error: (err: any) => {
+        console.error('Error banning user:', err);
+        this.errMsg = err.error.error || 'Error happened while banning a user.';
+      },
+      complete: () => { 
+        console.log('User ban complete.');
+      }   
+    });
+  } 
 }
