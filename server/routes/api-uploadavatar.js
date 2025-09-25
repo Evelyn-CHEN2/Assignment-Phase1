@@ -15,7 +15,6 @@ module.exports = {
             const mime = req.file.mimetype;
             const b64 = req.file.buffer.toString('base64');
             const avatarUrl = `data:${mime};base64,${b64}`;
-
             const userId = new ObjectId(String(req.params.userId))
 
             try {

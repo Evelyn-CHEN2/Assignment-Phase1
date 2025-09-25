@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
 import { GroupForm } from './group-form';
 
 describe('GroupForm', () => {
@@ -8,7 +8,8 @@ describe('GroupForm', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GroupForm]
+      imports: [GroupForm],
+      providers: [provideHttpClient()]
     })
     .compileComponents();
 

@@ -11,4 +11,5 @@ import { Header } from './components/header/header';
 })
 export class App {
   protected readonly title = signal('Assignment-Phase1');
+  get appTitle(): string { return this.title()}
 }

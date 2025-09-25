@@ -156,9 +156,6 @@
                 <div class="mb-3">
                   <input #fileInput type="file" accept="image/*" (change)="changeAvatar($event)">
                   <img [src]="avatarSrc || selectedUser?.avatar" class="avatar-img">
-                  <button type="button" (click)="fileInput.click()"  [disabled]="isUploading">
-                    {{isUploading ? 'Uploading...' : 'Upload'}}
-                  </button>
                 </div>
             </div>
   

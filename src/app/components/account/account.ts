@@ -16,6 +16,7 @@ type GroupReformatted = Omit<Group, 'channels'> & { channels: Channel[] };
 
 @Component({
   selector: 'app-account',
+  standalone: true,
   imports: [FormsModule, CommonModule, NgSelectModule],
   templateUrl: './account.html',
   styleUrl: './account.css'
@@ -33,7 +34,6 @@ export class Account implements OnInit {
   bannedChannels: string[] = [];
   bannedUsers: string[] = [];
   avatarSrc = '';
-  isUploading = false;
   avatarFile: File | null = null;
   selectedUser: User | null = null; // Stores user object
   
@@ -145,15 +145,14 @@ export class Account implements OnInit {
     this.router.navigate(['/chatwindow', channel._id])
   }
 
-  // Change user avatat
+  // Change user avatar
   openProfileModal(user: User, event: any): void {
     event.preventDefault();
     this.selectedUser = { ...user };
   }
 
   changeAvatar(event: any) {
-    event.preventDefault();
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const file = event.target.files[0];
     if (!file) return;
     this.avatarFile = file;
 
@@ -164,7 +163,6 @@ export class Account implements OnInit {
 
   saveEdit() {
     if (!this.selectedUser?._id || !this.avatarFile) return;
-    this.isUploading = true;
     const userId = this.selectedUser._id;
     this.userService.uploadAvatar(userId, this.avatarFile).subscribe({
       next: ({avatar}) => {
@@ -172,11 +170,10 @@ export class Account implements OnInit {
           this.user.avatar = avatar;
         }
         this.avatarSrc = avatar;
-        this.isUploading = false;
+        this.errMsg = '';
       },
       error: (err) => {
         console.error('Uploading failed: ', err);
-        this.isUploading = false;
       },
       complete: () => {
         console.log('Avatar uploaded sucessfully!')
