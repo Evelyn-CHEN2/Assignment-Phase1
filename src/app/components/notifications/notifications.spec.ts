@@ -157,7 +157,7 @@ describe('Notifications', () => {
   });
  
   // Test delete notification
-  it('should delete notification for lists', () => {
+  it('should delete notification form lists', () => {
     notificationSpy.deleteNotification.and.returnValue(of(void 0));
     component.notifications = notifications;
     const notification = component.notifications[1]; // n2

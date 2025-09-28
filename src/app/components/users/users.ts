@@ -16,6 +16,9 @@ import { SlicePipe } from '@angular/common';
   styleUrl: './users.css'
 })
 export class Users {
+  closeUpdateModel(closeUpdateModel: any) {
+    throw new Error('Method not implemented.');
+  }
   users: User[] = [];
   loggedUser: User | null = null;
   userGroupsByUser: Record<string, Group[]> = {}; 
@@ -90,6 +93,7 @@ export class Users {
           this.roleByGroupByUser[userId] = userRoleByGroups; 
         })  
       })
+
       this.userRole = membership?.role || 'chatuser';
       this.errMsg = '';
     })
@@ -168,7 +172,7 @@ export class Users {
     this.selectedGroup = group;
   }
 
-  private closeUpdateModel(user: User, group: Group): void {
+  private closeUpdateModal(user: User, group: Group): void {
     this.showUpdateRole[(`${user._id}: ${group._id}`)] = false;
   }
   
@@ -184,7 +188,7 @@ export class Users {
       next: () => {
         // Update the UI 
         this.roleByGroupByUser[user._id][group._id] = newRole;
-        this.closeUpdateModel(user, group);
+        this.closeUpdateModal(user, group);
       },
       error: (err: any) => {
         console.error('Error updating user role:', err);
@@ -192,6 +196,7 @@ export class Users {
       },
       complete: () => { 
         console.log('User role update complete.');
+        this.errMsg = '';
       }
     })
   }
