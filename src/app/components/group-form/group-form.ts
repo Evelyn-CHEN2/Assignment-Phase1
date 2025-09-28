@@ -19,7 +19,6 @@ export class GroupForm {
   description: string = '';
   channelnames: string = '';
   errMsg: string = '';
-  isAdmin: boolean | null = null;
 
   private groupService = inject(GroupService);
   private authService = inject(AuthService);
@@ -41,44 +40,45 @@ export class GroupForm {
     // Only allow super or admin to create groups
     this.user = this.authService.getCurrentUser();
 
-    if (this.user) {
-      this.authService.fetchMembership(this.user._id).subscribe(m => this.isAdmin = m.admin === this.user?._id);
-    } else {
+    if(!this.user) {
       this.errMsg = 'User information is missing. Please log in again.';
       return;
     }
-
-    if (this.isAdmin === false) {
-      this.errMsg = 'You do not have permission to create groups!';
-      return; 
-    }
-    const channelNames = this.channelnames.split(/[\r?\n,;]+/)
-      .map(cname => cname.trim().replace(/^[,;]+|[,;]+$/g, ''))
-      .filter(c => c.length > 0);
-
-    if (!Array.isArray(channelNames)) {
-      this.errMsg = 'Please enter one channel name per line.';
-      return;
-    }
-    // Call the group service to create the group
-    if (!this.user) {
-      this.errMsg = 'User information is missing. Please log in again.';
-      return;
-    }
-    const userId = this.user._id;
-    this.groupService.createGroup(this.groupname, this.description, channelNames, userId).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard/groups']);
-        this.onReset(f);
-      }, 
-      error: (err: any) => {
-        console.error('Error creating group:', err);
-        this.errMsg = err.error?.error || 'An error occurred while creating a group.';
-      },
-      complete: () => {
-        console.log('Group created successfully.');
+    const userId = this.user?._id;
+    
+    this.authService.fetchMembership(userId).subscribe(m => {
+      if(!m) {
+        this.errMsg = 'You do not have permission to create groups!';
+        return
       }
+      
+      const groupName = this.groupname.trim();
+      const description = this.description.trim();
+      // (this.channelnames ?? '') ensures channelnames to be string when its null, for testing
+      const channelNames = (this.channelnames ?? '').split(/[\r?\n,;]+/)
+        .map(cname => cname.trim().replace(/^[,;]+|[,;]+$/g, ''))
+        .filter(c => c.length > 0);
+
+      if (!groupName || !description || channelNames.length === 0) {
+        this.errMsg = 'Please enter one channel name per line.';
+        return;
+      }
+      // Call the group service to create the group
+
+      this.groupService.createGroup(groupName, description, channelNames, userId).subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard/groups']);
+          this.onReset(f);
+        }, 
+        error: (err: any) => {
+          console.error('Error creating group:', err);
+          this.errMsg = err.error?.error || 'An error occurred while creating a group.';
+        },
+        complete: () => {
+          console.log('Group created successfully.');
+        }
     })
+  });
 
   }
 }

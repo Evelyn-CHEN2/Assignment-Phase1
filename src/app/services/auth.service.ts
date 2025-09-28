@@ -22,8 +22,8 @@ export class AuthService {
     return this.http.post<User>(this.server + '/api/register', { username: username, email: email, pwd: pwd });
   }
 
-  fetchMembership(userId: string): Observable<Membership> {
-    return this.http.get<Membership>(this.server + '/api/fetchmembership', { params: { userId } });
+  fetchMembership(userId: string): Observable<Membership | null> {
+    return this.http.get<Membership | null>(this.server + '/api/fetchmembership', { params: { userId } });
   }
 
   membership$: Observable<Membership | null> = this.currentUser$.pipe(
