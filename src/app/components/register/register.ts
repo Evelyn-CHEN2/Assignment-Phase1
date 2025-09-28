@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { GroupService } from '../../services/group.service';
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
-export class Register implements OnInit {
+export class Register {
   submitted = false;
   username: string = '';
   email: string ='';
@@ -26,7 +26,6 @@ export class Register implements OnInit {
   selectedGroupIds: string[] = [];
 
   private authService = inject(AuthService);
-  private groupService = inject(GroupService);
   private router = inject(Router);
 
   onReset(f: NgForm): void {
@@ -35,11 +34,11 @@ export class Register implements OnInit {
     f.resetForm();
   }
 
-  ngOnInit(): void {
-    this.groupService.getGroups().subscribe(groups =>{
-      this.availableGroups = groups;
-    })
-  }
+  // ngOnInit(): void {
+  //   this.groupService.getGroups().subscribe(groups =>{
+  //     this.availableGroups = groups;
+  //   })
+  // }
 
   register(f: NgForm): void {
     this.errMsg = ''; 
@@ -59,6 +58,7 @@ export class Register implements OnInit {
       },
       complete: () => {
         console.log('Registration request completed.');
+        this.errMsg = '';
       }
     })
   
