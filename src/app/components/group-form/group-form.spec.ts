@@ -40,10 +40,10 @@ describe('GroupForm', () => {
 
     fixture = TestBed.createComponent(GroupForm);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { of, throwError, timestamp } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { of, throwError } from 'rxjs';
 import { User, Channel, chatMsg } from'../../interface';
 import { Chatwindow } from './chatwindow';
 import { AuthService } from '../../services/auth.service';

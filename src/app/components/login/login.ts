@@ -23,6 +23,7 @@ export class Login implements OnInit {
   private router = inject(Router);
 
   ngOnInit(): void {
+    this.errMsg = '';
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
         this.router.navigate(['/account']);
@@ -54,7 +55,8 @@ export class Login implements OnInit {
         this.errMsg = err.error.error || 'Login failed. Please check your credentials and try again.';
       },
       complete: () => {
-        console.info('Login request completed');
+        console.log('Login request completed');
+        this.errMsg = ''
       }
     });
   }
