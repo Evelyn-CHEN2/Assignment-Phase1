@@ -119,7 +119,6 @@ export class Groups implements OnInit {
   // Edit a group
   saveEdit(event: any): void {
     event.preventDefault();
-    this.errMsg = '';
     if (!this.editGroup) return;
     const groupId = this.editGroup._id;
     const newGroupName = this.editGroup.groupname
@@ -137,6 +136,7 @@ export class Groups implements OnInit {
       },
       complete: () => {
         console.log('Group edit request completed.');
+        this.errMsg = '';
       }
     })
   }
@@ -163,6 +163,7 @@ export class Groups implements OnInit {
       },
       complete: () => {
         console.log('Group deletion request completed.');
+        this.errMsg = '';
       }
     })
   }
@@ -193,6 +194,7 @@ export class Groups implements OnInit {
       },
       complete: () => {
         console.log('Channel deletion request completed.');
+        this.errMsg = '';
       }
     })
   }
@@ -224,6 +226,7 @@ export class Groups implements OnInit {
       },
       complete: () => {
         console.log('Channel creation request completed.');
+        this.errMsg = '';
       }
     })
   }
@@ -250,6 +253,7 @@ export class Groups implements OnInit {
       },
       complete: () => {
         console.log('Application request completed.');  
+        this.errMsg = '';
       }
     })
   }
