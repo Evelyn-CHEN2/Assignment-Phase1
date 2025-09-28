@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { provideRouter, Router } from '@angular/router'; 
 import { Login } from './login';
 import { AuthService } from '../../services/auth.service';
 import { NgForm } from '@angular/forms';
@@ -21,9 +19,9 @@ describe('Login', () => {
     authSpy = jasmine.createSpyObj<AuthService>('AuthService', ['getCurrentUser', 'setCurrentUser', 'login']);
   
     await TestBed.configureTestingModule({
-      imports: [Login, RouterTestingModule],
+      imports: [Login],
       providers: [
-        provideHttpClient(),
+        provideRouter([]),
         { provide: AuthService, useValue: authSpy}
       ]
     })

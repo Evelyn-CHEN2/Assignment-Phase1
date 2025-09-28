@@ -105,6 +105,7 @@ export class Notifications implements OnInit {
       },
       complete: () => {
         console.log('Application approved successfully.');
+        this.errMsg = '';
       }
     });
   }
@@ -128,6 +129,7 @@ export class Notifications implements OnInit {
       },
       complete: () => {
         console.log('Notification deleted successfully.');
+        this.errMsg = '';
       }
     })
   }
@@ -158,6 +160,7 @@ export class Notifications implements OnInit {
       },
       complete: () => {
         console.log('User unbanned successfully.');
+        this.errMsg = '';
       }
     })
   }
