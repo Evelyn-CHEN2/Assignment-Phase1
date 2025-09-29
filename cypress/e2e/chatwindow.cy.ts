@@ -2,11 +2,7 @@ describe('Chatwindow', () => {
   const route = '/chatwindow/c11';
   beforeEach(() => {
     window.localStorage.setItem('currentUser', JSON.stringify({ _id: 'u1', username: 'eve' }))
-    // Mock membership
-    cy.intercept('GET', '**/api/fetchmembership*', {
-      statusCode: 200,
-      body: { _id: 'm1', role: 'chatuser', admin: 'u1', groups: ['g1', 'g2']}
-    });
+
     // Mock chat message
     cy.intercept('GET', '**/api/fetchchatmessages/c11', {
       statusCode: 200,

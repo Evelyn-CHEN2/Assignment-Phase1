@@ -7,7 +7,7 @@ import { SlicePipe, UpperCasePipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { ChatmessageService } from '../../services/chatmessage.service';
-import { map } from 'rxjs';
+import { forkJoin, of, map } from 'rxjs';
 import { SocketService } from '../../services/socket.service';
 
 @Component({
@@ -25,8 +25,11 @@ export class Chatwindow implements OnInit, OnDestroy {
   userNum: number = 0;
   message: string = '';
   errMsg: string = '';
+  isAdmin: boolean = false;
+  isSuperMap: Record<string, boolean> = {};
   chatMessages: chatMsg[] = []; 
   selectedUser: string = ''; // User id who is selected to ban 
+  avatarSrcById: Record<string, string> = {}; // Display user avatar in chat window
 
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
@@ -46,31 +49,60 @@ export class Chatwindow implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     if (!this.currentUser) return;
+
     const id = this.route.snapshot.params['id'];
     if (!id) {
       console.error('Channel ID is missing in the route parameters.');
       return;
     }
     this.channelId = id;
-    // Fetch channel and users for displaying channel and user names on the header
-    this.groupService.getChannels().pipe(
-      map((channels: Channel[]) => {
-        return channels.find(c => c._id === this.channelId );
-      })
-    ).subscribe(channel => {
-      this.channel = channel ?? null;
-      if (!this.channel) {
-        console.error(`Channel ${this.channelId} not found.`);
-        return;
-      };
-      this.userService.getUsers().subscribe((users: User[]) => {
-        this.userById = Object.fromEntries(
+    forkJoin({
+      channels: this.groupService.getChannels(),
+      users: this.userService.getUsers(),
+      messages: this.chatMsgService.fetchMsgsByChannelId(this.channelId),
+      membership: this.authService.fetchMembership(this.currentUser._id)
+    })
+    .pipe(
+      map(({ channels, users, messages, membership }) => {
+        const channel = channels.find(c => c._id === this.channelId) ?? null;
+
+        const userById = Object.fromEntries(
           users.map(u => [u._id, u.username.charAt(0).toUpperCase() + u.username.slice(1)])
         );
-        this.errMsg = '';
+        const avatarSrcById = Object.fromEntries(
+          users.map(u => [u._id, u.avatar])
+        );
+        const isSuperMap = Object.fromEntries(
+          users.map(u => [u._id, !!u.isSuper])
+        );
+        const isAdmin = membership?.role === 'admin' || membership?.role === 'super';
+
+        return { channel, userById, avatarSrcById, isSuperMap, isAdmin, messages };
       })
-    });
-    this.chatMsgService.fetchMsgsByChannelId(this.channelId).subscribe(chatMsgs => this.chatMessages = chatMsgs)
+    ).subscribe({
+        next: ({ channel, userById, avatarSrcById, isSuperMap, isAdmin, messages }) => {
+          if (!channel) {
+            console.error(`Channel ${this.channelId} not found.`);
+            this.errMsg = 'Channel not found.';
+            return;
+          }
+          this.channel = channel;
+          this.userById = userById;
+          this.avatarSrcById = avatarSrcById;
+          this.isSuperMap = isSuperMap;
+          this.isAdmin = isAdmin;
+          this.chatMessages = messages;
+          this.errMsg = '';
+        },
+        error: (err) => {
+          console.error('Failed to load chat window data:', err);
+          this.errMsg = 'Failed to load chat window.';
+        },
+        complete: () => {
+          console.log('Load chat window successfully.');
+          this.errMsg = '';
+        }
+      });
 
     // Socket.io integration
     const senderName = this.currentUser.username || 'A new user';
@@ -145,7 +177,7 @@ export class Chatwindow implements OnInit, OnDestroy {
     this.message = '';
   }
 
-    // Toggle ban confirmation modal
+  // Toggle ban confirmation modal
   openBanModal(userId: string): void {
     this.selectedUser = userId;
   }

@@ -4,7 +4,7 @@ describe('GroupForm', () => {
     cy.intercept(
       { method: 'GET', url: '**/api/fetchmembership*', query: { userId: 'u1' } },
       { statusCode: 200, body: { _id: 'm1', role: 'admin', admin: 'u1', groups: ['g1', 'g3'] } }
-    ).as('getMembership');
+    );
     cy.visit(route, {
       onBeforeLoad(win) {
         win.localStorage.setItem('currentUser', JSON.stringify({ _id: 'u1', isSuper: false }));

@@ -8,8 +8,7 @@ import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
 import { NotificationService } from '../../services/notification.service';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { map } from 'rxjs';
+import { forkJoin, map } from 'rxjs';
 
 // Reformatted groups with channels, not channel IDs
 type GroupReformatted = Omit<Group, 'channels'> & { channels: Channel[] }; 

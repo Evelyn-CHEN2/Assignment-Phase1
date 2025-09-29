@@ -4,9 +4,12 @@
         <button type="button" class="back-btn" (click)="goBack()">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <div class="avatar">
-            {{ (currentUser?.username) | slice:0:1 | uppercase }}
-        </div>
+        @if (currentUser?.avatar) {
+          <img [src]="currentUser?.avatar" class="avatar-img" alt="avatar">
+        } @else {
+          <div class="avatar-img">{{ (currentUser?.avatar || currentUser?.username) }}</div>
+        }
+        
         <strong>{{ currentUser?.username }}</strong>
       </div>
       <h2 class="chan-name"># {{ channel?.channelname }}</h2>
@@ -18,15 +21,30 @@
       <ul class="msg-list">
         @for (m of chatMessages; track $index) {
           <li class="msg" [class.is-mine]="m.sender === currentUser?._id">
-            <button
-              class="btn btn-m p-0 msg-avatar" 
-              style="color: #40916c; border: none;" 
-              type="button"
-              data-bs-toggle="modal" 
-              data-bs-target="#confirmBanModal" 
-              (click)="openBanModal(m.sender)">
-              {{ (userById[m.sender]) || 'U'}}
-            </button>
+            @if (isAdmin && currentUser?._id !== m.sender && !isSuperMap[m.sender]) {
+              <button
+                class="btn btn-m p-0 msg-avatar"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#confirmBanModal"
+                (click)="openBanModal(m.sender)">
+                <span class="avatar">
+                  @if (avatarSrcById[m.sender]) {
+                    <img [src]="avatarSrcById[m.sender]" alt="avatar" />
+                  } @else {
+                    {{ (userById[m.sender] || 'U') | slice:0:1 | uppercase }}
+                  }
+                </span>
+              </button>
+            } @else {
+              <span class="avatar">
+                @if (avatarSrcById[m.sender]) {
+                  <img [src]="avatarSrcById[m.sender]" alt="avatar" />
+                } @else {
+                  {{ (userById[m.sender] || 'U') | slice:0:1 | uppercase }}
+                }
+              </span>
+            }
             <div class="msg-bubble">
               <div class="msg-text">{{ m.message }}</div>
             </div>
