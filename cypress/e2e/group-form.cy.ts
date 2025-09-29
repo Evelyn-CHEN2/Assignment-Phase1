@@ -1,6 +1,5 @@
-const route = '/dashboard/group-form';
-
 describe('GroupForm', () => {
+  const route = '/dashboard/group-form';
   beforeEach(() => {
     cy.intercept(
       { method: 'GET', url: '**/api/fetchmembership*', query: { userId: 'u1' } },
@@ -13,16 +12,17 @@ describe('GroupForm', () => {
     });
   })
 
-  it('shows client-side validation when submitting', () => {
+  it('should show client-side validation when submitting', () => {
     cy.contains('button', 'Create').click();
 
     cy.get('form.group-form').should('have.class', 'was-validated');
-    cy.contains('.invalid-feedback', 'Group name is required.').should('exist');
-    cy.contains('.invalid-feedback', 'Group description is required.').should('exist');
-    cy.contains('.invalid-feedback', 'Add at least one channel.').should('exist');
+    cy.contains('.invalid-feedback', 'Group name is required.').should('be.visible');
+    cy.contains('.invalid-feedback', 'Group description is required.').should('be.visible');
+    cy.contains('.invalid-feedback', 'Add at least one channel.').should('be.visible');
   });
 
-  it('creates a group and navigates to /dashboard/groups', () => {
+  it('should create a group and navigate to /dashboard/groups', () => {
+    // Use intercept to mock backend
     cy.intercept('POST', '**/api/creategroup', req => {
       // Assert payload from the form
       expect(req.body.userId).to.eq('u1');
