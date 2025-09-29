@@ -34,6 +34,23 @@
               {{ m.timestamp | date: 'short' : 'Australia/Brisbane' }}
             </time>
           </li>
+        }
+        @if (errMsg) {
+          <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
+        }
+      </ul>
+    </div>
+  
+    <!-- Text input area -->
+    <form class="chat-input" (ngSubmit)="sendMessage($event)">
+      <input 
+        class="form-control me-2" type="text" 
+        [(ngModel)]="message" 
+        name="message" 
+        placeholder="Express your ideas ..." required/>
+      <button class="send-btn" type="submit">Send</button>
+    </form>
+</div>
 
 <!-- Ban user confirmation modal -->
 <div class="modal fade" id="confirmBanModal" 
@@ -72,22 +89,5 @@
 
 
 
-          
-        }
-        @if (errMsg) {
-          <div class="alert text-danger" style="font-size: small; padding: 0">*{{ errMsg }}</div>
-        }
-      </ul>
-    </div>
-  
-    <!-- Text input area -->
-    <form class="chat-input" (ngSubmit)="sendMessage($event)">
-      <input 
-        class="form-control me-2" type="text" 
-        [(ngModel)]="message" 
-        name="message" 
-        placeholder="Express your ideas ..." required/>
-      <button class="send-btn" type="submit">Send</button>
-    </form>
-</div>
+
 
