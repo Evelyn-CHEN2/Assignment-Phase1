@@ -50,10 +50,11 @@ export class Users {
     }).pipe(
       map(({ groups, membership, users }) => {
         // Fetch groups that current user administers
-        const adminGroups = currentUser ? groups.filter(g => membership?.groups.includes(g._id)) : [];
+        const adminGroupIds = membership?.groups ?? [];
+        const adminGroups = this.loggedUser ? groups.filter(g => adminGroupIds.includes(g._id)) : [];
         // Filter users that belong to the admin groups
         const adminUsers = users.filter(u => 
-          u.groups.some(ug => adminGroups.some(ag => ag._id === ug))
+          (u.groups ?? []).some(ug => adminGroups.some(ag => ag._id === ug))
         );
         // Fetch all groups for super
         return { groups, membership, adminUsers, users };
@@ -63,7 +64,7 @@ export class Users {
         this.users = users.filter(u => u._id !== this.loggedUser?._id); // Exclude super self
         this.userGroupsByUser = Object.fromEntries(
           this.users.map(u => { 
-            const userGroups = groups.filter(g => u.groups.includes(g._id));
+            const userGroups = groups.filter(g => (u.groups ?? []).includes(g._id));
             return [u._id, userGroups];
           })
         )
@@ -71,7 +72,7 @@ export class Users {
         this.users = adminUsers.filter(u => u._id !== this.loggedUser?._id && u.isSuper === false); // Exclude admin self and supers
         this.userGroupsByUser = Object.fromEntries(
           this.users.map(u => { 
-            const userGroups = groups.filter(g => u.groups.includes(g._id) && membership.groups.includes(g._id));
+            const userGroups = groups.filter(g => (u.groups ?? []).includes(g._id) && (membership?.groups ?? []).includes(g._id));
             return [u._id, userGroups];
           })
         )
@@ -81,12 +82,12 @@ export class Users {
         // For each user, fetch their role in each group
         this.authService.fetchMembership(userId).subscribe(m => {
           const role = m?.role ?? 'chatuser'; 
+          const memGroupIds = m?.groups ?? [];
           const userRoleByGroups = Object.fromEntries(userGroups.map(g => {
             if (m?.role === 'super') {
-              const groupRole = 'super';
-              return [g._id, groupRole];
+              return [g._id, 'super'];
             } else {
-              const groupRole = m?.groups.includes(g._id) ? role : 'chatuser';
+              const groupRole = memGroupIds.includes(g._id) ? role : 'chatuser';
               return [g._id, groupRole];
             }
           }))

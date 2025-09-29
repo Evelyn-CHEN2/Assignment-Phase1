@@ -64,9 +64,11 @@ describe('Groups', () => {
     });
 
     cy.wait(['@getGroups', '@getChannels', '@fetchMembership', '@getUsers']);
+    cy.wait('@anyApi').then(({ request, response }) => {
+      console.log('[API]', request.method, request.url, response?.statusCode);
+    });
     cy.get('.card-title').should('have.length.at.least', 1);
   })
-
 
   it('should display button to swipe between groups and admin groups', () => {
     // Admin only button
