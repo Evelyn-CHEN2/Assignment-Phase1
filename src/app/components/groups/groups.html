@@ -28,13 +28,13 @@
               <h5 class="card-title mb-1">
                 @if (userRole === 'super' || userRole === 'admin') {
                   <a href="#"
-                  class="text-reset text-decoration-none"
-                  style="cursor: pointer"
-                  (click)="toggleEditGroup(group, $event)"
-                  data-bs-toggle="modal"
-                  data-bs-target="#editGroupModal">
-                  {{group.groupname}}
-               </a>
+                    class="text-reset text-decoration-none"
+                    style="cursor: pointer"
+                    (click)="toggleEditGroup(group, $event)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editGroupModal">
+                    {{group.groupname}}
+                  </a>
                 } @else {
                   {{group.groupname}}
                 }
