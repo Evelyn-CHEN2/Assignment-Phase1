@@ -1,8 +1,16 @@
 describe('Chatwindow', () => {
   const route = '/chatwindow/c11';
   beforeEach(() => {
-    window.localStorage.setItem('currentUser', JSON.stringify({ _id: 'u1', username: 'eve' }))
-
+    cy.visit(route, {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('currentUser', JSON.stringify({ _id: 'u1', isSuper: true }));
+      }
+    });
+    // Mock membership
+    cy.intercept('GET', '**/api/fetchmembership*', {
+      statusCode: 200,
+      body: { _id: 'm1', role: 'chatuser', admin: 'u1', groups: ['g1', 'g2']}
+    });
     // Mock chat message
     cy.intercept('GET', '**/api/fetchchatmessages/c11', {
       statusCode: 200,
@@ -10,9 +18,7 @@ describe('Chatwindow', () => {
         { _id: 'm1', sender: 'u2', message: 'Hello!', timestamp: new Date().toISOString() },
         { _id: 'm2', sender: 'u1', message: 'Hi!', timestamp: new Date().toISOString() }
       ]
-    });
-
-    cy.visit(route)
+    }); 
   });
 
   // Go back to last page

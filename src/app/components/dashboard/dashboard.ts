@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -11,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
-  userRole: string = ''; 
+  userRole: string = 'chatuser'; 
 
   private authService = inject(AuthService);
 

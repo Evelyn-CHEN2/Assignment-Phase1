@@ -111,6 +111,7 @@ export class Account implements OnInit {
       },
       complete: () => {
         console.log('User self deletion complete.');
+        this.errMsg = '';
       }
     })
   }
@@ -133,6 +134,7 @@ export class Account implements OnInit {
       },
       complete: () => {
         console.log('Leave group request completed.');
+        this.errMsg = '';
       }
     });
   }

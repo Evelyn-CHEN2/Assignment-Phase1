@@ -7,7 +7,7 @@ describe('GroupForm', () => {
     );
     cy.visit(route, {
       onBeforeLoad(win) {
-        win.localStorage.setItem('currentUser', JSON.stringify({ _id: 'u1', isSuper: false }));
+        win.localStorage.setItem('currentUser', JSON.stringify({ _id: 'u1', isSuper: true }));
       }
     });
   })
