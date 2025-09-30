@@ -8,7 +8,7 @@ describe('Dashboard', () => {
 
     cy.visit(route, {
       onBeforeLoad(win) {
-        // It is required if app reads grom localStorage on init
+        // It is required if app reads from localStorage on init
         win.localStorage.setItem('currentUser', JSON.stringify({ _id: 'u1', username: 'eve' }));
       }
     });
@@ -34,7 +34,7 @@ describe('Dashboard', () => {
   });
 
   // Does not display breadcrumb for chatuser
-  it('does NOT show breadcrumb for CHATUSERS', () => {
+  it('does not show breadcrumb for chatusers', () => {
     visitWithRole('chatuser');
 
     cy.get('nav[aria-label="breadcrumb"]').should('not.exist');
@@ -43,13 +43,13 @@ describe('Dashboard', () => {
   it('should navigate to Users/Groups/Notifications when clicking', () => {
     visitWithRole('super');
 
-    cy.contains('a', 'Users').click();
+    cy.contains('a', 'Users').should('be.visible').click();
     cy.url().should('include', '/dashboard/users');
 
-    cy.contains('a', 'Groups').click();
+    cy.contains('a', 'Groups').should('be.visible').click();
     cy.url().should('include', '/dashboard/groups');
 
-    cy.contains('a', 'Notifications').click();
+    cy.contains('a', 'Notifications').should('be.visible').click();
     cy.url().should('include', '/dashboard/notifications');
 
   })

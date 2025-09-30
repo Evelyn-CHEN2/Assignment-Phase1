@@ -133,9 +133,8 @@ describe('account', () => {
     
     cy.contains('.group-item', 'Data').find('button.btn i.bi-box-arrow-right').click();
 
-    cy.get('#confirmLeaveGroupModal').should('be.visible');
-    cy.get('#confirmLeaveGroupLabel').should('contain.text', 'Are you sure to leave Group');
     cy.get('#confirmLeaveGroupModal').contains('strong', 'Data').should('be.visible');
+    cy.get('#confirmLeaveGroupLabel').should('contain.text', 'Are you sure to leave Group');
 
     // Confirm
     cy.contains('button', 'Leave').click();
