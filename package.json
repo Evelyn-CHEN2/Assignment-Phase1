@@ -9,7 +9,8 @@
     "test": "ng test",
     "e2e": "ng e2e",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "test:api": "mocha \"test/**/*.test.js\" --timeout 8000 --exit"
   },
   "prettier": {
     "overrides": [
@@ -47,14 +48,17 @@
     "@angular/compiler-cli": "^20.1.0",
     "@cypress/schematic": "^4.1.3",
     "@types/jasmine": "~5.1.0",
+    "chai": "^6.2.0",
+    "cypress": "15.3.0",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "mocha": "^11.7.3",
     "nodemon": "^3.1.10",
-    "typescript": "~5.8.2",
-    "cypress": "15.3.0"
+    "supertest": "^7.1.4",
+    "typescript": "~5.8.2"
   }
 }

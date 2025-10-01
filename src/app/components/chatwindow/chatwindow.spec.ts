@@ -36,7 +36,7 @@ describe('Chatwindow', () => {
 
   beforeEach(async () => {
     // Create mock services with methods
-    authSpy = jasmine.createSpyObj('AuthService', ['getCurrentUser']);
+    authSpy = jasmine.createSpyObj('AuthService', ['getCurrentUser', 'fetchMembership']);
     groupSpy = jasmine.createSpyObj('GroupService', ['getChannels']);
     userSpy = jasmine.createSpyObj('UserService', ['getUsers', 'banUser']);
     chatMsgSpy = jasmine.createSpyObj('ChatmessageService', ['fetchMsgsByChannelId']);
@@ -73,6 +73,7 @@ describe('Chatwindow', () => {
     groupSpy.getChannels.and.returnValue(of(channels));
     userSpy.getUsers.and.returnValue(of(allUsers));
     chatMsgSpy.fetchMsgsByChannelId.and.returnValue(of(chatMsgs));
+    authSpy.fetchMembership.and.returnValue(of({ _id: 'm1', role: 'admin' } as any));
 
     socketSpy.onMessage.and.callFake((cb: any) => cb({ _id: 'm2', sender: 'u1', message: 'test', timestamp: Date.now()}));
     socketSpy.onNotices.and.callFake((cb: any) => cb('System notice'));
