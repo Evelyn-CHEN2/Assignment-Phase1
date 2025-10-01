@@ -28,13 +28,6 @@ module.exports = {
                 console.error('Error reading users file: ', error);
                 res.status(500).json({ error: 'Failed to retrieve user.' });
             }
-
-            
-
-            
-        
-        
-        
         })
     }
 }

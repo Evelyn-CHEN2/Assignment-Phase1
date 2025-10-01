@@ -3,11 +3,12 @@ const app = express();
 const cors = require('cors');
 app.use(express.json());
 app.use(cors());
+app.get('/', (_req, res) => res.json({ ok: true }));
 
 const PORT = 3000;
 const server = require('http').createServer(app); 
 
-const connectDB = require('./mongoDB.js');
+const { connectDB } = require('./mongoDB.js');
 
 const options = {
     cors: {
@@ -66,6 +67,8 @@ const sockets = require('./socket.js');
         process.exit(1);
     }
 })();
+
+module.exports = { app, server }; 
 
 
   

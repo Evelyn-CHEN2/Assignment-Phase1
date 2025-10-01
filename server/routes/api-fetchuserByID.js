@@ -1,9 +1,11 @@
+const { ObjectId } = require('mongodb');
+
 module.exports = {
     route: async(app, db) => {
         const userData = db.collection('users');
 
         app.get('/api/fetchuserbyID/:id', async(req, res) => {
-            const userId = req.params.id;
+            const userId = String(req.params.id);
             if (!userId) {
                 return res.status(400).json({ error: 'No user ID provided' });
             }

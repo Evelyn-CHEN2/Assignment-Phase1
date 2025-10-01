@@ -3,10 +3,28 @@ const { MongoClient } = require('mongodb');
 const uri = 'mongodb://localhost:27017'; 
 const client = new MongoClient(uri);
 
+let db;
+
 async function connectDB() {
-    await client.connect();
-    console.log('Connected to MongoDB');
-    return client.db('chat')
+    if (!db) {
+        await client.connect();
+        db = client.db('chat');
+        console.log('Connected to MongoDB');
+    }
+    return db;
 }
 
-module.exports = connectDB;
+async function health() {
+    let result = await db.command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    return result;
+}
+
+async function closeDB() {
+    if (client) {
+      await client.close();
+    }
+    db = undefined;
+}
+
+module.exports = { connectDB, health, closeDB };
