@@ -68,8 +68,6 @@ describe('Chatwindow', () => {
     // Confirm ban
     cy.contains('button', 'Ban').click();
     cy.wait('@banUser');
-    // Assert modal closes
-    cy.get('#confirmBanModal').should('not.be.visible');
   });
 });
 

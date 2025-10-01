@@ -152,7 +152,7 @@ export class Notifications implements OnInit {
               ...r,
               channelIds: r.channelIds.filter(cId => cId !== channelId)
             }
-          })
+          }).filter(r => r.channelIds.length > 0);
       },
       error: (err: any) => {
         this.errMsg = err.error.error || 'An error occurred while unbanning the user.';

@@ -59,36 +59,37 @@
         </div>
       </div>
     </li>
-    <!-- Approve application modals -->
-    <div class="modal fade" id="approveApplicationModal" tabindex="-1" aria-labelledby="approveApplicationLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-          <div class="modal-body py-3">
-            <p class="mb-0" id="approveApplicationLabel">
-              Are you sure to approve
-                @if (selectedNotification) {
-                  <strong>{{ userById[notification.applier]}}'s application?</strong>
-                }
-            </p>
-          </div>
-          <div class="modal-footer py-2">
-            <button 
-              type="button" class="btn btn-sm btn-outline-secondary" 
-              data-bs-dismiss="modal">
-              Cancel
-            </button>
-            <button 
-              type="button" class="btn btn-sm btn-danger" 
-              data-bs-dismiss="modal"
-              (click)="selectedNotification && approve(selectedNotification, $event)">
-              Confirm
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   }
 </ul>
+
+<!-- Approve application modals -->
+<div class="modal fade" id="approveApplicationModal" tabindex="-1" aria-labelledby="approveApplicationLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-body py-3">
+        <p class="mb-0" id="approveApplicationLabel">
+          Are you sure to approve
+            @if (selectedNotification) {
+              <strong>{{ userById[selectedNotification.applier]}}'s application?</strong>
+            }
+        </p>
+      </div>
+      <div class="modal-footer py-2">
+        <button 
+          type="button" class="btn btn-sm btn-outline-secondary" 
+          data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button 
+          type="button" class="btn btn-sm btn-danger" 
+          data-bs-dismiss="modal"
+          (click)="selectedNotification && approve(selectedNotification, $event)">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Delete application modals  -->
 <div class="modal fade" id="deleteApplicationModal" tabindex="-1" aria-labelledby="deleteApplicationLabel" aria-hidden="true">

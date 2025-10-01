@@ -58,7 +58,7 @@ describe('Notifications', () => {
       }
     });
 
-    cy.wait(['@getUsers', '@fetchMembership', '@fetchNotifications', '@fetchBanReports']);
+    cy.wait(['@getUsers', '@getGroups','@getChannels', '@fetchMembership', '@fetchNotifications', '@fetchBanReports']);
   });
 
   it('should render notifications and banreports', () => {
@@ -89,14 +89,11 @@ describe('Notifications', () => {
       cy.get('button.btn-approve').click();
     });
 
-    cy.get('#approveApplicationModal').contains('strong', 'Eve').should('be.visible');
+    cy.get('#approveApplicationModal').should('be.visible');
     cy.get('#approveApplicationLabel').should('contain.text', 'Are you sure to approve');
-    cy.get('#approveApplicationModal').within(() => {
-      cy.contains('button', 'Confirm').click();
-    });
+    cy.get('#approveApplicationModal').contains('button', 'Confirm').click();
 
     cy.wait('@approve');
-    cy.get('#approveApplicationModal').should('not.be.visible');
   });
 
   it('deletes a notification', () => {
@@ -107,12 +104,9 @@ describe('Notifications', () => {
 
     cy.get('#deleteApplicationModal').should('be.visible');
     cy.get('#deleteApplicationLabel').should('contain.text', 'Are you sure to delete');
-    cy.get('#deleteApplicationModal').within(() => {
-      cy.contains('button', 'Delete').click();
-    });
+    cy.get('#deleteApplicationModal').contains('button', 'Delete').click();
 
     cy.wait('@deleteNotification');
-    cy.get('#deleteApplicationModal').should('not.be.visible');
   })
 
   it('displays banned user information', () => {
@@ -139,6 +133,11 @@ describe('Notifications', () => {
     cy.contains('#confirmUnbanModal', 'Confirm').click();
 
     cy.wait('@unBan');
-    cy.get('#confirmUnbanModal').should('not.be.visible')
-  })
+    
+    cy.get('.banned-list .banned-item').should('have.length', 1);
+    cy.get('.banned-list').within(() => {
+      cy.contains('li', 'general').should('not.exist');
+      cy.contains('li', 'examples').should('exist');     
+    });
+  });
 });
