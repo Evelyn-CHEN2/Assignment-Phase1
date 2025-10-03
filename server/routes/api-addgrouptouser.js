@@ -35,7 +35,7 @@ module.exports = {
             try {
                 await usersData.findOneAndUpdate(
                     { _id: new ObjectId(applierId) }, 
-                    { $push: { groups: new ObjectId(groupId)}}
+                    { $addToSet: { groups: new ObjectId(groupId)}}
                 );
                 
                 await notificationsData.findOneAndUpdate(

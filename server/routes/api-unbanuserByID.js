@@ -8,14 +8,15 @@ module.exports = {
             if (!req.params || !req.body) {
                 return res.status(400).json({ error: 'No data provided' });
             }
-            const userId = String(req.params.userId);
+            const userId = String(req.params.id);
             const channelId = String(req.body.channelId);
 
             try {
                 await banReportsData.updateOne(
                     { userId: new ObjectId(userId) },
                     { $pull: { channelIds: new ObjectId(channelId)}}
-                )
+                );
+                res.sendStatus(204);
             }
             catch (error) {
                 console.error('Error writing ban reports file after unbanning: ', error);

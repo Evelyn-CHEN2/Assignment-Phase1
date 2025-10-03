@@ -31,7 +31,7 @@ module.exports = {
 
                 await groupsData.updateOne(
                     { _id: new ObjectId(groupId) },
-                    { $push: { channels: newChannel.insertedId } }
+                    { $addToSet: { channels: insertedId } }
                 )
                 console.log('New channel created:', newChannel);
                 res.send(newChannel);

@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 
 module.exports = {
     route: async(app, db) => {
-        const banReportsData = await db.collection('banReports')
+        const banReportsData = db.collection('banReports')
 
         app.post('/api/banuserbyID/:id', async(req, res) => {
             if (!req.params || !req.body) {

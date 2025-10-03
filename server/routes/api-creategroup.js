@@ -72,9 +72,6 @@ module.exports = {
                     console.error('Error creating new group:', error);
                     res.status(500).json({ error: 'Failed to create group' });
                 }
-                
-            
-           
         })
     }
 }
