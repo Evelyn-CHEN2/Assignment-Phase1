@@ -2,14 +2,11 @@ const { expect } = require('chai');
 const request = require('supertest');
 const { ObjectId } = require('mongodb');
 
-const { app, server } = require('../server/server.js');
-const { connectDB, health } = require('../server/mongoDB.js');
-const { forEachChild } = require('typescript');
-const { timestamp } = require('rxjs');
+const { app, server, initServer } = require('../server/server.js');
+const { connectDB, health, closeDB } = require('../server/mongoDB.js');
 
 describe('Server Integration Tests', function() {
     // Connect with DB
-
     let db;
     let membership;
     let users;
@@ -19,7 +16,9 @@ describe('Server Integration Tests', function() {
     let banReports;
     let chatMsgs;
     before(async() => {
-        db = await connectDB();
+        const ctx = await initServer();
+        db = ctx.db;
+
         membership = db.collection('membership');
         users = db.collection('users');
         notifications = db.collection('notifications');
@@ -29,8 +28,9 @@ describe('Server Integration Tests', function() {
         chatMsgs = db.collection('chatMsgs');
       });
     // Close server after tests
-    after(function(done) {
-        server.close(done)
+    after(async () => {
+        await closeDB();
+        server.close()
     });
 
     describe('Basic health check', function() {
