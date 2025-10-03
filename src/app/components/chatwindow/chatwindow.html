@@ -5,11 +5,14 @@
           <i class="bi bi-chevron-left"></i>
         </button>
         @if (currentUser?.avatar) {
-          <img [src]="currentUser?.avatar" class="avatar-img" alt="avatar">
+          <span class="avatar avatar--32">
+            <img [src]="currentUser?.avatar" class="avatar-img" alt="avatar">
+          </span>
         } @else {
-          <div class="avatar-img">{{ (currentUser?.avatar || currentUser?.username) }}</div>
+          <span class="avatar avatar--32">
+            <div class="avatar-img">{{ (currentUser?.avatar || currentUser?.username) }}</div>
+          </span>
         }
-        
         <strong>{{ currentUser?.username }}</strong>
       </div>
       <h2 class="chan-name"># {{ channel?.channelname }}</h2>
@@ -28,7 +31,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#confirmBanModal"
                 (click)="openBanModal(m.sender)">
-                <span class="avatar">
+                <span class="avatar avatar--28">
                   @if (avatarSrcById[m.sender]) {
                     <img [src]="avatarSrcById[m.sender]" alt="avatar" />
                   } @else {
@@ -37,7 +40,7 @@
                 </span>
               </button>
             } @else {
-              <span class="avatar">
+              <span class="avatar avatar--28">
                 @if (avatarSrcById[m.sender]) {
                   <img [src]="avatarSrcById[m.sender]" alt="avatar" />
                 } @else {
@@ -48,7 +51,7 @@
             <div class="msg-bubble">
               <div class="msg-text">{{ m.message }}</div>
             </div>
-            <time class="msg-time" [attr.datatime]="m.timestamp">
+            <time class="msg-time" [attr.datetime]="m.timestamp">
               {{ m.timestamp | date: 'short' : 'Australia/Brisbane' }}
             </time>
           </li>
