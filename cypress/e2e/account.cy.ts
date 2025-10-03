@@ -40,7 +40,7 @@ describe('account', () => {
       statusCode: 200,
       body: [
         { _id: 'b1', userId: 'u1', channelIds: ['c1'] },
-        { _id: 'b2', userId: 'u1', channelIds: ['c2'] },
+        { _id: 'b2', userId: 'u2', channelIds: ['c2'] },
       ]
     }).as('getBanReports');
 
@@ -66,8 +66,8 @@ describe('account', () => {
 
     // Disable banned channels
     cy.contains('.group-item', 'Data').within(() => {
-      cy.contains('.chip', 'general').should('exist').and('be.disabled').find('i.bi-ban').should('exist');;
-      cy.contains('.chip', 'examples').should('exist').and('be.disabled').find('i.bi-ban').should('exist');;
+      cy.contains('.chip', 'general').should('exist').and('be.disabled').find('i.bi-ban').should('exist');
+      cy.contains('.chip', 'examples').should('exist').and('not.be.disabled');
     });
 
     cy.get('[data-role]').should('have.attr', 'data-role', 'chatuser');
