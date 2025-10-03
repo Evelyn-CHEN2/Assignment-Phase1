@@ -40,7 +40,8 @@ describe('Account', () => {
   const membership: Membership = { _id: 'm1', role: 'admin', admin: 'u1', groups: ['g1', 'g3'] }
   
   const banReports: BanReport[] = [
-    { _id: 'b1', userId: 'u3', channelIds: ['c11'] }
+    { _id: 'b1', userId: 'u3', channelIds: ['c11'] },
+    { _id: 'b2', userId: 'u1', channelIds: ['c11', 'c12'] }
   ];
   const user: User = { _id: 'u3', username: 'eve', pwd: '', email: '', groups: [], valid: true, avatar: '', isSuper: false};
   const event: any = { preventDefault: jasmine.createSpy('preventDefault')};
@@ -88,8 +89,7 @@ describe('Account', () => {
     expect(comp.user).toEqual(allUsers[0]);
     expect(comp.formattedGroups.map(g => g._id)).toEqual(['g1', 'g3'])
     expect(comp.userRole).toBe('admin');
-    expect(comp.bannedChannels).toEqual(['c11']);
-    expect(comp.bannedUsers).toEqual(['u3']);
+    expect(comp.banReport?.channelIds).toEqual(['c11', 'c12']);
     expect(comp.errMsg).toBe('');
   });
 

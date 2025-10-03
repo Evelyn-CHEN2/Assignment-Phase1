@@ -6,11 +6,11 @@
         </button>
         @if (currentUser?.avatar) {
           <span class="avatar avatar--32">
-            <img [src]="currentUser?.avatar" class="avatar-img" alt="avatar">
+            <img [src]="avatarSrcById[currentUser!._id!]" class="avatar-img" alt="avatar">
           </span>
         } @else {
           <span class="avatar avatar--32">
-            <div class="avatar-img">{{ (currentUser?.avatar || currentUser?.username) }}</div>
+            <div class="avatar-img">{{ (currentUser?.username) | slice:0:1 | uppercase}}</div>
           </span>
         }
         <strong>{{ currentUser?.username }}</strong>
@@ -35,7 +35,7 @@
                   @if (avatarSrcById[m.sender]) {
                     <img [src]="avatarSrcById[m.sender]" alt="avatar" />
                   } @else {
-                    {{ (userById[m.sender] || 'U') | slice:0:1 | uppercase }}
+                    {{ (userById[m.sender] ) | slice:0:1 | uppercase }}
                   }
                 </span>
               </button>
@@ -44,7 +44,7 @@
                 @if (avatarSrcById[m.sender]) {
                   <img [src]="avatarSrcById[m.sender]" alt="avatar" />
                 } @else {
-                  {{ (userById[m.sender] || 'U') | slice:0:1 | uppercase }}
+                  {{ (userById[m.sender] ) | slice:0:1 | uppercase }}
                 }
               </span>
             }

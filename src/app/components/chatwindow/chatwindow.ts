@@ -21,6 +21,7 @@ export class Chatwindow implements OnInit, OnDestroy {
   channel: Channel | null = null;
   channelId: string = '';
   currentUser: User | null = null;
+  loggedUser: User | null = null;
   userById: Record<string, string> = {};
   userNum: number = 0;
   message: string = '';
@@ -64,6 +65,9 @@ export class Chatwindow implements OnInit, OnDestroy {
     })
     .pipe(
       map(({ channels, users, messages, membership }) => {
+        const freshUser = users.find(u => u._id === this.currentUser?._id) ?? this.currentUser;
+        this.loggedUser = freshUser;
+
         const channel = channels.find(c => c._id === this.channelId) ?? null;
 
         const userById = Object.fromEntries(

@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AuthService } from '../../services/auth.service';
-import { Group, Channel, User } from '../../interface';
+import { Group, Channel, User, BanReport } from '../../interface';
 import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
 import { NotificationService } from '../../services/notification.service';
@@ -30,8 +30,8 @@ export class Account implements OnInit {
   roleByGroup: Record<string, string> = {}; 
   errMsg: string = '';
   isBanned: boolean = false;
-  bannedChannels: string[] = [];
-  bannedUsers: string[] = [];
+  banReport: BanReport | null = null;
+
   avatarSrc = '';
   avatarFile: File | null = null;
   selectedUser: User | null = null; // Stores user object
@@ -55,9 +55,9 @@ export class Account implements OnInit {
         // Refresh the user data
         this.user = allUsers.find(u => u._id === currentUser?._id) ?? currentUser;
         this.userRole = membership?.role || 'chatuser';
-        // Build an array of banned channels
-        const bannedChannels = banReports.flatMap(r => r.channelIds);
-        const bannedUsers = banReports.map(r => r.userId);
+        // Find user ban report if exists
+        this.banReport = banReports.find(r => r.userId === this.user?._id) ?? null;
+        console.log('ban report: ', this.banReport)
         // Filter groups with channels that belong to the user
         const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id));
         const formattedGroups = filteredGroups.map(g => {
@@ -68,7 +68,7 @@ export class Account implements OnInit {
           }
         });
           
-        return { formattedGroups, bannedChannels, bannedUsers};
+        return { formattedGroups };
       })
     ).subscribe({
       next: (data) => {
@@ -77,8 +77,6 @@ export class Account implements OnInit {
           return;
         }
         this.formattedGroups = data.formattedGroups;
-        this.bannedChannels = data.bannedChannels;
-        this.bannedUsers = data.bannedUsers;
         this.errMsg = '';
       },
       error: (err: any) => {
