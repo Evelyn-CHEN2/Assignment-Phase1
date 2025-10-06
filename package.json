@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "test:api": "mocha test/routes.test.js --timeout 8000 --exit"
+    "test:api": "mocha test/routes.test.js"
   },
   "prettier": {
     "overrides": [
