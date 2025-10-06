@@ -121,7 +121,7 @@ class Notification {
 - `reqUserNum(channelId)` - emit `{ channelId, userNum }` back to the requester.
 - **disconnect** - server recomputes room counts for any rooms the socket was in and may broadcast a generic “user disconnected” notice.
 
-### Assignement phase-2 dividing line
+----------------------------------------- Assignement phase-2 dividing line ---------------------------------------------------------------
 ## Git repository
 - Create a tag named **`Phase2`** to start phase2 of assignemnt.
 - Merge cadence: changes to `master` from branch master directly.
