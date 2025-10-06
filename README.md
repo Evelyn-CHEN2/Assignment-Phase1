@@ -388,7 +388,7 @@ db.createCollection("banReports", {
   - Provides a **RESTful API** that returns JSON responses for all client requests.
   - Handles **business logic**, **database operations**, and **validation**.
 
-## Client-Server Communication **
+## Client-Server Communication
   - The client sends requests like:
     - `GET /api/allgroups` → returns a list of groups in JSON.
     - `POST /api/register` → creates a new user.
