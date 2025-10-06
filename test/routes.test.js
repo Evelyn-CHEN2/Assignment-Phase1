@@ -437,7 +437,7 @@ describe('Server Integration Tests', function() {
                 expect(group).to.have.property('channels').that.is.an('array');
                 expect(group).to.have.property('createdBy').that.is.a('string');
             })
-        })
+        });
     });
 
     // Route api-creategroup

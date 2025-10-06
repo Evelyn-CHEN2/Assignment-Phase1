@@ -28,7 +28,7 @@ export interface Channel {
     _id: string;
     channelname: string;
     groupId: string;  // Store group.id
-    chatMsg: chatMsg[];
+    chatMsg: string[];
 }
 
 export interface chatMsg {
@@ -44,7 +44,7 @@ export interface Notification {
     applier: string; // Store user.id who applies
     groupToApply: string; // Store group.id
     status: string; // 'pending', 'approved'
-    approvedBy: string; // Store user.id(super/admin)
+    approvedBy: string | null; // Store user.id(super/admin)
     timestamp: Date;
 }
 

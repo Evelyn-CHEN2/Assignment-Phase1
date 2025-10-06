@@ -34,12 +34,6 @@ export class Register {
     f.resetForm();
   }
 
-  // ngOnInit(): void {
-  //   this.groupService.getGroups().subscribe(groups =>{
-  //     this.availableGroups = groups;
-  //   })
-  // }
-
   register(f: NgForm): void {
     this.errMsg = ''; 
     this.submitted = true;

@@ -44,9 +44,9 @@ export const routes: Routes = [
     {
         path: 'account', component: Account, canActivate: [authGuard]
     },
-    {
-        path: 'account/:id', component: Account, canActivate: [authGuard, adminAuthGuard],
-    },
+    // {
+    //     path: 'account/:id', component: Account, canActivate: [authGuard, adminAuthGuard],
+    // },
     {
         path: 'chatwindow/:id', component: Chatwindow, canActivate: [authGuard]
     }
