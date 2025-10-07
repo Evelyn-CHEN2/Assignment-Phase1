@@ -79,7 +79,7 @@ export class Chatwindow implements OnInit, OnDestroy {
         const isSuperMap = Object.fromEntries(
           users.map(u => [u._id, !!u.isSuper])
         );
-        const isAdmin = membership?.role === 'admin' || membership?.role === 'super';
+        const isAdmin = membership?.role === 'admin';
 
         return { channel, userById, avatarSrcById, isSuperMap, isAdmin, messages };
       })

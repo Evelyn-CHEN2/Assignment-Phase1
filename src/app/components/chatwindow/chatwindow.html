@@ -24,7 +24,7 @@
       <ul class="msg-list">
         @for (m of chatMessages; track $index) {
           <li class="msg" [class.is-mine]="m.sender === currentUser?._id">
-            @if (isAdmin && currentUser?._id !== m.sender && !isSuperMap[m.sender]) {
+            @if (isAdmin && currentUser?._id !== m.sender && !isSuperMap[m.sender] || (currentUser?.isSuper && currentUser?._id !== m.sender)) {
               <button
                 class="btn btn-m p-0 msg-avatar"
                 type="button"

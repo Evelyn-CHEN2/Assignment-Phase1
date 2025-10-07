@@ -16,7 +16,7 @@ describe('Users', () => {
   let userSpy: jasmine.SpyObj<UserService>;
 
   const allUsers: User[] = [
-    { _id: 'u1', username: 'tom', pwd: '1234', email: 'tom@com', groups: ['g1', 'g3'], valid: true, avatar: '', isSuper: false },
+    { _id: 'u1', username: 'tom', pwd: '1234', email: 'tom@com', groups: ['g1', 'g3'], valid: true, avatar: '', isSuper: true },
     { _id: 'u2', username: 'jerry', pwd: '1234', email: 'jerry@com', groups: ['g1', 'g2'], valid: true, avatar: '', isSuper: false },
     { _id: 'u3', username: 'eve', pwd: '1234', email: 'eve@com', groups: ['g1', 'g3'], valid: true, avatar: '', isSuper: false }
   ];
@@ -61,8 +61,8 @@ describe('Users', () => {
     userSpy.getUsers.and.returnValue(of(allUsers));
     groupSpy.getGroups.and.returnValue(of(allGroups));
     authSpy.fetchMembership.and.callFake((id: string) => {
-      if (id === 'u1') {
-        return of({ _id: 'm1', role: 'super', admin: 'u1', groups: [] });
+      if (id === 'u2') {
+        return of({ _id: 'm1', role: 'admin', admin: 'u2', groups: ['g2'] });
       }
       // return null membership
       return of(null);
@@ -74,6 +74,7 @@ describe('Users', () => {
     expect(component.users.map(u=>u._id)).toEqual(['u2', 'u3']);
     expect(component.userGroupsByUser['u2'].map(g=>g._id)).toEqual(['g1', 'g2']);
     expect(component.roleByGroupByUser['u2']['g1']).toBe('chatuser');
+    expect(component.roleByGroupByUser['u2']['g2']).toBe('admin');
     expect(component.userRole).toBe('super');
     expect(component.errMsg).toBe('');
   }));

@@ -20,6 +20,7 @@ describe('GroupForm', () => {
 
   const currentUser: User = { _id: 'u1', username: 'tom', pwd: '1234', email: 'tom@com', groups: ['g1', 'g3'], valid: true, avatar: '', isSuper: false };
   const membership: Membership | null = { _id: 'm1', role: 'admin', admin: 'u1', groups: ['g1', 'g3'] };
+  const chatUser:  User = { _id: 'u2', username: 'eve', pwd: '1234', email: 'eve@com', groups: ['g1', 'g2'], valid: true, avatar: '', isSuper: false };
 
   beforeEach(async () => {
     f = { invalid: false, reset: jasmine.createSpy('reset'), resetForm: jasmine.createSpy('resetForm') } as unknown as NgForm;
@@ -66,7 +67,7 @@ describe('GroupForm', () => {
   })
 
   it('should set error if not admin or super', () => {
-    authSpy.getCurrentUser.and.returnValue(currentUser);
+    authSpy.getCurrentUser.and.returnValue(chatUser);
     authSpy.fetchMembership.and.returnValue(of(null));
 
     component.createGroup(f);

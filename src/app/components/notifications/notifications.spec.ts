@@ -117,7 +117,7 @@ describe('Notifications', () => {
 
     fixture.detectChanges();
 
-    expect(component.userRole).toBe('admin');
+    expect(component.userRole).toBe('super');
     expect(component.notifications?.[0]._id).toBe('n1');
     expect(component.userById['u3']).toBe('Eve');
     expect(component.groupById['g1']).toBe('test1');

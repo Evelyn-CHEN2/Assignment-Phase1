@@ -180,7 +180,7 @@ describe('Server Integration Tests', function() {
             await membership.deleteOne({ _id: doc._id})
         });
 
-        it('should createa a super document, and update user', async() => {
+        it('should and update user.isSuper', async() => {
             const userId = new ObjectId();
             const groupId = new ObjectId();
 
@@ -204,17 +204,11 @@ describe('Server Integration Tests', function() {
 
             expect(res.status).to.eq(204);
 
-            const updated = await membership.findOne({role: 'super', admin: userId})
-            expect(updated).to.exist;
-            expect(updated.role).to.eq('super');
-            expect(String(updated.admin)).to.eq(userId.toString());
-
             const user = await users.findOne({ _id: userId});
             expect(user).to.exist;
             expect(user.isSuper).to.eq(true);
 
             await users.deleteOne({ _id: userId});
-            await membership.deleteOne({ role: 'super', admin: userId})
         })
     });
 

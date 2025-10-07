@@ -56,7 +56,7 @@ export class Notifications implements OnInit {
         const channelById = Object.fromEntries(
           channels.map(c => [String(c._id), c.channelname])
         )
-        this.userRole = membership?.role || '';
+        this.userRole = (currentUser?.isSuper ? 'super' : membership?.role) || '';
         // Filter notifications for groups administered by current user(admin)
         const adminNotifications = notifications.filter(n => { 
           const groupApplying = groups.find(g => g._id === n.groupToApply);

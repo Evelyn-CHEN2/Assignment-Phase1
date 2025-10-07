@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
-  userRole: string = 'chatuser'; 
+  userRole: string = ''; 
 
   private authService = inject(AuthService);
 
@@ -20,7 +20,7 @@ export class Dashboard implements OnInit {
       if (m && m.role) {
         this.userRole = m.role;
       } else {
-        this.userRole = 'chatuser';
+        this.userRole = currentUser?.isSuper ? 'super' : 'chatuser';
       }
     })
   }

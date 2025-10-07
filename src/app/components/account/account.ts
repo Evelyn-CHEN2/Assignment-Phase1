@@ -54,10 +54,9 @@ export class Account implements OnInit {
       map(({ groups, channels, allUsers, membership, banReports }) => {
         // Refresh the user data
         this.user = allUsers.find(u => u._id === currentUser?._id) ?? currentUser;
-        this.userRole = membership?.role || 'chatuser';
+        this.userRole = (currentUser?.isSuper ? 'super' : membership?.role) || 'chatuser';
         // Find user ban report if exists
         this.banReport = banReports.find(r => r.userId === this.user?._id) ?? null;
-        console.log('ban report: ', this.banReport)
         // Filter groups with channels that belong to the user
         const filteredGroups = groups.filter(g => this.user?.groups.includes(g._id));
         const formattedGroups = filteredGroups.map(g => {

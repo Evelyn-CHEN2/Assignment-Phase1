@@ -20,7 +20,8 @@ module.exports = {
                     email: loggedUser.email,
                     groups: loggedUser.groups,
                     valid: loggedUser.valid,
-                    avatar: loggedUser.avatar
+                    avatar: loggedUser.avatar,
+                    isSuper: loggedUser.isSuper
                 };
                 res.send(safeUser)
             }

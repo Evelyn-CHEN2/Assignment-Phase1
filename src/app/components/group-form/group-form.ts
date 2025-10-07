@@ -47,7 +47,7 @@ export class GroupForm {
     const userId = this.user?._id;
     
     this.authService.fetchMembership(userId).subscribe(m => {
-      if(!m) {
+      if(!m && !this.user?.isSuper) {
         this.errMsg = 'You do not have permission to create groups!';
         return
       }

@@ -10,9 +10,11 @@ export const adminAuthGuard: CanActivateFn = async (route, state) => {
   const loggedUser = auth.getCurrentUser();
 
   const isAdmin = auth.fetchMembership(loggedUser?._id || '').pipe(
-    map ( (m: Membership | null) => m?.role === 'super' || m?.role === 'admin')
+    map ( (m: Membership | null) => m?.role === 'admin')
   )
-  if (isAdmin) {
+
+  const isSuper = loggedUser?.isSuper;
+  if (isAdmin || isSuper) {
     return true;
   }
   return router.navigate(['/account']);

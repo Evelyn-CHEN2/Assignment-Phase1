@@ -16,22 +16,28 @@
         <a class="nav-link d-flex align-items-center text-white" routerLink="/login">
           <i class="bi bi-house-door me-2 icon-size"></i> Login</a>
       </li>
-      @if ((userRole$ | async) === 'chatuser') {
-        <li class="nav-item">
-          <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard/groups">
-            <i class="bi bi-people me-2 icon-size"></i> Groups</a>
-        </li> 
-      }
+      @if (userRole$ | async; as role) {
 
-      @if ((userRole$ | async) === 'super' || (userRole$ | async) === 'admin') {
-        <li class="nav-item">
-          <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard">
-            <i class="bi bi-speedometer2 me-2 icon-size"></i> Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard/group-form">
-            <i class="bi bi-snapchat me-2 icon-size"></i> + Group</a>
-        </li>
+        @if (role === 'chatuser') {
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard/groups">
+              <i class="bi bi-people me-2 icon-size"></i> Groups
+            </a>
+          </li>
+        }
+        @else if (role === 'super' || role === 'admin') {
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard">
+              <i class="bi bi-speedometer2 me-2 icon-size"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center text-white" routerLink="/dashboard/group-form">
+              <i class="bi bi-snapchat me-2 icon-size"></i> + Group
+            </a>
+          </li>
+        }
+      
       }
       <li class="nav-item">
         <a class="nav-link d-flex align-items-center text-white" routerLink="/account">

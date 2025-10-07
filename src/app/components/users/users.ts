@@ -60,7 +60,7 @@ export class Users {
         return { groups, membership, adminUsers, users };
       })
     ).subscribe(({ users, adminUsers, groups, membership }) => {
-      if (membership?.role === 'super') {
+      if (currentUser?.isSuper) {
         this.users = users.filter(u => u._id !== this.loggedUser?._id); // Exclude super self
         this.userGroupsByUser = Object.fromEntries(
           this.users.map(u => { 
@@ -84,18 +84,15 @@ export class Users {
           const role = m?.role ?? 'chatuser'; 
           const memGroupIds = m?.groups ?? [];
           const userRoleByGroups = Object.fromEntries(userGroups.map(g => {
-            if (m?.role === 'super') {
-              return [g._id, 'super'];
-            } else {
-              const groupRole = memGroupIds.includes(g._id) ? role : 'chatuser';
-              return [g._id, groupRole];
-            }
-          }))
+            const groupRole = memGroupIds.includes(g._id) ? role : 'chatuser';
+            return [g._id, groupRole];
+          })
+        )
           this.roleByGroupByUser[userId] = userRoleByGroups; 
         })  
       })
 
-      this.userRole = membership?.role || 'chatuser';
+      this.userRole = (currentUser?.isSuper ? 'super' : membership?.role) || 'chatuser';
       this.errMsg = '';
     })
   }

@@ -70,7 +70,7 @@ export class Groups implements OnInit {
             channels: allchannels.filter(c => c.groupId === g._id)
           }
         });
-        this.userRole = membership?.role || 'chatuser';
+        this.userRole = (currentUser?.isSuper ? 'super' : membership?.role) || 'chatuser';
         // Groups administered by current user
         const adminGroups = freshUser ? formattedGroups.filter(g => membership?.groups?.includes(g._id)) : [];
         return { userById, formattedGroups, adminGroups, membership };

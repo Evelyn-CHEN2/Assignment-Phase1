@@ -16,14 +16,6 @@ module.exports = {
             // Write the updated user to file, update isSuper
             try {
                 if (newRole === 'super') {
-                    await membershipData.insertOne(
-                        { 
-                            _id: new ObjectId(),
-                            role: newRole,
-                            admin: new ObjectId(userId),
-                            groups: [] 
-                        }
-                    );
                     await users.updateOne(
                         { _id: new ObjectId(userId) },
                         { $set: {isSuper: true}}
