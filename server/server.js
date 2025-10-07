@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const { ExpressPeerServer } = require('peer');
 
 app.use(express.json());
 app.use(cors());
@@ -19,6 +20,9 @@ const options = {
 }
 const io = require('socket.io')(server, options);
 const { connect } = require('./socket.js');
+
+const peerOptions = { debug: true, path: '/', ssl: {}};
+app.use('/peerjs', ExpressPeerServer(server, peerOptions));
 
 async function initServer() {
     const db = await connectDB();
@@ -69,13 +73,14 @@ if (require.main === module) {
         await initServer();
         server.listen(PORT, () => {
           console.log(`HTTP + Socket.IO listening on http://localhost:${PORT}`);
+          console.log(`PeerJS signaling on ws://localhost:${PORT}/peerjs`);
         });
       } catch (err) {
         console.error('Failed to start server:', err);
         process.exit(1);
       }
     })();
-  }
+}
 
 module.exports = { app, server, initServer }; 
 

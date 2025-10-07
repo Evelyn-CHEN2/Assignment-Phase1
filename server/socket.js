@@ -69,6 +69,17 @@ module.exports = {
             socket.on('disconnect', () => {
                 console.log('User disconnected from channelChat namespace');
             });
+
+            // Tells the room the user's peerJS id
+            socket.on('announcePeerId', ({ channelId, peerId, userId, sender }) => {
+                socket.join(channelId);
+                // Send id to others in the channel
+                socket.to(channelId).emit('onPeerId', { channelId, peerId, userId, sender });
+            });
+            // Call ended 
+            socket.on('endCall', ({ channelId }) => {
+                socket.to(channelId).emit('callEnded', { channelId })
+            })
        
         })
        
