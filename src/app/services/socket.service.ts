@@ -47,19 +47,4 @@ export class SocketService {
   onNotices(handler: any): void {
     this.socket?.on('notice', handler);
   }
-
-  announcePeerId(channelId: string, peerId: string,userId: string, sender: string) {
-    this.socket?.emit('announcePeerId', {channelId, peerId, sender})
-  }
-
-  onPeerId(handler: (payload: { channelId: string; peerId: string;userId: string, senderName: string }) => void) {
-    this.socket?.on('peerId', handler);
-  }
-
-  endCall(channelId: string) {
-    this.socket?.emit('endCall', { channelId });
-  }
-  onCallEnded(cb: (data: { channelId: string }) => void) {
-    this.socket?.on('callEnded', cb);
-  }
 }
