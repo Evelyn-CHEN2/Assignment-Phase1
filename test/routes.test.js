@@ -177,7 +177,7 @@ describe('Server Integration Tests', function() {
             const groupIds = (doc.groups || []).map(g=> g.toString());
             expect(groupIds).to.include(groupId.toString());
 
-            await membership.deleteOne({ _id: doc._id})
+            await membership.deleteOne({ admin: userId})
         });
 
         it('should and update user.isSuper', async() => {
@@ -583,6 +583,7 @@ describe('Server Integration Tests', function() {
             expect(memGroups).not.include(groupId.toString());
 
             await groups.deleteOne({ _id: groupId });
+            await membership.deleteOne({ _id: memId});
         })
     });
 
